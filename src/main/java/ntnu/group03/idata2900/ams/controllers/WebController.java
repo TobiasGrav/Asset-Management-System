@@ -1,4 +1,4 @@
-package ntnu.group03.Bachelor_IDATA2900_AMS;
+package ntnu.group03.idata2900.ams.controllers;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
