@@ -21,10 +21,10 @@ public class User {
 
     @Column(name = "company_id", nullable = false, unique = false)
     @Schema(description = "company id of the user")
-    private int companyId;
+    private String companyId;
     @Column(name = "group_id", nullable = false, unique = false)
     @Schema(description = "group id of the user")
-    private int groupId;
+    private String groupId;
     @Column(name = "first_name", nullable = false, unique = false)
     @Schema(description = "First name of the user")
     private String firstName;
@@ -77,7 +77,7 @@ public class User {
      * @param phoneNumber  users phone number.
      * @param creationDate creation date of user
      */
-    public User(int companyId, int groupId, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime creationDate) {
+    public User(String companyId, String groupId, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime creationDate) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -98,11 +98,11 @@ public class User {
         return this.id;
     }
 
-    public int getCompanyId() {
+    public String getCompanyId() {
         return this.companyId;
     }
 
-    public int getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
@@ -150,11 +150,11 @@ public class User {
         this.id = id;
     }
 
-    public void setCompanyId(int companyId) {
+    public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 

@@ -24,7 +24,7 @@ public class Asset {
     private String name;
     @Column(name = "description", nullable = false, unique = false)
     @Schema(description = "description of the asset")
-    private int description;
+    private String description;
     @Column(name = "creation_date", nullable = false, unique = false)
     @Schema(description = "the date asset was created")
     private LocalDateTime creationDate;
@@ -82,7 +82,7 @@ public class Asset {
      * @param commissionDate    Commission date of asset.
      * @param qrCode            QR code of asset
      */
-    public Asset(String name, int description, LocalDateTime creationDate, LocalDateTime commissionDate, String qrCode) {
+    public Asset(String name, String description, LocalDateTime creationDate, LocalDateTime commissionDate, String qrCode) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -115,7 +115,7 @@ public class Asset {
      * Returns asset description
      * @return returns asset description
      */
-    public int getDescription() {
+    public String getDescription() {
         return this.description;
     }
 
@@ -215,7 +215,7 @@ public class Asset {
      *
      * @param description description of asset
      */
-    public void setDescription(int description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

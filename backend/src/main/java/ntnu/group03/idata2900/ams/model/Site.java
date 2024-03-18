@@ -22,7 +22,7 @@ public class Site {
     private String name;
     @Column(name = "client_id", nullable = false, unique = false)
     @Schema(description = "client id connected to the site")
-    private int clientId;
+    private String clientId;
     @Column(name = "active", nullable = false, unique = false, updatable = true)
     @Schema(description = "If site is active or not")
     private boolean active;
@@ -40,7 +40,7 @@ public class Site {
         return this.name;
     }
 
-    public int getClientId() {
+    public String getClientId() {
         return this.clientId;
     }
 
@@ -60,7 +60,7 @@ public class Site {
         this.name = name;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 

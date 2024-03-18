@@ -22,7 +22,7 @@ public class Datasheet {
     private String name;
     @Column(name = "reference_number", nullable = false, unique = true)
     @Schema(description = "reference number of the datasheet")
-    private int referenceNumber;
+    private String referenceNumber;
     @Column(name = "pdf_url", nullable = false, unique = true)
     @Schema(description = "url to the datasheet pdf")
     private String pdfUrl;
@@ -40,7 +40,7 @@ public class Datasheet {
         return this.name;
     }
 
-    public int getReferenceNumber() {
+    public String getReferenceNumber() {
         return this.referenceNumber;
     }
 
@@ -60,7 +60,7 @@ public class Datasheet {
         this.name = name;
     }
 
-    public void setReferenceNumber(int referenceNumber) {
+    public void setReferenceNumber(String referenceNumber) {
         this.referenceNumber = referenceNumber;
     }
 
