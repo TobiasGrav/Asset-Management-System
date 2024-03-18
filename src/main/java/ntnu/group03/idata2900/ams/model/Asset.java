@@ -43,13 +43,34 @@ public class Asset {
     @JoinColumns({
             @JoinColumn(name = "category_id", referencedColumnName = "id")
     })
-    @Schema(description = "Product bought in the order")
+    @Schema(description = "category of the given asset")
     private Category category;
 
     @JsonBackReference
     @OneToMany(mappedBy = "asset")
     @Schema(description = "services that are completed on asset")
     private Set<ServiceCompleted> servicesCompleted = new LinkedHashSet<>();
+
+    @JsonManagedReference
+    @ManyToOne()
+    @JoinColumns({
+            @JoinColumn(name = "datasheet_id", referencedColumnName = "id")
+    })
+    @Schema(description = "datasheet of the given asset")
+    private Datasheet datasheet;
+
+    @JsonManagedReference
+    @ManyToOne()
+    @JoinColumns({
+            @JoinColumn(name = "site_id", referencedColumnName = "id")
+    })
+    @Schema(description = "site of the given asset")
+    private Site site;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "asset")
+    @Schema(description = "spare parts that builds / constructs given parent asset")
+    private Set<SparePart> spareParts = new LinkedHashSet<>();
 
 
     /**

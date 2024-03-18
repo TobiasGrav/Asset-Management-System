@@ -1,12 +1,15 @@
 package ntnu.group03.idata2900.ams.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-@Schema(description = "Services completed on a given asset", title = "ServicesCompleted")
+@Schema(description = "Services completed on a given asset", title = "service completed")
 @Entity
 public class ServiceCompleted {
 
@@ -50,5 +53,10 @@ public class ServiceCompleted {
     })
     @Schema(description = "user that completed the service")
     private User user;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "serviceCompleted")
+    @Schema(description = "comments connected to given services")
+    private Set<ServiceComment> serviceComments = new LinkedHashSet<>();
 
 }
