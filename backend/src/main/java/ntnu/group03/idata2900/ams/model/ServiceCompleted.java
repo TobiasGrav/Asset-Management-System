@@ -32,25 +32,25 @@ public class ServiceCompleted {
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "asset_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "asset the service was completed on")
     private Asset asset;
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "service_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "service that was completed")
     private Service service;
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "user_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "user that completed the service")
     private User user;
 

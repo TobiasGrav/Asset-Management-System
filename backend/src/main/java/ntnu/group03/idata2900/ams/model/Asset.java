@@ -40,9 +40,9 @@ public class Asset {
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "category_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "category of the given asset")
     private Category category;
 
@@ -53,17 +53,17 @@ public class Asset {
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "datasheet_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "datasheet of the given asset")
     private Datasheet datasheet;
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "site_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "site of the given asset")
     private Site site;
 

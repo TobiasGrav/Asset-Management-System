@@ -24,9 +24,9 @@ public class SparePart {
 
     @JsonManagedReference
     @ManyToOne()
-    @JoinColumns({
+    @JoinColumns(
             @JoinColumn(name = "asset_id", referencedColumnName = "id")
-    })
+    )
     @Schema(description = "asset that contains given spare parts")
     private Asset asset;
 }
