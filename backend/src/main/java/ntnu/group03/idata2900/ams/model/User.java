@@ -94,4 +94,107 @@ public class User {
     }
 
 
+    public int getId() {
+        return this.id;
+    }
+
+    public int getCompanyId() {
+        return this.companyId;
+    }
+
+    public int getGroupId() {
+        return this.groupId;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return this.creationDate;
+    }
+
+    public LocalDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public Set<Role> getRoles() {
+        return this.roles;
+    }
+
+    public Set<ServiceCompleted> getServicesCompleted() {
+        return this.servicesCompleted;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setUpdatedDate(LocalDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setServicesCompleted(Set<ServiceCompleted> servicesCompleted) {
+        this.servicesCompleted = servicesCompleted;
+    }
 }

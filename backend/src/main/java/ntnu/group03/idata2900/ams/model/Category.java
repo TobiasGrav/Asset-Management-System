@@ -25,4 +25,30 @@ public class Category {
     @OneToMany(mappedBy = "category")
     @Schema(description = "assets with the given category")
     private Set<Asset> assets = new LinkedHashSet<>();
+
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Set<Asset> getAssets() {
+        return this.assets;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAssets(Set<Asset> assets) {
+        this.assets = assets;
+    }
 }

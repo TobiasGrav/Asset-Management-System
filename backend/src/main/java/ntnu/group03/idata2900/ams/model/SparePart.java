@@ -29,4 +29,36 @@ public class SparePart {
     )
     @Schema(description = "asset that contains given spare parts")
     private Asset asset;
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getPositionDiagramUrl() {
+        return this.positionDiagramUrl;
+    }
+
+    public int getNumberOfParts() {
+        return this.numberOfParts;
+    }
+
+    public Asset getAsset() {
+        return this.asset;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPositionDiagramUrl(String positionDiagramUrl) {
+        this.positionDiagramUrl = positionDiagramUrl;
+    }
+
+    public void setNumberOfParts(int numberOfParts) {
+        this.numberOfParts = numberOfParts;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
 }

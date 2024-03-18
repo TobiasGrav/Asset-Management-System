@@ -31,4 +31,44 @@ public class Datasheet {
     @OneToMany(mappedBy = "datasheet")
     @Schema(description = "assets that has the given datasheet")
     private Set<Asset> assets = new LinkedHashSet<>();
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getReferenceNumber() {
+        return this.referenceNumber;
+    }
+
+    public String getPdfUrl() {
+        return this.pdfUrl;
+    }
+
+    public Set<Asset> getAssets() {
+        return this.assets;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setReferenceNumber(int referenceNumber) {
+        this.referenceNumber = referenceNumber;
+    }
+
+    public void setPdfUrl(String pdfUrl) {
+        this.pdfUrl = pdfUrl;
+    }
+
+    public void setAssets(Set<Asset> assets) {
+        this.assets = assets;
+    }
 }

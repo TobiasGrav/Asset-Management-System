@@ -45,7 +45,7 @@ public class Role {
      * returns id
      */
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Role {
      * returns users with role.
      */
     public Set<User> getUsers() {
-        return users;
+        return this.users;
     }
 
     /**
@@ -77,7 +77,7 @@ public class Role {
      * returns name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**

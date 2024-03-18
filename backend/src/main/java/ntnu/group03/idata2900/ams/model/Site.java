@@ -31,4 +31,44 @@ public class Site {
     @OneToMany(mappedBy = "site")
     @Schema(description = "assets that are located at the given site")
     private Set<Asset> assets = new LinkedHashSet<>();
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getClientId() {
+        return this.clientId;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public Set<Asset> getAssets() {
+        return this.assets;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setAssets(Set<Asset> assets) {
+        this.assets = assets;
+    }
 }

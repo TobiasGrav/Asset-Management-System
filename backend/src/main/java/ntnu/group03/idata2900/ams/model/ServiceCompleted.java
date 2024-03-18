@@ -59,4 +59,68 @@ public class ServiceCompleted {
     @Schema(description = "comments connected to given services")
     private Set<ServiceComment> serviceComments = new LinkedHashSet<>();
 
+
+    public int getId() {
+        return this.id;
+    }
+
+    public LocalDateTime getTimeCompleted() {
+        return this.timeCompleted;
+    }
+
+    public LocalDateTime getLastService() {
+        return this.lastService;
+    }
+
+    public int getNumberOfServicesDone() {
+        return this.numberOfServicesDone;
+    }
+
+    public Asset getAsset() {
+        return this.asset;
+    }
+
+    public Service getService() {
+        return this.service;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public Set<ServiceComment> getServiceComments() {
+        return this.serviceComments;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTimeCompleted(LocalDateTime timeCompleted) {
+        this.timeCompleted = timeCompleted;
+    }
+
+    public void setLastService(LocalDateTime lastService) {
+        this.lastService = lastService;
+    }
+
+    public void setNumberOfServicesDone(int numberOfServicesDone) {
+        this.numberOfServicesDone = numberOfServicesDone;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setServiceComments(Set<ServiceComment> serviceComments) {
+        this.serviceComments = serviceComments;
+    }
 }

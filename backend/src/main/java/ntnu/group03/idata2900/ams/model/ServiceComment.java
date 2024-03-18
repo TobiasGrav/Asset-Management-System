@@ -29,4 +29,28 @@ public class ServiceComment {
     )
     @Schema(description = "the comment to be commented on service completed")
     private Comment comment;
+
+    public int getId() {
+        return this.id;
+    }
+
+    public ServiceCompleted getServiceCompleted() {
+        return this.serviceCompleted;
+    }
+
+    public Comment getComment() {
+        return this.comment;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setServiceCompleted(ServiceCompleted serviceCompleted) {
+        this.serviceCompleted = serviceCompleted;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
 }
