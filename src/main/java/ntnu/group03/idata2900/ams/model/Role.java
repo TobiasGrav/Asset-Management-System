@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Schema(description = "Roles which users may have.", name = "roles")
+@Schema(description = "Roles which users may have.", name = "role")
 @Entity
 public class Role {
 
@@ -22,7 +22,7 @@ public class Role {
     private String name;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "role")
     @Schema(description = "Users with the given role")
     private Set<User> users = new LinkedHashSet<>();
 }
