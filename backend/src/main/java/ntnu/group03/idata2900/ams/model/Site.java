@@ -22,7 +22,7 @@ public class Site {
     private String name;
     @Column(name = "client_id", nullable = false, unique = false)
     @Schema(description = "client id connected to the site")
-    private int clientId;
+    private String clientId;
     @Column(name = "active", nullable = false, unique = false, updatable = true)
     @Schema(description = "If site is active or not")
     private boolean active;
@@ -31,4 +31,44 @@ public class Site {
     @OneToMany(mappedBy = "site")
     @Schema(description = "assets that are located at the given site")
     private Set<Asset> assets = new LinkedHashSet<>();
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getClientId() {
+        return this.clientId;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public Set<Asset> getAssets() {
+        return this.assets;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setAssets(Set<Asset> assets) {
+        this.assets = assets;
+    }
 }

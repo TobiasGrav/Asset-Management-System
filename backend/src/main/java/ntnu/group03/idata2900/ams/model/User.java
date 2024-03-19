@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import ntnu.group03.idata2900.ams.dto.SignUpDto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -21,10 +22,10 @@ public class User {
 
     @Column(name = "company_id", nullable = false, unique = false)
     @Schema(description = "company id of the user")
-    private int companyId;
+    private String companyId;
     @Column(name = "group_id", nullable = false, unique = false)
     @Schema(description = "group id of the user")
-    private int groupId;
+    private String groupId;
     @Column(name = "first_name", nullable = false, unique = false)
     @Schema(description = "First name of the user")
     private String firstName;
@@ -37,8 +38,8 @@ public class User {
     @Column(name = "password", nullable = false, unique = false)
     @Schema(description = "Password of the user")
     private String password;
-    @Column(name = "phone_number", nullable = false, unique = false)
-    @Schema(description = "phone number to the user")
+    @Column(name = "phone_number", nullable = true, unique = false)
+    @Schema(description = "phone number of the user")
     private String phoneNumber;
     @Column(name = "creation_date", nullable = false, unique = false)
     @Schema(description = "the date user was created")
@@ -77,7 +78,7 @@ public class User {
      * @param phoneNumber  users phone number.
      * @param creationDate creation date of user
      */
-    public User(int companyId, int groupId, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime creationDate) {
+    public User(String companyId, String groupId, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime creationDate) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -89,9 +90,129 @@ public class User {
         this.active = true;
     }
 
+    /**
+     * Creates a new instance of User.
+     *
+     * @param userInfo information provided by SignUpDto instance
+     */
+    public User(SignUpDto userInfo) {
+        this.email = userInfo.getEmail();
+        this.firstName = userInfo.getFirstName();
+        this.lastName = userInfo.getLastName();
+        this.password = userInfo.getPassword();
+        this.companyId = userInfo.getCompanyId();
+        this.groupId = userInfo.getGroupId();
+        this.phoneNumber = userInfo.getPhoneNumber();
+        this.creationDate = LocalDateTime.now();
+        this.active = true;
+    }
+
     public User() {
 
     }
 
 
+    public int getId() {
+        return this.id;
+    }
+
+    public String getCompanyId() {
+        return this.companyId;
+    }
+
+    public String getGroupId() {
+        return this.groupId;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return this.creationDate;
+    }
+
+    public LocalDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public Set<Role> getRoles() {
+        return this.roles;
+    }
+
+    public Set<ServiceCompleted> getServicesCompleted() {
+        return this.servicesCompleted;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setUpdatedDate(LocalDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setServicesCompleted(Set<ServiceCompleted> servicesCompleted) {
+        this.servicesCompleted = servicesCompleted;
+    }
 }

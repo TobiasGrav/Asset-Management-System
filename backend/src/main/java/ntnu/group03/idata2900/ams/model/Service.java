@@ -33,4 +33,36 @@ public class Service {
     public Service() {
 
     }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getIntervalName() {
+        return this.intervalName;
+    }
+
+    public Set<ServiceCompleted> getServicesCompleted() {
+        return this.servicesCompleted;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIntervalName(String intervalName) {
+        this.intervalName = intervalName;
+    }
+
+    public void setServicesCompleted(Set<ServiceCompleted> servicesCompleted) {
+        this.servicesCompleted = servicesCompleted;
+    }
 }
