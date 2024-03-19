@@ -26,14 +26,29 @@ public class Comment {
     @Schema(description = "services connected to given comment")
     private Set<ServiceComment> serviceComments = new LinkedHashSet<>();
 
+    /**
+     * Returns comment id
+     *
+     * @return returns comment id
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     * Returns comment
+     *
+     * @return returns comment
+     */
     public String getComment() {
         return this.comment;
     }
 
+    /**
+     * Returns service comments
+     *
+     * @return returns service comments
+     */
     public Set<ServiceComment> getServiceComments() {
         return this.serviceComments;
     }
