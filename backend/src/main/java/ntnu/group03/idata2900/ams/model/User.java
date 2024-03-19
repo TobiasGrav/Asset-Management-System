@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import ntnu.group03.idata2900.ams.dto.SignUpDto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -37,8 +38,8 @@ public class User {
     @Column(name = "password", nullable = false, unique = false)
     @Schema(description = "Password of the user")
     private String password;
-    @Column(name = "phone_number", nullable = false, unique = false)
-    @Schema(description = "phone number to the user")
+    @Column(name = "phone_number", nullable = true, unique = false)
+    @Schema(description = "phone number of the user")
     private String phoneNumber;
     @Column(name = "creation_date", nullable = false, unique = false)
     @Schema(description = "the date user was created")
@@ -86,6 +87,23 @@ public class User {
         this.groupId = groupId;
         this.phoneNumber = phoneNumber;
         this.creationDate = creationDate;
+        this.active = true;
+    }
+
+    /**
+     * Creates a new instance of User.
+     *
+     * @param userInfo information provided by SignUpDto instance
+     */
+    public User(SignUpDto userInfo) {
+        this.email = userInfo.getEmail();
+        this.firstName = userInfo.getFirstName();
+        this.lastName = userInfo.getLastName();
+        this.password = userInfo.getPassword();
+        this.companyId = userInfo.getCompanyId();
+        this.groupId = userInfo.getGroupId();
+        this.phoneNumber = userInfo.getPhoneNumber();
+        this.creationDate = LocalDateTime.now();
         this.active = true;
     }
 
