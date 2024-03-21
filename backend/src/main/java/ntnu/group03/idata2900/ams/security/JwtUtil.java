@@ -16,8 +16,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt_secret_key}")
-    private String SECRET_KEY;
+    //@Value("${jwt_secret_key}")
+    private String SECRET_KEY = "1234";
     private static final String JWT_AUTH_KEY = "roles";
 
     /**

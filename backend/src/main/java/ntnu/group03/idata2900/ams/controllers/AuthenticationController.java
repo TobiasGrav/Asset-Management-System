@@ -5,6 +5,7 @@ import ntnu.group03.idata2900.ams.security.AuthenticationRequest;
 import ntnu.group03.idata2900.ams.security.AuthenticationResponse;
 import ntnu.group03.idata2900.ams.security.JwtUtil;
 import ntnu.group03.idata2900.ams.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,9 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
+    @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
     private UserService userService;
+    @Autowired
     private JwtUtil jwtUtil;
 
     /**
