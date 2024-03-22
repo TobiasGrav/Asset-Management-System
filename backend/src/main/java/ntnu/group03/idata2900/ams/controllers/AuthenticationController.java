@@ -12,11 +12,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
     @Autowired
@@ -35,6 +37,7 @@ public class AuthenticationController {
     @PostMapping("/api/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
+            System.out.println(authenticationRequest);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getEmail(),
                     authenticationRequest.getPassword()));

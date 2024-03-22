@@ -1,15 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
 
-import './login.css'
+import './login.css';
 
 const Login = (props) => {
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("Jons@ntnu.no")
+  const [password, setPassword] = useState("IDATA2024isbased")
   
   const login = () => {
     console.log(email);
     console.log(password);
+    axios.post('http://localhost:8080/api/authenticate', {
+      email: email,
+      password: password
+    })
+    .then(response => {
+      if(response.status == 200) {
+        console.log("login successful")
+        axios.get("http://localhost:8080/", {
+          headers: {
+            Authorization: 'Bearer ' + response.data.response,
+            Accept: "application/json",
+            'Content-Type': "application/json"
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+      }
+      console.log(response);
+    })
+    .catch(error => {
+      // Handle error
+      console.log(error);
+    });
+
   }
 
   return (
