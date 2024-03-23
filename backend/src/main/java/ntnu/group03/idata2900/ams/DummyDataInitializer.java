@@ -46,8 +46,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         if (userRepository.count() == 0){
 
 
-            Role user = new Role("user");
-            Role admin = new Role("admin");
+            Role user = new Role("USER");
+            Role admin = new Role("ADMIN");
 
             Set<Role> setUserAdmin = new HashSet<>();
             Set<Role> setUserOnly = new HashSet<>();
