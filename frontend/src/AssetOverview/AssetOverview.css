@@ -1,0 +1,490 @@
+.asset-overview-container {
+    width: 100%;
+    display: flex;
+    overflow: auto;
+    min-height: 100vh;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #01171C;
+  }
+  .asset-overview-navbar {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+    justify-content: flex-start;
+    background-color: transparent;
+  }
+  .asset-overview-container1 {
+    flex: 0 0 auto;
+    width: 20%;
+    height: 75px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    padding-left: 8px;
+    justify-content: flex-start;
+  }
+  .asset-overview-image {
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+  }
+  .asset-overview-text {
+    color: #003341;
+    width: 144px;
+    height: auto;
+    text-align: left;
+  }
+  .asset-overview-container2 {
+    gap: 16px;
+    flex: 0 0 auto;
+    width: 70%;
+    height: 75px;
+    display: flex;
+    align-items: flex-end;
+    padding-right: 25px;
+    justify-content: flex-start;
+  }
+  .asset-overview-container3 {
+    gap: 8px;
+    width: auto;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+    background-color: #003341;
+  }
+  .asset-overview-text001 {
+    color: #01171C;
+  }
+  .asset-overview-image1 {
+    width: auto;
+    margin-top: 0px;
+    object-fit: cover;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+  .asset-overview-container4 {
+    gap: 8px;
+    width: auto;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+    background-color: #01232D;
+  }
+  .asset-overview-text004 {
+    color: #01171C;
+  }
+  .asset-overview-image2 {
+    width: auto;
+    margin-top: 0px;
+    object-fit: cover;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+  .asset-overview-container5 {
+    gap: 8px;
+    width: auto;
+    align-items: center;
+    padding-top: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    justify-content: center;
+    background-color: #01232D;
+  }
+  .asset-overview-text007 {
+    color: #01171C;
+  }
+  .asset-overview-image3 {
+    width: auto;
+    margin-top: 0px;
+    object-fit: cover;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+  }
+  .asset-overview-container6 {
+    flex: 0 0 auto;
+    width: 10%;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    justify-content: flex-end;
+  }
+  .asset-overview-image4 {
+    width: 24px;
+    height: 24px;
+    margin-top: 8px;
+    object-fit: cover;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .asset-overview-image5 {
+    width: 16px;
+    height: 16px;
+    margin-top: 8px;
+    object-fit: cover;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .asset-overview-main {
+    flex: 0 0 auto;
+    width: 100%;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .asset-overview-container7 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 1400px;
+    display: flex;
+    position: relative;
+    align-self: center;
+    align-items: flex-start;
+    flex-direction: row;
+  }
+  .asset-overview-left-container {
+    gap: 8px;
+    flex: 1;
+    display: flex;
+    max-width: 15%;
+    align-items: flex-start;
+    margin-left: 16px;
+    padding-top: 16px;
+    border-color: #01232D;
+    border-style: dashed;
+    border-width: 2px;
+    margin-right: 16px;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: transparent;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+  }
+  .asset-overview-text010 {
+    color: #083F4C;
+    font-family: "Open Sans";
+  }
+  .asset-overview-button {
+    font-family: "Open Sans";
+  }
+  .asset-overview-button1 {
+    font-family: "Open Sans";
+  }
+  .asset-overview-button2 {
+    font-family: "Open Sans";
+  }
+  .asset-overview-right-container {
+    flex: 0 0 auto;
+    width: 85%;
+    height: 1400px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: column;
+    background-color: #003341;
+  }
+  .asset-overview-text013 {
+    color: #C9D7DD;
+    margin-top: 80px;
+    font-family: "Open Sans";
+    margin-left: 96px;
+    margin-right: 96px;
+    margin-bottom: 32px;
+  }
+  .asset-overview-textinput {
+    width: 75%;
+  }
+  .asset-overview-ul {
+    width: 75%;
+    height: auto;
+    position: relative;
+    align-self: center;
+    margin-left: 96px;
+    margin-right: 96px;
+    padding-left: 0px;
+  }
+  .asset-overview-li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text016 {
+    text-align: center;
+  }
+  .asset-overview-text017 {
+    text-align: center;
+  }
+  .asset-overview-text020 {
+    text-align: center;
+  }
+  .asset-overview-li01 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text023 {
+    text-align: center;
+  }
+  .asset-overview-text024 {
+    text-align: center;
+  }
+  .asset-overview-text025 {
+    text-align: center;
+  }
+  .asset-overview-li02 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text028 {
+    text-align: center;
+  }
+  .asset-overview-text029 {
+    text-align: center;
+  }
+  .asset-overview-text030 {
+    text-align: center;
+  }
+  .asset-overview-li03 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text033 {
+    text-align: center;
+  }
+  .asset-overview-text034 {
+    text-align: center;
+  }
+  .asset-overview-text035 {
+    text-align: center;
+  }
+  .asset-overview-li04 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text038 {
+    text-align: center;
+  }
+  .asset-overview-text039 {
+    text-align: center;
+  }
+  .asset-overview-text040 {
+    text-align: center;
+  }
+  .asset-overview-li05 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text043 {
+    text-align: center;
+  }
+  .asset-overview-text044 {
+    text-align: center;
+  }
+  .asset-overview-text045 {
+    text-align: center;
+  }
+  .asset-overview-li06 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text048 {
+    text-align: center;
+  }
+  .asset-overview-text049 {
+    text-align: center;
+  }
+  .asset-overview-text050 {
+    text-align: center;
+  }
+  .asset-overview-li07 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text053 {
+    text-align: center;
+  }
+  .asset-overview-text054 {
+    text-align: center;
+  }
+  .asset-overview-text055 {
+    text-align: center;
+  }
+  .asset-overview-li08 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text058 {
+    text-align: center;
+  }
+  .asset-overview-text059 {
+    text-align: center;
+  }
+  .asset-overview-text060 {
+    text-align: center;
+  }
+  .asset-overview-li09 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text063 {
+    text-align: center;
+  }
+  .asset-overview-text064 {
+    text-align: center;
+  }
+  .asset-overview-text065 {
+    text-align: center;
+  }
+  .asset-overview-li10 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text068 {
+    text-align: center;
+  }
+  .asset-overview-text069 {
+    text-align: center;
+  }
+  .asset-overview-text070 {
+    text-align: center;
+  }
+  .asset-overview-li11 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text073 {
+    text-align: center;
+  }
+  .asset-overview-text074 {
+    text-align: center;
+  }
+  .asset-overview-text075 {
+    text-align: center;
+  }
+  .asset-overview-li12 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text078 {
+    text-align: center;
+  }
+  .asset-overview-text079 {
+    text-align: center;
+  }
+  .asset-overview-text080 {
+    text-align: center;
+  }
+  .asset-overview-li13 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text083 {
+    text-align: center;
+  }
+  .asset-overview-text084 {
+    text-align: center;
+  }
+  .asset-overview-text085 {
+    text-align: center;
+  }
+  .asset-overview-li14 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text088 {
+    text-align: center;
+  }
+  .asset-overview-text089 {
+    text-align: center;
+  }
+  .asset-overview-text090 {
+    text-align: center;
+  }
+  .asset-overview-li15 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text093 {
+    text-align: center;
+  }
+  .asset-overview-text094 {
+    text-align: center;
+  }
+  .asset-overview-text095 {
+    text-align: center;
+  }
+  .asset-overview-li16 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: #F9FBFC;
+  }
+  .asset-overview-text098 {
+    text-align: center;
+  }
+  .asset-overview-text099 {
+    text-align: center;
+  }
+  .asset-overview-text100 {
+    text-align: center;
+  }
+  .asset-overview-container8 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .asset-overview-text103 {
+    color: #E7EDF0;
+  }
+  @media(max-width: 479px) {
+    .asset-overview-text013 {
+      color: #C9D7DD;
+      font-family: Open Sans;
+    }
+  }
+  
