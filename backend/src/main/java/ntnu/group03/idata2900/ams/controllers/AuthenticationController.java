@@ -1,9 +1,8 @@
 package ntnu.group03.idata2900.ams.controllers;
 
-import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.security.AuthenticationRequest;
 import ntnu.group03.idata2900.ams.security.AuthenticationResponse;
-import ntnu.group03.idata2900.ams.security.JwtUtil;
+import ntnu.group03.idata2900.ams.util.JwtUtil;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin()
 public class AuthenticationController {
 
     @Autowired
