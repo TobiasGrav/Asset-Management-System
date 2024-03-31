@@ -1,55 +1,120 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
-import './table.css'
+import { useNavigate } from 'react-router-dom';
 
 function Table() {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
+        setLoading(true);
         try {
             const response = await axios.get('http://localhost:8080/api/assets');
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const goToNextPage = () => setCurrentPage(current => Math.min(current + 1, totalPages - 1));
-    const goToPreviousPage = () => setCurrentPage(current => Math.max(current - 1, 0));
-
-    // Function to format the LocalDateTime to "dd.mm.yyyy hh:mm"
     const formatLocalDateTime = (localDateTime) => {
         return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
     };
 
+    const columns = [
+        {
+            name: 'Name',
+            selector: row => row.name,
+            sortable: true,
+        },
+        {
+            name: 'Description',
+            selector: row => row.description,
+            sortable: true,
+        },
+        {
+            name: 'Creation Date',
+            selector: row => formatLocalDateTime(row.creationDate),
+            sortable: true,
+        },
+        {
+            name: 'Active',
+            selector: row => row.active ? 'Yes' : 'No',
+            sortable: true,
+        },
+    ];
+
+    // Handler for row click event using navigate
+    const handleRowClicked = (row) => {
+        navigate(`/asset/${row.id}`); // Use navigate to change the route
+    };
+
+    const customStyles = {
+        headCells: {
+            style: {
+                backgroundColor: '#f2f2f2',
+                color: '#333',
+                paddingLeft: '12px',
+                paddingRight: '12px',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '12px',
+                paddingRight: '12px',
+                borderColor: '#ddd',
+                cursor: 'default', // Ensures the cursor indicates the cell is not editable
+            },
+        },
+        rows: {
+            style: {
+                '&:nth-of-type(even)': {
+                    backgroundColor: '#f2f2f2', // Even rows background color
+                },
+                '&:hover': {
+                    backgroundColor: '#ddd', // Hover row background color
+                },
+                borderColor: '#ddd', // Row border color
+            },
+        },
+        pagination: {
+            style: {
+                marginTop: '20px', // Pagination margin top
+            },
+            pageButtonsStyle: {
+                borderRadius: '4px', // Pagination buttons border radius
+                backgroundColor: '#f2f2f2', // Pagination buttons background color
+                borderColor: '#ddd', // Pagination buttons border color
+                color: '#333', // Pagination buttons text color
+                height: 'auto',
+                padding: '8px', // Pagination buttons padding
+                '&:hover': {
+                    backgroundColor: '#ddd', // Pagination buttons hover background color
+                },
+            },
+        },
+    };
+
     return (
-        <div className="table-container">
-            <table className="table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Creation Date</th>
-                    <th>Active</th>
-                </tr>
-                </thead>
-                <tbody>
-                {data.map(asset => (
-                    <tr key={asset.id}>
-                        <td>{asset.name}</td>
-                        <td>{asset.description}</td>
-                        <td>{formatLocalDateTime(asset.creationDate)}</td>
-                        <td>{asset.active ? 'Yes' : 'No'}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div style={{ margin: '20px' }}>
+            <DataTable
+                title="Assets"
+                columns={columns}
+                data={data}
+                progressPending={loading}
+                pagination
+                persistTableHead
+                onRowClicked={handleRowClicked}
+                customStyles={customStyles}
+            />
         </div>
     );
 }
