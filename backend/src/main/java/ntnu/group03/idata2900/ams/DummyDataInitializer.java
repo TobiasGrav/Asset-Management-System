@@ -158,21 +158,120 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     null,
                     "5678");
 
+            Asset asset4 = new Asset(
+                    "Pump123",
+                    "A random pump321",
+                    LocalDateTime.now(),
+                    null,
+                    "1234vcxsgsg5");
+
+            Asset asset5 = new Asset(
+                    "Vent3333",
+                    "A random vent2222",
+                    LocalDateTime.now(),
+                    null,
+                    "34vcxvxc563333");
+
+            Asset asset6 = new Asset(
+                    "Filter6565",
+                    "A random filter5455",
+                    LocalDateTime.now(),
+                    null,
+                    "567vcxggvcx8");
+
+            Asset asset7 = new Asset(
+                    "Pump656565",
+                    "A random pump656565",
+                    LocalDateTime.now(),
+                    null,
+                    "123vjjvx45");
+
+            Asset asset8 = new Asset(
+                    "Vent321321321",
+                    "A random vent12312321",
+                    LocalDateTime.now(),
+                    null,
+                    "3452342356");
+
+            Asset asset9 = new Asset(
+                    "Filter321321321",
+                    "A random filter321321321",
+                    LocalDateTime.now(),
+                    null,
+                    "5665453478");
+
+            Asset asset10 = new Asset(
+                    "Pump454545",
+                    "A random pump321321321",
+                    LocalDateTime.now(),
+                    null,
+                    "12456798345");
+
+            Asset asset11 = new Asset(
+                    "Vent54654654",
+                    "A random vent654654654",
+                    LocalDateTime.now(),
+                    null,
+                    "3233456");
+
+            Asset asset12 = new Asset(
+                    "Filter654654",
+                    "A random filter5454665",
+                    LocalDateTime.now(),
+                    null,
+                    "567823");
+
             asset1.setCategory(category1);
             asset2.setCategory(category2);
             asset3.setCategory(category3);
+            asset4.setCategory(category1);
+            asset5.setCategory(category2);
+            asset6.setCategory(category3);
+            asset7.setCategory(category1);
+            asset8.setCategory(category2);
+            asset9.setCategory(category3);
+            asset10.setCategory(category1);
+            asset11.setCategory(category2);
+            asset12.setCategory(category3);
 
             asset1.setDatasheet(datasheet1);
             asset2.setDatasheet(datasheet2);
             asset3.setDatasheet(datasheet3);
+            asset4.setDatasheet(datasheet1);
+            asset5.setDatasheet(datasheet2);
+            asset6.setDatasheet(datasheet3);
+            asset7.setDatasheet(datasheet1);
+            asset8.setDatasheet(datasheet2);
+            asset9.setDatasheet(datasheet3);
+            asset10.setDatasheet(datasheet1);
+            asset11.setDatasheet(datasheet2);
+            asset12.setDatasheet(datasheet3);
 
             asset1.setSite(site1);
             asset2.setSite(site2);
             asset3.setSite(site3);
+            asset4.setSite(site1);
+            asset5.setSite(site2);
+            asset6.setSite(site3);
+            asset7.setSite(site1);
+            asset8.setSite(site2);
+            asset9.setSite(site3);
+            asset10.setSite(site1);
+            asset11.setSite(site2);
+            asset12.setSite(site3);
 
             assetRepository.save(asset1);
             assetRepository.save(asset2);
             assetRepository.save(asset3);
+            assetRepository.save(asset4);
+            assetRepository.save(asset5);
+            assetRepository.save(asset6);
+            assetRepository.save(asset7);
+            assetRepository.save(asset8);
+            assetRepository.save(asset9);
+            assetRepository.save(asset10);
+            assetRepository.save(asset11);
+            assetRepository.save(asset12);
 
 
             logger.info("DONE importing test data");
