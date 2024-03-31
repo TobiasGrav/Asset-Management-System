@@ -32,6 +32,24 @@ public class Datasheet {
     @Schema(description = "assets that has the given datasheet")
     private Set<Asset> assets = new LinkedHashSet<>();
 
+
+    /**
+     * Constructor with parameters
+     *
+     * @param name              datasheet name
+     * @param referenceNumber   datasheet referenceNumber
+     * @param pdfUrl            datasheet pdfUrl
+     */
+    public Datasheet(String name, String referenceNumber, String pdfUrl) {
+        this.name = name;
+        this.referenceNumber = referenceNumber;
+        this.pdfUrl = pdfUrl;
+    }
+
+    public Datasheet(){
+
+    }
+
     public int getId() {
         return id;
     }

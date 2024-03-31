@@ -13,6 +13,17 @@ target/
 .springBeans
 .sts4-cache
 
+
+### React ###
+/node_modules
+/.pnp
+.pnp.js
+/coverage
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

@@ -26,6 +26,18 @@ public class Category {
     @Schema(description = "assets with the given category")
     private Set<Asset> assets = new LinkedHashSet<>();
 
+    /**
+     * Constructor with parameters
+     *
+     * @param name category name
+     */
+    public Category(String name) {
+        this.name = name;
+    }
+
+    public Category(){
+
+    }
 
     public int getId() {
         return this.id;
