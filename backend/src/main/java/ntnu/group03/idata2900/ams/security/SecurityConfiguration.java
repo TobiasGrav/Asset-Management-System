@@ -52,7 +52,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
         // Allow JWT authentication
         http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults()).sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
+                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->authorizationManagerRequestMatcherRegistry
                         //.requestMatchers(HttpMethod.GET, "/").hasAuthority("admin")
@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/authenticate").permitAll()
-                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/api/assets").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

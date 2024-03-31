@@ -28,7 +28,7 @@ public class Asset {
     @Column(name = "creation_date", nullable = false, unique = false)
     @Schema(description = "the date asset was created")
     private LocalDateTime creationDate;
-    @Column(name = "commission_date", nullable = false, unique = false)
+    @Column(name = "commission_date", nullable = true, unique = false)
     @Schema(description = "the date asset was commissioned")
     private LocalDateTime commissionDate;
     @Column(name = "qr_code", nullable = false, unique = true)

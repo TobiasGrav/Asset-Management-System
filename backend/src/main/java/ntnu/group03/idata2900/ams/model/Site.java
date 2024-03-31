@@ -32,6 +32,23 @@ public class Site {
     @Schema(description = "assets that are located at the given site")
     private Set<Asset> assets = new LinkedHashSet<>();
 
+
+    /**
+     * Constructor with parameters
+     *
+     * @param name      site name
+     * @param clientId  site clientId
+     */
+    public Site(String name, String clientId) {
+        this.name = name;
+        this.clientId = clientId;
+        this.active = true;
+    }
+
+    public Site(){
+
+    }
+
     public int getId() {
         return this.id;
     }
