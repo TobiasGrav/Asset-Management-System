@@ -104,7 +104,7 @@ function Table() {
     };
 
     return (
-        <div style={{ margin: '20px' }}>
+        <div style={{ margin: '20px', width: '90%' }}>
             <DataTable
                 title="Assets"
                 columns={columns}

@@ -1,0 +1,81 @@
+.assetBody {
+  width: 100%;
+  display: flex;
+  overflow: scroll;
+  min-height: 100vh;
+  align-items: center;
+  padding-left: 5%;
+  padding-right: 5%;
+  flex-direction: column;
+}
+.nameInput {
+  width: 941px;
+  height: 102px;
+  font-size: 32px;
+  text-align: center;
+}
+.assetContainer {
+  gap: var(--dl-space-space-threeunits);
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.assetInfoContainer {
+  gap: 0;
+  flex: 0 0 auto;
+  width: 599px;
+  height: 819px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+.inputID {
+  width: 464px;
+  height: 41px;
+}
+.textArea {
+  width: 481px;
+  height: 149px;
+}
+.assetImage {
+  width: 520px;
+  height: 460px;
+  object-fit: cover;
+}
+.buttonContainer {
+  gap: 48px;
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.leftButtonContainer {
+  gap: 48px;
+  width: 50%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rightButtonContainer {
+  gap: 48px;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  margin-right: 25px;
+  background: none;
+  border: none;
+  color: #083F4C;
+}
+.button:hover {
+  color: #C9D7DD;
+  cursor: pointer;
+}
