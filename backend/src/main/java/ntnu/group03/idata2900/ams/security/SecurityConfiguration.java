@@ -61,8 +61,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/authenticate").permitAll()
-                        .requestMatchers("/api/assets").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/assets/{id}").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/assets").permitAll()
+                        .requestMatchers("/api/assets/{id}").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
