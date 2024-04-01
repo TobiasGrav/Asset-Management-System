@@ -65,10 +65,10 @@ const Main = (props) => {
     
     .then(response => {
       console.log(response);
-      setName(response.data.asset.category.name);
-      setDescription(response.data.asset.description);
-      setAttachmentLink(response.data.asset.datasheet.pdfUrl);
-      setAttachmentName(response.data.asset.datasheet.name);
+      setName(response.data.category.name);
+      setDescription(response.data.description);
+      setAttachmentLink(response.data.datasheet.pdfUrl);
+      setAttachmentName(response.data.datasheet.name);
     })
 
     .catch(error => {

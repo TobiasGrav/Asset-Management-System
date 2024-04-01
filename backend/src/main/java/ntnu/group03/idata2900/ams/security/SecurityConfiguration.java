@@ -1,5 +1,6 @@
 package ntnu.group03.idata2900.ams.security;
 
+import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,11 +58,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->authorizationManagerRequestMatcherRegistry
                         //.requestMatchers(HttpMethod.GET, "/").hasAuthority("admin")
                         //.requestMatchers("/").hasAnyRole("user", "ADMIN")
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/authenticate").permitAll()
-                        .requestMatchers("/api/assets").hasAnyAuthority("USER", "ADMIN")
-                        .requestMatchers("/api/assets/{id}").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/api/assets").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/assets/{id}").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
                         .anyRequest().authenticated())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

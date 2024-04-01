@@ -49,21 +49,15 @@ public class AssetController {
      * @return a ModelAndView containing asset in JSON format or page-not-found
      */
     @GetMapping("/{id}")
-    public ModelAndView getAsset(@PathVariable int id) {
+    public ResponseEntity<Asset> getAsset(@PathVariable int id) {
         Optional<Asset> asset = this.assetService.getAsset(id);
-        ModelAndView modelAndView;
         if (asset.isEmpty()) {
             logger.warn(ASSET_NOT_FOUND, id);
-            modelAndView = new ModelAndView("page-not-found");
-            modelAndView.setStatus(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             logger.info("Asset found with ID: {}", id);
-            // The asset is displayed in JSON format
-            modelAndView = new ModelAndView();
-            modelAndView.addObject("asset", asset.get());
-            modelAndView.setView(new MappingJackson2JsonView());
+            return new ResponseEntity<>(asset.get(), HttpStatus.OK);
         }
-        return modelAndView;
     }
 
 
@@ -95,12 +89,19 @@ public class AssetController {
      * or HTTP status code 404 (NOT_FOUND) if the asset with the given ID doesn't exist.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Optional<Asset>> updateAsset(@PathVariable int id, @RequestBody Optional<Asset> updatedAsset) {
+    public ResponseEntity<Asset> updateAsset(@PathVariable int id, @RequestBody Asset updatedAsset) {
         Optional<Asset> existingAsset = assetService.getAsset(id);
         if (existingAsset.isEmpty()) {
             logger.warn(ASSET_NOT_FOUND, id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
+            Asset assetToUpdate = existingAsset.get();
+            assetToUpdate.setName(updatedAsset.getName());
+            assetToUpdate.setDescription(updatedAsset.getDescription());
+            assetToUpdate.setCommissionDate(updatedAsset.getCommissionDate());
+            assetToUpdate.setCategory(updatedAsset.getCategory());
+            assetToUpdate.setSite(updatedAsset.getSite());
+            assetToUpdate.setDatasheet(updatedAsset.getDatasheet());
             assetService.updateAsset(updatedAsset);
             logger.info("Asset updated with ID: {}", id);
             return new ResponseEntity<>(updatedAsset, HttpStatus.OK);

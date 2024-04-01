@@ -36,8 +36,8 @@ public class AssetService {
         return this.assetRepository.save(asset);
     }
 
-    public void updateAsset(Optional<Asset> optionalAsset) {
-        optionalAsset.ifPresent(this.assetRepository::save);
+    public void updateAsset(Asset asset) {
+        this.assetRepository.save(asset);
     }
 
     public void deleteAsset(int id){
