@@ -82,7 +82,7 @@
   .mainContainer {
     flex: 0 0 auto;
     width: 100%;
-    height: max-content;
+    height: auto;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -109,7 +109,7 @@
   .rightContainer {
     flex: 0 0 auto;
     width: 85%;
-    height: 1400px;
+    height: auto;
     display: flex;
     position: relative;
     align-items: center;

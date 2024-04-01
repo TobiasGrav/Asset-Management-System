@@ -4,6 +4,7 @@ import './App.css';
 import Table from './components/table';
 import Asset from './components/Asset';
 import Home from './Pages/Home'
+import Login from './Pages/login'
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 
 
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/asset" element={<Home />} />
           <Route path="/asset/:id" element={<Asset />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
   );

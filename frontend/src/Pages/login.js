@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
+
 
 import './login.css';
 
 const Login = (props) => {
+
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const [email, setEmail] = useState("Jons@ntnu.no")
   const [password, setPassword] = useState("IDATA2024isbased")
@@ -18,19 +22,8 @@ const Login = (props) => {
     .then(response => {
       if(response.status == 200) {
         console.log("login successful")
-        axios.get("http://localhost:8080/", {
-          headers: {
-            Authorization: 'Bearer ' + response.data.response,
-            Accept: "application/json",
-            'Content-Type': "application/json"
-          }
-        })
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
+        setCookie('JWT', response.data.response, {maxAge: 12*3600});
+        window.location.href = '/asset/';
       }
       console.log(response);
     })

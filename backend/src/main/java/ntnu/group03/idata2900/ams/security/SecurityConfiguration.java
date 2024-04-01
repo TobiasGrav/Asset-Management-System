@@ -57,11 +57,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->authorizationManagerRequestMatcherRegistry
                         //.requestMatchers(HttpMethod.GET, "/").hasAuthority("admin")
                         //.requestMatchers("/").hasAnyRole("user", "ADMIN")
-                        .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/api/authenticate").permitAll()
-                        .requestMatchers("/api/assets").permitAll()
-                        .requestMatchers("/api/assets/{id}").permitAll()
+                        .requestMatchers("/api/assets").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/api/assets/{id}").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

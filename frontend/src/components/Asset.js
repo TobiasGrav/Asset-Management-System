@@ -7,8 +7,12 @@ import Table from './table'
 import './Asset.css'
 import { useParams } from 'react-router'
 import axios from 'axios'
+import { useCookies } from 'react-cookie'
 
 const Main = (props) => {
+
+  const [cookies, setCookie, removeCookie] = useCookies();
+
   const { id } = useParams();
   
   const [name, setName] = useState();
@@ -43,7 +47,12 @@ const Main = (props) => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/assets/' + id)
+    axios.get('http://localhost:8080/api/assets/' + id, {
+      headers: {
+        Authorization: 'Bearer ' + cookies.JWT,
+        Accept: "application/json",
+        'Content-Type': "application/json"
+      }})
     
     .then(response => {
       console.log(response);

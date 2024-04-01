@@ -3,8 +3,11 @@ import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 function Table() {
+    const [cookies, setCookie, removeCookie] = useCookies();
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -16,7 +19,12 @@ function Table() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/assets');
+            const response = await axios.get('http://localhost:8080/api/assets', {
+                headers: {
+                  Authorization: 'Bearer ' + cookies.JWT,
+                  Accept: "application/json",
+                  'Content-Type': "application/json"
+                }});
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
