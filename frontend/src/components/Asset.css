@@ -15,8 +15,7 @@
   text-align: center;
 }
 .assetContainer {
-  gap: var(--dl-space-space-threeunits);
-  flex: 0 0 auto;
+  gap: 48px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -26,7 +25,7 @@
   gap: 0;
   flex: 0 0 auto;
   width: 599px;
-  height: 819px;
+  height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;

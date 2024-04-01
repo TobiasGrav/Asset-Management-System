@@ -38,11 +38,20 @@ const Main = (props) => {
       descriptionReference.current.disabled = isEditing;
     }}, [isEditing]);
 
+  const back = () => {
+    window.location.href = '/asset/';
+  }
+
   const edit = () => {
     setIsEditing(true);
   }
 
   const cancel = () => {
+    setIsEditing(false);
+  }
+
+  const confirm = () => {
+    console.log("confimed edit");
     setIsEditing(false);
   }
 
@@ -126,6 +135,7 @@ const Main = (props) => {
           {!isEditing && <button 
             type="button" 
             className="button"
+            onClick={back}
             ref={ backButtonReference }
           >
             Back
@@ -148,7 +158,17 @@ const Main = (props) => {
             onClick={edit}
             ref={ editButtonReference }
           >
-            edit
+            Edit
+          </button>
+          }
+
+          {isEditing && <button 
+            type="button" 
+            className="button" 
+            onClick={confirm}
+            ref={ editButtonReference }
+          >
+            Confirm
           </button>
           }
         </div>
