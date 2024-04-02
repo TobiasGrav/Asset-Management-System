@@ -49,7 +49,6 @@ public class AssetService {
     }
 
     public void updateAsset(Asset asset) {
-        asset.setCreationDate(LocalDateTime.now());
         this.assetRepository.save(asset);
     }
 
