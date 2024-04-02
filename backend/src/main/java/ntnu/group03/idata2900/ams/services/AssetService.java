@@ -1,10 +1,12 @@
 package ntnu.group03.idata2900.ams.services;
 
+import ntnu.group03.idata2900.ams.dto.AssetDto;
 import ntnu.group03.idata2900.ams.model.Asset;
 import ntnu.group03.idata2900.ams.repositories.AssetRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +34,22 @@ public class AssetService {
         return this.assetRepository.findAll(PageRequest.of(0,n));
     }
 
-    public Asset createAsset(Asset asset){
-        return this.assetRepository.save(asset);
+    public Asset createAsset(AssetDto assetDto){
+        Asset newAsset = new Asset();
+        newAsset.setCreationDate(LocalDateTime.now());
+        newAsset.setActive(true);
+        newAsset.setName(assetDto.getName());
+        newAsset.setDescription(assetDto.getDescription());
+        newAsset.setQrCode(assetDto.getQrCode());
+        newAsset.setCategory(assetDto.getCategory());
+        newAsset.setSite(assetDto.getSite());
+        newAsset.setDatasheet(assetDto.getDatasheet());
+
+        return this.assetRepository.save(newAsset);
     }
 
     public void updateAsset(Asset asset) {
+        asset.setCreationDate(LocalDateTime.now());
         this.assetRepository.save(asset);
     }
 

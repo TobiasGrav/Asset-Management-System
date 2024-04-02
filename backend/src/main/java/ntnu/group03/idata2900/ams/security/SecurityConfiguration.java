@@ -20,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity
 public class SecurityConfiguration {
 
     /**
@@ -53,9 +52,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
         // Allow JWT authentication
         http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->authorizationManagerRequestMatcherRegistry
+                .authorizeHttpRequests(auth -> auth
                         //.requestMatchers(HttpMethod.GET, "/").hasAuthority("admin")
                         //.requestMatchers("/").hasAnyRole("user", "ADMIN")
                         .requestMatchers("/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
@@ -63,7 +60,9 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/api/assets").permitAll()
                         .requestMatchers("/api/assets/{id}").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/api/assets/**").permitAll()
+                        .anyRequest().permitAll())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

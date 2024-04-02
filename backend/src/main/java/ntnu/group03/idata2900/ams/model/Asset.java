@@ -2,6 +2,7 @@ package ntnu.group03.idata2900.ams.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -19,25 +20,32 @@ public class Asset {
     @Schema(description = "ID of the asset")
     private int id;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "name", nullable = false, unique = false)
     @Schema(description = "name of the asset")
     private String name;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "description", nullable = false, unique = false)
     @Schema(description = "description of the asset")
     private String description;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "creation_date", nullable = false, unique = false)
     @Schema(description = "the date asset was created")
     private LocalDateTime creationDate;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "commission_date", nullable = true, unique = false)
     @Schema(description = "the date asset was commissioned")
     private LocalDateTime commissionDate;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "qr_code", nullable = false, unique = true)
     @Schema(description = "the unique qr code of the asset")
     private String qrCode;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "active", nullable = false, unique = false, updatable = true)
     @Schema(description = "If user account is active or not")
     private boolean active;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -46,11 +54,13 @@ public class Asset {
     @Schema(description = "category of the given asset")
     private Category category;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "asset")
     @Schema(description = "services that are completed on asset")
     private Set<ServiceCompleted> servicesCompleted = new LinkedHashSet<>();
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -59,6 +69,7 @@ public class Asset {
     @Schema(description = "datasheet of the given asset")
     private Datasheet datasheet;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -67,6 +78,7 @@ public class Asset {
     @Schema(description = "site of the given asset")
     private Site site;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "asset")
     @Schema(description = "spare parts that builds / constructs given parent asset")

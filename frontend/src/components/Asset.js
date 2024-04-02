@@ -25,6 +25,8 @@ const Main = (props) => {
   const [commissionDate, setCommissionDate] = useState();
   const [site, setSite] = useState();
   const [datasheet, setDatasheet] = useState();
+  const [qrCode, setQrCode] = useState();
+  const [active, setActive] = useState();
 
   const [isEditing, setIsEditing] = useState(false);
   var hasLoaded = false;
@@ -67,7 +69,8 @@ const Main = (props) => {
     axios.get(`http://localhost:8080/api/assets/${id}`, {
       headers: {
         Authorization: `Bearer ${cookies.JWT}`,
-          Accept: "application/json"
+          Accept: "application/json",
+          'Accept-Encryption': 'gzip, deflate, br'
       },
     })
         .then(response => {
@@ -75,6 +78,8 @@ const Main = (props) => {
           setName(asset.name);
           setDescription(asset.description);
           setCommissionDate(asset.commissionDate);
+          setQrCode(asset.qrCode);
+          setActive(asset.active);
           setCategory(asset.category);
           setSite(asset.site);
           setDatasheet(asset.datasheet);
@@ -90,6 +95,8 @@ const Main = (props) => {
             name: name,
             description: description,
             commissionDate: commissionDate,
+            qrCode: qrCode,
+            active: active,
             category: category,
             site: site,
             datasheet: datasheet
@@ -101,6 +108,8 @@ const Main = (props) => {
                 headers: {
                     Authorization: `Bearer ${cookies.JWT}`,
                     'Content-Type': 'application/json',
+                    Accept: "application/json",
+                    'Accept-Encryption': 'gzip, deflate, br'
                 },
             });
 
