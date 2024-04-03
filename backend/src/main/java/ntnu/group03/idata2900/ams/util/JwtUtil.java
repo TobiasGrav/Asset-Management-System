@@ -2,11 +2,12 @@ package ntnu.group03.idata2900.ams.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -17,7 +18,7 @@ import java.util.function.Function;
 public class JwtUtil {
 
     //@Value("${jwt_secret_key}")
-    private String SECRET_KEY = "1234";
+    private String SECRET_KEY = "1234@£fdsuifsdufsduåpåsdlvødslkfdgpiosdhgopreqht3498yt34yud!&!%#&##¤¤%%%";
     private static final String JWT_AUTH_KEY = "roles";
 
     /**
@@ -29,7 +30,7 @@ public class JwtUtil {
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String userEmail = extractUser(token);
-        return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return userDetails != null && userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     /**
@@ -46,12 +47,17 @@ public class JwtUtil {
         final long TIME_WHEN_USER_GETS_KICKED = TIME_NOW + (MILLISECONDS_IN_HOUR * HOURS_WHICH_TOKEN_LASTS);
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .subject(userDetails.getUsername())
                 .claim(JWT_AUTH_KEY, userDetails.getAuthorities())
-                .setIssuedAt(new Date(TIME_NOW))
-                .setExpiration(new Date(TIME_WHEN_USER_GETS_KICKED))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .issuedAt(new Date(TIME_NOW))
+                .expiration(new Date(TIME_WHEN_USER_GETS_KICKED))
+                .signWith(getSigningKey())
                 .compact();
+    }
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, "HmacSHA256");
     }
 
     /**
@@ -93,7 +99,7 @@ public class JwtUtil {
      * @return claims
      */
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
     }
 
     /**

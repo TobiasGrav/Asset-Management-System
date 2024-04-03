@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,9 @@ import java.io.IOException;
 /**
  * Filter that is applied to HTTP request that checks for a valid JWT token
  */
+@Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
-    private final static Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class.getSimpleName());
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -62,7 +62,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
         } catch (JwtException ex) {
-            logger.info("Error while parsing JWT token: " + ex.getMessage());
+            log.info("Error while parsing JWT token: " + ex.getMessage());
         }
         filterChain.doFilter(request, response);
     }

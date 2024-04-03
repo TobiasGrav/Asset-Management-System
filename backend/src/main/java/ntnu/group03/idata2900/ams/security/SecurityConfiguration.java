@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -20,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     /**
@@ -51,17 +51,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
         // Allow JWT authentication
-        http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+        http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers(HttpMethod.GET, "/").hasAuthority("admin")
-                        //.requestMatchers("/").hasAnyRole("user", "ADMIN")
                         .requestMatchers("/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/api/assets").permitAll()
                         .requestMatchers("/api/assets/{id}").permitAll()
                         .requestMatchers("/api/assets/**").permitAll()
-                        .anyRequest().permitAll())
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
