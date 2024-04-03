@@ -53,8 +53,8 @@ public class SecurityConfiguration {
         // Allow JWT authentication
         http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/api/assets").permitAll()
                         .requestMatchers("/api/assets/{id}").permitAll()
