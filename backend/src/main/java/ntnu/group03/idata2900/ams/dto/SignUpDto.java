@@ -1,8 +1,13 @@
 package ntnu.group03.idata2900.ams.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents data from user needed to sign up
  */
+@Setter
+@Getter
 public class SignUpDto {
 
     private String companyId;
@@ -34,59 +39,4 @@ public class SignUpDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getCompanyId() {
-        return this.companyId;
-    }
-
-    public String getGroupId() {
-        return this.groupId;
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 }

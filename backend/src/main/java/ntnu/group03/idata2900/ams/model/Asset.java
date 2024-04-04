@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.AssetDto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -86,6 +87,13 @@ public class Asset {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
+        this.active = true;
+    }
+
+    public Asset(AssetDto assetDto){
+        this.name = assetDto.getName();
+        this.description = assetDto.getDescription();
+        this.creationDate = assetDto.getCreationDate();
         this.active = true;
     }
 

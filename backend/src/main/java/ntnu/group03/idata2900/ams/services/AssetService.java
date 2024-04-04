@@ -35,14 +35,7 @@ public class AssetService {
     }
 
     public Asset createAsset(AssetDto assetDto){
-        Asset newAsset = new Asset();
-        newAsset.setCreationDate(LocalDateTime.now());
-        newAsset.setActive(true);
-        newAsset.setName(assetDto.getName());
-        newAsset.setDescription(assetDto.getDescription());
-        newAsset.setCategory(assetDto.getCategory());
-        newAsset.setDatasheet(assetDto.getDatasheet());
-
+        Asset newAsset = new Asset(assetDto);
         return this.assetRepository.save(newAsset);
     }
 
