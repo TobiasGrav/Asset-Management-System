@@ -1,9 +1,14 @@
 package ntnu.group03.idata2900.ams.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Schema(description = "Comment on service completed.", name = "ServiceComment")
 @Entity
 public class ServiceComment {
@@ -14,6 +19,7 @@ public class ServiceComment {
     @Schema(description = "ID of the service comment")
     private int id;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -22,6 +28,7 @@ public class ServiceComment {
     @Schema(description = "the completed service that is to be commented on")
     private ServiceCompleted serviceCompleted;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -30,27 +37,4 @@ public class ServiceComment {
     @Schema(description = "the comment to be commented on service completed")
     private Comment comment;
 
-    public int getId() {
-        return this.id;
-    }
-
-    public ServiceCompleted getServiceCompleted() {
-        return this.serviceCompleted;
-    }
-
-    public Comment getComment() {
-        return this.comment;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setServiceCompleted(ServiceCompleted serviceCompleted) {
-        this.serviceCompleted = serviceCompleted;
-    }
-
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
 }

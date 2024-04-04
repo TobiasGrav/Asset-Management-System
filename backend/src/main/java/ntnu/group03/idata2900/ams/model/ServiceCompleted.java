@@ -2,13 +2,18 @@ package ntnu.group03.idata2900.ams.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Schema(description = "Services completed on a given asset", title = "service completed")
 @Entity
 public class ServiceCompleted {
@@ -19,25 +24,26 @@ public class ServiceCompleted {
     @Schema(description = "ID of the serviceCompleted")
     private int id;
 
-    @Column(name = "time_completed", nullable = false, unique = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "time_completed", nullable = true, unique = false)
     @Schema(description = "Time completed when service is done")
     private LocalDateTime timeCompleted;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "last_service", nullable = true, unique = false)
     @Schema(description = "Time when last service is done")
     private LocalDateTime lastService;
-    @Column(name = "number_Of_Services_Done", nullable = true, unique = false)
-    @Schema(description = "Number of how many services is done on given asset")
-    private int numberOfServicesDone;
 
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
-            @JoinColumn(name = "asset_id", referencedColumnName = "id")
+            @JoinColumn(name = "assetSite_id", referencedColumnName = "id")
     )
-    @Schema(description = "asset the service was completed on")
-    private Asset asset;
+    @Schema(description = "assetSite the service was completed on")
+    private AssetSite assetSite;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -46,6 +52,7 @@ public class ServiceCompleted {
     @Schema(description = "service that was completed")
     private Service service;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -54,73 +61,11 @@ public class ServiceCompleted {
     @Schema(description = "user that completed the service")
     private User user;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "serviceCompleted")
     @Schema(description = "comments connected to given services")
     private Set<ServiceComment> serviceComments = new LinkedHashSet<>();
 
 
-    public int getId() {
-        return this.id;
-    }
-
-    public LocalDateTime getTimeCompleted() {
-        return this.timeCompleted;
-    }
-
-    public LocalDateTime getLastService() {
-        return this.lastService;
-    }
-
-    public int getNumberOfServicesDone() {
-        return this.numberOfServicesDone;
-    }
-
-    public Asset getAsset() {
-        return this.asset;
-    }
-
-    public Service getService() {
-        return this.service;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public Set<ServiceComment> getServiceComments() {
-        return this.serviceComments;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setTimeCompleted(LocalDateTime timeCompleted) {
-        this.timeCompleted = timeCompleted;
-    }
-
-    public void setLastService(LocalDateTime lastService) {
-        this.lastService = lastService;
-    }
-
-    public void setNumberOfServicesDone(int numberOfServicesDone) {
-        this.numberOfServicesDone = numberOfServicesDone;
-    }
-
-    public void setAsset(Asset asset) {
-        this.asset = asset;
-    }
-
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setServiceComments(Set<ServiceComment> serviceComments) {
-        this.serviceComments = serviceComments;
-    }
 }

@@ -12,38 +12,31 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Schema(description = "Categories which assets may have.", name = "category")
 @Entity
-public class Category {
+public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    @Schema(description = "ID of the category")
+    @Schema(description = "ID of the company")
     private int id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "name", nullable = false, unique = true)
-    @Schema(description = "Name of the category")
+    @Schema(description = "Name of the company")
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
-    @OneToMany(mappedBy = "category")
-    @Schema(description = "assets with the given category")
-    private Set<Asset> assets = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "company")
+    @Schema(description = "sites with the given company")
+    private Set<Site> sites = new LinkedHashSet<>();
 
-    /**
-     * Constructor with parameters
-     *
-     * @param name category name
-     */
-    public Category(String name) {
-        this.name = name;
+    public Company() {
     }
 
-    public Category(){
-
+    public Company(String name) {
+        this.name = name;
     }
 
 }

@@ -40,9 +40,7 @@ public class AssetService {
         newAsset.setActive(true);
         newAsset.setName(assetDto.getName());
         newAsset.setDescription(assetDto.getDescription());
-        newAsset.setQrCode(assetDto.getQrCode());
         newAsset.setCategory(assetDto.getCategory());
-        newAsset.setSite(assetDto.getSite());
         newAsset.setDatasheet(assetDto.getDatasheet());
 
         return this.assetRepository.save(newAsset);

@@ -2,9 +2,14 @@ package ntnu.group03.idata2900.ams.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Schema(description = "Site of the asset.", name = "SparePart")
 @Entity
 public class SparePart {
@@ -15,13 +20,15 @@ public class SparePart {
     @Schema(description = "ID of the spare part")
     private int id;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "position_diagram_url", nullable = false, unique = false)
     @Schema(description = "url of the position diagram to the spare part")
     private String positionDiagramUrl;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "number_of_parts", nullable = false, unique = false)
     @Schema(description = "number of spare parts")
     private int numberOfParts;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -30,35 +37,12 @@ public class SparePart {
     @Schema(description = "asset that contains given spare parts")
     private Asset asset;
 
-    public int getId() {
-        return this.id;
+    public SparePart(){
+
     }
 
-    public String getPositionDiagramUrl() {
-        return this.positionDiagramUrl;
-    }
-
-    public int getNumberOfParts() {
-        return this.numberOfParts;
-    }
-
-    public Asset getAsset() {
-        return this.asset;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setPositionDiagramUrl(String positionDiagramUrl) {
+    public SparePart(String positionDiagramUrl, int numberOfParts) {
         this.positionDiagramUrl = positionDiagramUrl;
-    }
-
-    public void setNumberOfParts(int numberOfParts) {
         this.numberOfParts = numberOfParts;
-    }
-
-    public void setAsset(Asset asset) {
-        this.asset = asset;
     }
 }

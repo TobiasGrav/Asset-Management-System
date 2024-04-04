@@ -1,12 +1,17 @@
 package ntnu.group03.idata2900.ams.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Schema(description = "Datasheet to a given asset.", name = "datasheet")
 @Entity
 public class Datasheet {
@@ -17,16 +22,20 @@ public class Datasheet {
     @Schema(description = "ID of the datasheet")
     private int id;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "name", nullable = false, unique = true)
     @Schema(description = "name of the datasheet")
     private String name;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "reference_number", nullable = false, unique = true)
     @Schema(description = "reference number of the datasheet")
     private String referenceNumber;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "pdf_url", nullable = false, unique = true)
     @Schema(description = "url to the datasheet pdf")
     private String pdfUrl;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "datasheet")
     @Schema(description = "assets that has the given datasheet")
@@ -50,43 +59,4 @@ public class Datasheet {
 
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getReferenceNumber() {
-        return this.referenceNumber;
-    }
-
-    public String getPdfUrl() {
-        return this.pdfUrl;
-    }
-
-    public Set<Asset> getAssets() {
-        return this.assets;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
-    }
-
-    public void setPdfUrl(String pdfUrl) {
-        this.pdfUrl = pdfUrl;
-    }
-
-    public void setAssets(Set<Asset> assets) {
-        this.assets = assets;
-    }
 }

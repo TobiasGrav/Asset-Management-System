@@ -1,12 +1,17 @@
 package ntnu.group03.idata2900.ams.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Schema(description = "Roles which users may have.", name = "roles")
 @Entity
 public class Role {
@@ -17,10 +22,12 @@ public class Role {
     @Schema(description = "ID of the role")
     private int id;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "name", nullable = false, unique = true)
     @Schema(description = "Name of the role")
     private String name;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @ManyToMany(mappedBy = "roles")
     @Schema(description = "Users with the given role")
@@ -41,51 +48,4 @@ public class Role {
         this.name = name;
     }
 
-    /**
-     * returns id
-     */
-    public int getId() {
-        return this.id;
-    }
-
-    /**
-     * sets the name of the id field to given value.
-     *
-     * @param id id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * returns users with role.
-     */
-    public Set<User> getUsers() {
-        return this.users;
-    }
-
-    /**
-     * Sets the value of the users field to given value.
-     *
-     * @param users users
-     */
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    /**
-     * returns name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Sets the value fo the name filed to given value.
-     *
-     * @param name name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 }

@@ -101,7 +101,6 @@ public class AssetController {
             Asset assetToUpdate = existingAsset.get();
             assetToUpdate.setName(updatedAsset.getName());
             assetToUpdate.setDescription(updatedAsset.getDescription());
-            assetToUpdate.setCommissionDate(updatedAsset.getCommissionDate());
             assetToUpdate.setActive(updatedAsset.isActive());
             assetService.updateAsset(assetToUpdate);
             logger.info("Asset updated with ID: {}", id);

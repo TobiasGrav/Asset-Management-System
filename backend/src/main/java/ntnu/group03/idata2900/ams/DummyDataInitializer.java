@@ -140,86 +140,62 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             Asset asset1 = new Asset(
                     "Pump",
                     "A random pump",
-                    LocalDateTime.now(),
-                    null,
-                    "12345");
+                    LocalDateTime.now());
 
             Asset asset2 = new Asset(
                     "Vent",
                     "A random vent",
-                    LocalDateTime.now(),
-                    null,
-                    "3456");
+                    LocalDateTime.now());
 
             Asset asset3 = new Asset(
                     "Filter",
                     "A random filter",
-                    LocalDateTime.now(),
-                    null,
-                    "5678");
+                    LocalDateTime.now());
 
             Asset asset4 = new Asset(
                     "Pump123",
                     "A random pump321",
-                    LocalDateTime.now(),
-                    null,
-                    "1234vcxsgsg5");
+                    LocalDateTime.now());
 
             Asset asset5 = new Asset(
                     "Vent3333",
                     "A random vent2222",
-                    LocalDateTime.now(),
-                    null,
-                    "34vcxvxc563333");
+                    LocalDateTime.now());
 
             Asset asset6 = new Asset(
                     "Filter6565",
                     "A random filter5455",
-                    LocalDateTime.now(),
-                    null,
-                    "567vcxggvcx8");
+                    LocalDateTime.now());
 
             Asset asset7 = new Asset(
                     "Pump656565",
                     "A random pump656565",
-                    LocalDateTime.now(),
-                    null,
-                    "123vjjvx45");
+                    LocalDateTime.now());
 
             Asset asset8 = new Asset(
                     "Vent321321321",
                     "A random vent12312321",
-                    LocalDateTime.now(),
-                    null,
-                    "3452342356");
+                    LocalDateTime.now());
 
             Asset asset9 = new Asset(
                     "Filter321321321",
                     "A random filter321321321",
-                    LocalDateTime.now(),
-                    null,
-                    "5665453478");
+                    LocalDateTime.now());
 
             Asset asset10 = new Asset(
                     "Pump454545",
                     "A random pump321321321",
-                    LocalDateTime.now(),
-                    null,
-                    "12456798345");
+                    LocalDateTime.now());
 
             Asset asset11 = new Asset(
                     "Vent54654654",
                     "A random vent654654654",
-                    LocalDateTime.now(),
-                    null,
-                    "3233456");
+                    LocalDateTime.now());
 
             Asset asset12 = new Asset(
                     "Filter654654",
                     "A random filter5454665",
-                    LocalDateTime.now(),
-                    null,
-                    "567823");
+                    LocalDateTime.now());
 
             asset1.setCategory(category1);
             asset2.setCategory(category2);
@@ -246,19 +222,6 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             asset10.setDatasheet(datasheet1);
             asset11.setDatasheet(datasheet2);
             asset12.setDatasheet(datasheet3);
-
-            asset1.setSite(site1);
-            asset2.setSite(site2);
-            asset3.setSite(site3);
-            asset4.setSite(site1);
-            asset5.setSite(site2);
-            asset6.setSite(site3);
-            asset7.setSite(site1);
-            asset8.setSite(site2);
-            asset9.setSite(site3);
-            asset10.setSite(site1);
-            asset11.setSite(site2);
-            asset12.setSite(site3);
 
             assetRepository.save(asset1);
             assetRepository.save(asset2);

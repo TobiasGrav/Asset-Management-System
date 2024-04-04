@@ -8,34 +8,30 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Setter
 @Getter
-@Schema(description = "service to be done on an asset.", name = "service")
 @Entity
-public class Service {
+public class AssetSite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    @Schema(description = "ID of the service")
+    @Schema(description = "ID of the assetSite")
     private int id;
 
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "description", nullable = false, unique = false)
-    @Schema(description = "description of the service")
-    private String description;
-    @Column(name = "interval_name", nullable = false, unique = false)
-    @Schema(description = "interval of the service")
-    private String intervalName;
+    @Column(name = "name", nullable = false, unique = true)
+    @Schema(description = "Commission date of the assetSite")
+    private LocalDateTime commissionDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
-    @OneToMany(mappedBy = "service")
-    @Schema(description = "services completed on asset")
+    @OneToMany(mappedBy = "assetSite")
+    @Schema(description = "services completed on assetSite")
     private Set<ServiceCompleted> servicesCompleted = new LinkedHashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -44,16 +40,25 @@ public class Service {
     @JoinColumns(
             @JoinColumn(name = "asset_id", referencedColumnName = "id")
     )
-    @Schema(description = "asset of the given service")
+    @Schema(description = "asset of the given assetSite")
     private Asset asset;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonManagedReference
+    @ManyToOne()
+    @JoinColumns(
+            @JoinColumn(name = "site_id", referencedColumnName = "id")
+    )
+    @Schema(description = "site of the given assetSite")
+    private Site site;
 
-    public Service() {
+    public AssetSite(){
 
     }
 
-    public Service(String description, String intervalName) {
-        this.description = description;
-        this.intervalName = intervalName;
+    public AssetSite(LocalDateTime commissionDate) {
+        this.commissionDate = commissionDate;
     }
 }
+
+
