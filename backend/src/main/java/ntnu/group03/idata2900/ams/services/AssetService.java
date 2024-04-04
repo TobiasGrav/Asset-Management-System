@@ -36,7 +36,6 @@ public class AssetService {
 
     public Asset createAsset(AssetDto assetDto){
         Asset newAsset = new Asset(assetDto);
-        newAsset.setCreationDate(LocalDateTime.now());
         return this.assetRepository.save(newAsset);
     }
 

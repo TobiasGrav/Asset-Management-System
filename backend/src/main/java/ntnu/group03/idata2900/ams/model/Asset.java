@@ -93,7 +93,7 @@ public class Asset {
     public Asset(AssetDto assetDto){
         this.name = assetDto.getName();
         this.description = assetDto.getDescription();
-        this.creationDate = assetDto.getCreationDate();
+        this.creationDate = LocalDateTime.now();
         this.datasheet = assetDto.getDatasheet();
         this.category = assetDto.getCategory();
         this.active = true;
