@@ -1,9 +1,12 @@
 package ntnu.group03.idata2900.ams.controllers;
 
+import ntnu.group03.idata2900.ams.dto.AssetDto;
 import ntnu.group03.idata2900.ams.model.Asset;
+import ntnu.group03.idata2900.ams.repositories.AssetRepository;
 import ntnu.group03.idata2900.ams.services.AssetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +71,7 @@ public class AssetController {
      * @return ResponseEntity containing the created asset and HTTP status code 201 (CREATED).
      */
     @PostMapping
-    public ResponseEntity<Asset> createAsset(@RequestBody Asset asset) {
+    public ResponseEntity<Asset> createAsset(@RequestBody AssetDto asset) {
         try {
             Asset createdAsset = assetService.createAsset(asset);
             logger.info("Asset created with ID: {}", createdAsset.getId());
@@ -89,7 +92,7 @@ public class AssetController {
      * or HTTP status code 404 (NOT_FOUND) if the asset with the given ID doesn't exist.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Asset> updateAsset(@PathVariable int id, @RequestBody Asset updatedAsset) {
+    public ResponseEntity<Asset> updateAsset(@PathVariable int id, @RequestBody AssetDto updatedAsset) {
         Optional<Asset> existingAsset = assetService.getAsset(id);
         if (existingAsset.isEmpty()) {
             logger.warn(ASSET_NOT_FOUND, id);
@@ -99,12 +102,10 @@ public class AssetController {
             assetToUpdate.setName(updatedAsset.getName());
             assetToUpdate.setDescription(updatedAsset.getDescription());
             assetToUpdate.setCommissionDate(updatedAsset.getCommissionDate());
-            assetToUpdate.setCategory(updatedAsset.getCategory());
-            assetToUpdate.setSite(updatedAsset.getSite());
-            assetToUpdate.setDatasheet(updatedAsset.getDatasheet());
-            assetService.updateAsset(updatedAsset);
+            assetToUpdate.setActive(updatedAsset.isActive());
+            assetService.updateAsset(assetToUpdate);
             logger.info("Asset updated with ID: {}", id);
-            return new ResponseEntity<>(updatedAsset, HttpStatus.OK);
+            return new ResponseEntity<>(assetToUpdate, HttpStatus.OK);
         }
     }
 

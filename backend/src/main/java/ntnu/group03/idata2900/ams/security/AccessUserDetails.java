@@ -6,16 +6,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class AccessUserDetails implements UserDetails {
 
     private final String email;
     private final String password;
     private final boolean active;
-    private final Set<GrantedAuthority> authorities = new HashSet<>();
+    private final List<GrantedAuthority> authorities = new LinkedList<>();
 
     /**
      * Creates a new instance of AccessUserDetails.
