@@ -21,7 +21,7 @@
   justify-content: center;
 }
 .assetInfoContainer {
-  gap: 0;
+  gap: 10px;
   flex: 0 0 auto;
   width: 599px;
   height: auto;

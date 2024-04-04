@@ -35,7 +35,7 @@ const Main = ({children}) => {
             src={require('./resources/assetmanagementsystem.png')}
             className="logoImage"
           />
-          <span className="logoText">Asset management database</span>
+          <span className="logoText">Asset Management Database</span>
         </div>
         <div className="bookmarkContainer">
           

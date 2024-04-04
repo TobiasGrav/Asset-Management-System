@@ -11,6 +11,7 @@ import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import HTTPRequest from '../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
+import QRCode from 'qrcode.react'
 
 const Main = (props) => {
 
@@ -70,6 +71,7 @@ const Main = (props) => {
 
   const cancel = () => {
     setIsEditing(false);
+
   }
 
   const confirm = () => {
@@ -118,6 +120,7 @@ const Main = (props) => {
           console.error("Error updating the asset:", error);
           alert("Failed to update the asset.");
       }
+      setIsEditing(false);
   };
 
   // lets the user input values
@@ -133,18 +136,22 @@ const Main = (props) => {
   return (
     <div className="assetBody">
       <input type="text" placeholder="Name" name={name} value={name} onChange={handleNameChange} className="nameInput" disabled={!isEditing}/>
+      <br></br>
       <div className="assetContainer">
         <div className="assetInfoContainer">
           <text>Asset ID</text>
-          <textarea placeholder="Enter Asset ID" value={id} disabled={isEditing}></textarea>
-          <span><text>Site ID</text><text>Location</text><text>Address</text><br></br></span>
-          <span><input placeholder="Enter Asset ID" value={site?.id} disabled={isEditing}></input><input placeholder="Enter Site Location" value={site?.name} disabled={isEditing}></input><br></br></span>
+          <input placeholder="Enter Asset ID" value={id} disabled={true}></input>
+          <span><text style={{marginRight:"130px"}}>Site ID</text><text>Location</text><br></br></span>
+          <span><input placeholder="Enter Asset ID" value={site?.id} disabled={!isEditing}></input><input placeholder="Enter Site Location" value={site?.name} disabled={!isEditing}></input><br></br></span>
           <span><span>Description</span><br></br></span>
           <input type="text" placeholder="Enter Description" name={description} value={description} onChange={handleDescriptionChange} className="inputID" disabled={!isEditing}/>
           <span><span>Asset Datasheet</span><br></br></span>
           <a href={attachmentLink} target="_blank" rel="noreferrer noopener">
             {attachmentName}.pdf
           </a>
+          <br></br>
+          <text>Asset QR Code</text>
+          <QRCode value={"http://localhost:8080/assets/" + id} size={256} level={"H"} bgColor={"#ffffff"} fgColor={"#000000"} includeMargin={true}/>
         </div>
         <img alt="image" src={require("../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>

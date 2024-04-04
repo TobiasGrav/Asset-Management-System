@@ -68,7 +68,7 @@ function Table() {
     const customStyles = {
         headCells: {
             style: {
-                backgroundColor: '#f2f2f2',
+                backgroundColor: '#E7EDF0',
                 color: '#333',
                 paddingLeft: '12px',
                 paddingRight: '12px',
@@ -85,7 +85,10 @@ function Table() {
         rows: {
             style: {
                 '&:nth-of-type(even)': {
-                    backgroundColor: '#f2f2f2', // Even rows background color
+                    backgroundColor: '#E7EDF0', // Even rows background color
+                },
+                '&:nth-of-type(odd)': {
+                    backgroundColor: '#F9FBFC', // Even rows background color
                 },
                 '&:hover': {
                     backgroundColor: '#ddd', // Hover row background color
@@ -99,7 +102,7 @@ function Table() {
             },
             pageButtonsStyle: {
                 borderRadius: '4px', // Pagination buttons border radius
-                backgroundColor: '#f2f2f2', // Pagination buttons background color
+                backgroundColor: '#E7EDF0', // Pagination buttons background color
                 borderColor: '#ddd', // Pagination buttons border color
                 color: '#333', // Pagination buttons text color
                 height: 'auto',
@@ -113,8 +116,9 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Asset Overview</h1></div>
+            <input placeholder='Search for asset' style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
             <DataTable
-                title="Assets"
                 columns={columns}
                 data={data}
                 progressPending={loading}
