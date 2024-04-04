@@ -1,13 +1,12 @@
 .body {
     width: 100%;
     display: flex;
-    overflow: auto;
-    min-height: 100vh;
+    height: 100%;
     align-items: center;
     flex-direction: column;
     justify-content: flex-start;
-    background-color: #01171C;
-    overflow: scroll;
+    background-color: #C9D7DD;
+    overflow-y: scroll;
   }
   .navbarContainer {
     flex: 0 0 auto;
@@ -42,7 +41,7 @@
   .bookmarkContainer {
     gap: 16px;
     flex: 0 0 auto;
-    width: 60%;
+    width: 70%;
     height: 75px;
     display: flex;
     align-items: flex-end;
@@ -52,9 +51,8 @@
   .utilityIcon {
     width: auto;
     margin-top: 0px;
-    object-fit: cover;
     margin-left: 16px;
-    margin-right: 0px;
+    margin-right: 16px;
     margin-bottom: 0px;
   }
   .navText {
@@ -72,11 +70,10 @@
   }
   .utilityContainer {
     flex: 0 0 auto;
-    width: 20%;
+    width: auto;
     height: 75px;
     display: flex;
     align-items: center;
-    padding-right: 100px;
     justify-content: flex-end;
   }
   .mainContainer {
@@ -109,12 +106,21 @@
   .rightContainer {
     flex: 0 0 auto;
     width: 85%;
+    min-height: 1000px;
+    padding-top: 2%;
     height: auto;
     display: flex;
     position: relative;
     align-items: center;
     flex-direction: column;
-    background-color: #003341;
+    background-color: #F9FBFC;
+    border-radius: 20px 0px 0px 0px;
+  }
+
+  .bottomContainer {
+    display: flex;
+    align-items: center;
+    height: 100px;
   }
 
   

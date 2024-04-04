@@ -8,15 +8,17 @@ import './Asset.css'
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom'
+import HTTPRequest from '../tools/HTTPRequest'
+import { jwtDecode } from 'jwt-decode'
 
 const Main = (props) => {
 
+  // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
 
+  // information variables
   const { id } = useParams();
-
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [attachmentLink, setAttachmentLink] = useState();
@@ -26,8 +28,9 @@ const Main = (props) => {
   const [site, setSite] = useState();
   const [datasheet, setDatasheet] = useState();
 
+  // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
-  var hasLoaded = false;
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const nameReference = useRef(null);
   const idReference = useRef(null);
@@ -37,13 +40,25 @@ const Main = (props) => {
   const deleteButtonReference = useRef(null);
   const cancelButtonReference = useRef(null);
 
+  // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
+  useEffect(() => {
+    jwtDecode(cookies.JWT).roles.forEach(role => {
+      if(role.authority == "ADMIN") {
+            setIsAdmin(true);
+      }
+    })
+  })
+
+
+  // Prevents the user from inputing values when not in editing mode.
   useEffect(() => {
     if(descriptionReference.current != null) {
       nameReference.current.disabled = isEditing;
       idReference.current.disabled = isEditing;
       descriptionReference.current.disabled = isEditing;
     }}, [isEditing]);
-
+    
+  // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
   const back = () => {
     navigate('/asset/');
@@ -62,59 +77,55 @@ const Main = (props) => {
     setIsEditing(false);
   }
 
+  // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    // Fetch asset details on component mount
-    axios.get(`http://localhost:8080/api/assets/${id}`, {
-      headers: {
-        Authorization: `Bearer ${cookies.JWT}`,
-          Accept: "application/json"
-      },
+    HTTPRequest.get(`http://localhost:8080/api/assets/${id}`, cookies.JWT)
+    .then(response => {
+      console.log(response);
+      let asset = response.data;
+      setName(asset.name);
+      setDescription(asset.description);
+      setCommissionDate(asset.commissionDate);
+      setCategory(asset.category);
+      setSite(asset.site);
+      setAttachmentName(asset.datasheet.name);
+      setAttachmentLink(asset.datasheet.pdfUrl);
     })
-        .then(response => {
-          const asset = response.data;
-          setName(asset.name);
-          setDescription(asset.description);
-          setCommissionDate(asset.commissionDate);
-          setCategory(asset.category);
-          setSite(asset.site);
-          setDatasheet(asset.datasheet);
-        })
-        .catch(error => console.error("Fetching asset failed", error));
+    .catch(error => {console.log(error)});
   }, [id, cookies.JWT]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const updatedAsset = {
-            id: id,
-            name: name,
-            description: description,
-            commissionDate: commissionDate,
-            category: category,
-            site: site,
-            datasheet: datasheet
-        };
-        console.log(updatedAsset);
-
-        try {
-            await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
-                headers: {
-                    Authorization: `Bearer ${cookies.JWT}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            alert("Asset updated successfully!");
-        } catch (error) {
-            console.error("Error updating the asset:", error);
-            alert("Failed to update the asset.");
-        }
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      const updatedAsset = {
+          id: id,
+          name: name,
+          description: description,
+          commissionDate: commissionDate,
+          category: category,
+          site: site,
+          datasheet: datasheet
+      };
+      console.log(updatedAsset);
+      try {
+          await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
+              headers: {
+                  Authorization: `Bearer ${cookies.JWT}`,
+                  'Content-Type': 'application/json',
+              },
+          });
+          alert("Asset updated successfully!");
+      } catch (error) {
+          console.error("Error updating the asset:", error);
+          alert("Failed to update the asset.");
+      }
   };
 
+  // lets the user input values
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
 
+  // lets the user input values
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
@@ -124,8 +135,10 @@ const Main = (props) => {
       <input type="text" placeholder="Name" name={name} value={name} onChange={handleNameChange} className="nameInput" disabled={!isEditing}/>
       <div className="assetContainer">
         <div className="assetInfoContainer">
-          <span><span>Asset ID</span><br></br></span>
+          <text>Asset ID</text>
           <textarea placeholder="Enter Asset ID" value={id} disabled={isEditing}></textarea>
+          <span><text>Site ID</text><text>Location</text><text>Address</text><br></br></span>
+          <span><input placeholder="Enter Asset ID" value={site?.id} disabled={isEditing}></input><input placeholder="Enter Site Location" value={site?.name} disabled={isEditing}></input><br></br></span>
           <span><span>Description</span><br></br></span>
           <input type="text" placeholder="Enter Description" name={description} value={description} onChange={handleDescriptionChange} className="inputID" disabled={!isEditing}/>
           <span><span>Asset Datasheet</span><br></br></span>
@@ -133,7 +146,7 @@ const Main = (props) => {
             {attachmentName}.pdf
           </a>
         </div>
-        <img alt="image" src="/metabokompressor-500h.png" className="assetImage"/>
+        <img alt="image" src={require("../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">
@@ -147,7 +160,7 @@ const Main = (props) => {
           {isEditing &&
               <button type="button" className="button" onClick={cancel} ref={ cancelButtonReference }>Cancel</button>}
 
-          {!isEditing &&
+          {!isEditing && isAdmin &&
               <button type="button" className="button" onClick={edit} ref={ editButtonReference }>Edit</button>}
 
           {isEditing &&

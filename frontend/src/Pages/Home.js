@@ -4,11 +4,24 @@ import { Helmet } from 'react-helmet'
 
 import Table from '../components/table'
 import Asset from '../components/Asset'
+import { jwtDecode } from 'jwt-decode'
 
 import './Home.css'
-import { Route, Router, Routes } from 'react-router'
+import { Route, Router, Routes, useNavigate } from 'react-router'
+import { useCookies } from 'react-cookie'
 
-const Main = (props) => {
+const Main = ({children}) => {
+
+  const [cookies, setCookie, deleteCookie] = useCookies();
+
+  const navigate = useNavigate();
+
+  console.log(jwtDecode(cookies.JWT));
+
+  const asset = () => {
+    navigate("/asset/");
+  }
+
   return (
     <div className="body">
       <Helmet>
@@ -49,6 +62,7 @@ const Main = (props) => {
           <button
             type="button"
             className="navButton"
+            onClick={asset}
           >
             Asset
           </button>
@@ -66,10 +80,7 @@ const Main = (props) => {
           </button>
         </div>
         <div className="rightContainer">
-          <Routes>
-            <Route path='' element={<Table/>}/>
-            <Route path='/:id' element={<Asset/>}/>
-          </Routes>
+          {children}
         </div>
       </div>
       <div className="bottomContainer">
