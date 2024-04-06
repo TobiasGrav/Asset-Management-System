@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Schema(description = "Site of the asset.", name = "site")
+@Schema(description = "Site represents a boat where all the assets of that given boat is located", name = "site")
 @Entity
 public class Site {
 
@@ -28,17 +28,13 @@ public class Site {
     @Schema(description = "name of the site")
     private String name;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "client_id", nullable = false, unique = false)
-    @Schema(description = "client id connected to the site")
-    private String clientId;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "active", nullable = false, unique = false, updatable = true)
     @Schema(description = "If site is active or not")
     private boolean active;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumns(
             @JoinColumn(name = "company_id", referencedColumnName = "id")
     )
@@ -46,30 +42,25 @@ public class Site {
     private Company company;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonManagedReference
-    @ManyToOne()
-    @JoinColumns(
-            @JoinColumn(name = "user_id", referencedColumnName = "id")
-    )
-    @Schema(description = "site of the given asset")
-    private User user;
+    @JsonBackReference
+    @ManyToMany(mappedBy = "sites")
+    @Schema(description = "Users connected to the the given site")
+    private Set<User> users = new LinkedHashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "site")
-    @Schema(description = "assetSites on the given site")
-    private Set<AssetSite> assetSites = new LinkedHashSet<>();
+    @Schema(description = "assetOnSites on the given site")
+    private Set<AssetOnSite> assetOnSites = new LinkedHashSet<>();
 
 
     /**
      * Constructor with parameters
      *
      * @param name      site name
-     * @param clientId  site clientId
      */
-    public Site(String name, String clientId) {
+    public Site(String name) {
         this.name = name;
-        this.clientId = clientId;
         this.active = true;
     }
 

@@ -1,5 +1,6 @@
 package ntnu.group03.idata2900.ams;
 
+import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.util.Set;
 /**
  * Responsible for populating database with dummy data for testing
  */
+@Slf4j
 @Component
 public class DummyDataInitializer implements ApplicationListener<ApplicationEvent> {
 
@@ -31,7 +33,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final SiteRepository siteRepository;
 
-    private final Logger logger = LoggerFactory.getLogger("DummyInit");
+    private final AssetOnSiteRepository assetOnSiteRepository;
 
     /**
      * Creates a new instance of DummyDataInitializer.
@@ -43,24 +45,26 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
      * @param categoryRepository    The repository for managing category   entities.
      * @param siteRepository        The repository for managing site       entities.
      */
-    public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository, CategoryRepository categoryRepository, SiteRepository siteRepository) {
+    public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
+                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
         this.datasheetRepository = datasheetRepository;
         this.categoryRepository = categoryRepository;
         this.siteRepository = siteRepository;
+        this.assetOnSiteRepository = assetOnSiteRepository;
     }
 
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
 
-        logger.info("Importing test data...");
+        log.info("Importing test data...");
 
         if (userRepository.count() == 0){
 
-
+            // Setting up roles
             Role user = new Role("USER");
             Role admin = new Role("ADMIN");
 
@@ -74,7 +78,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             roleRepository.save(user);
             roleRepository.save(admin);
 
-            // Test users
+            // Setting up test users
             User jon = new User(
                     "CompanyID#01",
                     "GroupID#01",
@@ -86,7 +90,6 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     LocalDateTime.now());
 
             jon.setRoles(setUserAdmin);
-            userRepository.save(jon);
 
             User jenny = new User(
                     "CompanyID#02",
@@ -100,9 +103,42 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
             jenny.setRoles(setUserOnly);
 
+            // Setting up site
+            Site site1 = new Site("Nordlandsbåten");
+            Site site2 = new Site("Bodøbåten");
+            Site site3 = new Site("Ålesundbåten");
+
+            Set<Site> setAllSites = new HashSet<>();
+            Set<Site> setSiteUsers1 = new HashSet<>();
+
+            setAllSites.add(site1);
+            setAllSites.add(site2);
+            setAllSites.add(site3);
+
+            setSiteUsers1.add(site1);
+
+            Company company1 = new Company("CFlow");
+            Company company2 = new Company("Facebook");
+            Company company3 = new Company("NTNU");
+
+            site1.setCompany(company1);
+            site2.setCompany(company2);
+            site3.setCompany(company3);
+
+            siteRepository.save(site1);
+            siteRepository.save(site2);
+            siteRepository.save(site3);
+
+            jon.setSites(setAllSites);
+
+            jenny.setSites(setSiteUsers1);
+
+
+
+            userRepository.save(jon);
             userRepository.save(jenny);
 
-
+            // Setting up categories
             Category category1 = new Category("Pump");
             Category category2 = new Category("Vent");
             Category category3 = new Category("Filter");
@@ -111,6 +147,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             categoryRepository.save(category2);
             categoryRepository.save(category3);
 
+            // Setting up datasheets
             Datasheet datasheet1 = new Datasheet(
                     "Pump",
                     "1234",
@@ -128,15 +165,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             datasheetRepository.save(datasheet2);
             datasheetRepository.save(datasheet3);
 
-            Site site1 = new Site("Nordland", "#1234");
-            Site site2 = new Site("Bodø", "#2345");
-            Site site3 = new Site("Ålesund", "#3456");
-
-            siteRepository.save(site1);
-            siteRepository.save(site2);
-            siteRepository.save(site3);
-
-
+            // Setting up assets
             Asset asset1 = new Asset(
                     "Pump",
                     "A random pump",
@@ -237,9 +266,53 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             assetRepository.save(asset12);
 
 
-            logger.info("DONE importing test data");
+            // Setting up AssetOnSite
+            AssetOnSite assetOnSite1 = new AssetOnSite();
+            AssetOnSite assetOnSite2 = new AssetOnSite();
+            AssetOnSite assetOnSite3 = new AssetOnSite();
+            AssetOnSite assetOnSite4 = new AssetOnSite();
+            AssetOnSite assetOnSite5 = new AssetOnSite();
+            AssetOnSite assetOnSite6 = new AssetOnSite();
+            AssetOnSite assetOnSite7 = new AssetOnSite();
+            AssetOnSite assetOnSite8 = new AssetOnSite();
+            AssetOnSite assetOnSite9 = new AssetOnSite();
+
+            assetOnSite1.setAsset(asset1);
+            assetOnSite2.setAsset(asset2);
+            assetOnSite3.setAsset(asset3);
+            assetOnSite4.setAsset(asset4);
+            assetOnSite5.setAsset(asset5);
+            assetOnSite6.setAsset(asset6);
+            assetOnSite7.setAsset(asset7);
+            assetOnSite8.setAsset(asset8);
+            assetOnSite9.setAsset(asset9);
+
+            assetOnSite1.setSite(site1);
+            assetOnSite2.setSite(site1);
+            assetOnSite3.setSite(site1);
+            assetOnSite4.setSite(site2);
+            assetOnSite5.setSite(site2);
+            assetOnSite6.setSite(site2);
+            assetOnSite7.setSite(site3);
+            assetOnSite8.setSite(site3);
+            assetOnSite9.setSite(site3);
+
+            assetOnSiteRepository.save(assetOnSite1);
+            assetOnSiteRepository.save(assetOnSite2);
+            assetOnSiteRepository.save(assetOnSite3);
+            assetOnSiteRepository.save(assetOnSite4);
+            assetOnSiteRepository.save(assetOnSite5);
+            assetOnSiteRepository.save(assetOnSite6);
+            assetOnSiteRepository.save(assetOnSite7);
+            assetOnSiteRepository.save(assetOnSite8);
+            assetOnSiteRepository.save(assetOnSite9);
+
+
+
+
+            log.info("DONE importing test data");
         } else {
-            logger.info("Database already populated.");
+            log.info("Database already populated.");
         }
     }
 }

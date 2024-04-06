@@ -15,23 +15,23 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-public class AssetSite {
+public class AssetOnSite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    @Schema(description = "ID of the assetSite")
+    @Schema(description = "ID of the assetOnSite")
     private int id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "name", nullable = false, unique = true)
-    @Schema(description = "Commission date of the assetSite")
+    @Column(name = "commissionDate", nullable = true, unique = false)
+    @Schema(description = "Commission date of the assetOnSite")
     private LocalDateTime commissionDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
-    @OneToMany(mappedBy = "assetSite")
-    @Schema(description = "services completed on assetSite")
+    @OneToMany(mappedBy = "assetOnSite")
+    @Schema(description = "services completed on assetOnSite")
     private Set<ServiceCompleted> servicesCompleted = new LinkedHashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -52,11 +52,11 @@ public class AssetSite {
     @Schema(description = "site of the given assetSite")
     private Site site;
 
-    public AssetSite(){
+    public AssetOnSite(){
 
     }
 
-    public AssetSite(LocalDateTime commissionDate) {
+    public AssetOnSite(LocalDateTime commissionDate) {
         this.commissionDate = commissionDate;
     }
 }

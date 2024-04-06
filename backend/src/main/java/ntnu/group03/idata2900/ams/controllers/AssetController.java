@@ -1,5 +1,6 @@
 package ntnu.group03.idata2900.ams.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.AssetDto;
 import ntnu.group03.idata2900.ams.model.Asset;
 import ntnu.group03.idata2900.ams.repositories.AssetRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/api/assets")
@@ -23,7 +25,6 @@ public class AssetController {
     private final AssetService assetService;
 
     private static final String ASSET_NOT_FOUND = "Asset not found with id: {}";
-    private static final Logger logger = LoggerFactory.getLogger(AssetController.class);
 
     /**
      * Creates a new instance of AssetController.
@@ -55,10 +56,10 @@ public class AssetController {
     public ResponseEntity<Asset> getAsset(@PathVariable int id) {
         Optional<Asset> asset = this.assetService.getAsset(id);
         if (asset.isEmpty()) {
-            logger.warn(ASSET_NOT_FOUND, id);
+            log.warn(ASSET_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            logger.info("Asset found with ID: {}", id);
+            log.info("Asset found with ID: {}", id);
             return new ResponseEntity<>(asset.get(), HttpStatus.OK);
         }
     }
@@ -74,10 +75,10 @@ public class AssetController {
     public ResponseEntity<Asset> createAsset(@RequestBody AssetDto asset) {
         try {
             Asset createdAsset = assetService.createAsset(asset);
-            logger.info("Asset created with ID: {}", createdAsset.getId());
+            log.info("Asset created with ID: {}", createdAsset.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdAsset);
         } catch (Exception e) {
-            logger.error("Error creating asset", e);
+            log.error("Error creating asset", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
@@ -95,7 +96,7 @@ public class AssetController {
     public ResponseEntity<Asset> updateAsset(@PathVariable int id, @RequestBody AssetDto updatedAsset) {
         Optional<Asset> existingAsset = assetService.getAsset(id);
         if (existingAsset.isEmpty()) {
-            logger.warn(ASSET_NOT_FOUND, id);
+            log.warn(ASSET_NOT_FOUND, id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             Asset assetToUpdate = existingAsset.get();
@@ -103,7 +104,7 @@ public class AssetController {
             assetToUpdate.setDescription(updatedAsset.getDescription());
             assetToUpdate.setActive(updatedAsset.isActive());
             assetService.updateAsset(assetToUpdate);
-            logger.info("Asset updated with ID: {}", id);
+            log.info("Asset updated with ID: {}", id);
             return new ResponseEntity<>(assetToUpdate, HttpStatus.OK);
         }
     }
@@ -116,14 +117,14 @@ public class AssetController {
      * or HTTP status code 404 (NOT_FOUND) if the asset with the given ID doesn't exist.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Optional<Asset>> deleteAsset(@PathVariable int id) {
+    public ResponseEntity<Asset> deleteAsset(@PathVariable int id) {
         Optional<Asset> existingAsset = assetService.getAsset(id);
         if (existingAsset.isEmpty()) {
-            logger.warn(ASSET_NOT_FOUND, id);
+            log.warn(ASSET_NOT_FOUND, id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             assetService.deleteAsset(id);
-            logger.info("Asset deleted with ID: {}", id);
+            log.info("Asset deleted with ID: {}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }

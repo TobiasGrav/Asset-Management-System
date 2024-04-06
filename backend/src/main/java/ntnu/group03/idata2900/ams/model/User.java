@@ -77,16 +77,21 @@ public class User {
     private Set<Role> roles = new LinkedHashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "site_users",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "site_id", referencedColumnName = "id")
+    )
+    @Schema(description = "Sites the user has access to")
+    private Set<Site> sites = new LinkedHashSet<>();
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "user")
     @Schema(description = "services completed on asset")
     private Set<ServiceCompleted> servicesCompleted = new LinkedHashSet<>();
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonBackReference
-    @OneToMany(mappedBy = "user")
-    @Schema(description = "sites user are connected to")
-    private Set<Site> sites = new LinkedHashSet<>();
 
 
     /**

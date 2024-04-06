@@ -40,8 +40,8 @@ public class ServiceCompleted {
     @JoinColumns(
             @JoinColumn(name = "assetSite_id", referencedColumnName = "id")
     )
-    @Schema(description = "assetSite the service was completed on")
-    private AssetSite assetSite;
+    @Schema(description = "assetOnSite the service was completed on")
+    private AssetOnSite assetOnSite;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference

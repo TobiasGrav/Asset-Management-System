@@ -23,7 +23,7 @@ public class Comment {
     private int id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "comment", nullable = false, unique = true)
+    @Column(name = "comment", nullable = false, unique = false)
     @Schema(description = "comment on what needs to be commented on")
     private String comment;
 
