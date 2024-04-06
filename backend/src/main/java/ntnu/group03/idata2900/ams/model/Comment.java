@@ -6,7 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.CommentDto;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -27,6 +29,12 @@ public class Comment {
     @Schema(description = "comment on what needs to be commented on")
     private String comment;
 
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "creation_date", nullable = false, unique = false)
+    @Schema(description = "the date comment was created")
+    private LocalDateTime creationDate;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "comment")
@@ -37,7 +45,13 @@ public class Comment {
 
     }
 
-    public Comment(String comment) {
+    public Comment(String comment, LocalDateTime creationDate) {
         this.comment = comment;
+        this.creationDate = creationDate;
+    }
+
+    public Comment(CommentDto commentDto) {
+        this.comment = commentDto.getComment();
+        this.creationDate = LocalDateTime.now();
     }
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
 import ntnu.group03.idata2900.ams.services.ServiceService;
+import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -38,6 +39,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final ServiceRepository serviceRepository;
 
+    private final CommentRepository commentRepository;
+
     /**
      *
      * Creates a new instance of DummyDataInitializer.
@@ -49,9 +52,10 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
      * @param categoryRepository    The repository for managing category    entities.
      * @param assetOnSiteRepository The repository for managing assetOnSite entities.
      * @param serviceRepository     The repository for managing service     entities.
+     * @param commentRepository     The repository for managing comment     entities.
      */
     public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
-                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository) {
+                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository, CommentRepository commentRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
@@ -60,6 +64,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         this.siteRepository = siteRepository;
         this.assetOnSiteRepository = assetOnSiteRepository;
         this.serviceRepository = serviceRepository;
+        this.commentRepository = commentRepository;
     }
 
 
@@ -71,8 +76,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         if (userRepository.count() == 0){
 
             // Setting up roles
-            Role user = new Role("USER");
-            Role admin = new Role("ADMIN");
+            Role user = new Role(SecurityAccessUtil.USER);
+            Role admin = new Role(SecurityAccessUtil.ADMIN);
 
             Set<Role> setUserAdmin = new HashSet<>();
             Set<Role> setUserOnly = new HashSet<>();
@@ -353,6 +358,19 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             serviceRepository.save(service10);
             serviceRepository.save(service11);
             serviceRepository.save(service12);
+
+            // Setting up comments
+            Comment comment1 = new Comment("Test comment 1", LocalDateTime.now());
+            Comment comment2 = new Comment("Test comment 2", LocalDateTime.now());
+            Comment comment3 = new Comment("Test comment 3", LocalDateTime.now());
+            Comment comment4 = new Comment("Test comment 4", LocalDateTime.now());
+            Comment comment5 = new Comment("Test comment 5", LocalDateTime.now());
+
+            commentRepository.save(comment1);
+            commentRepository.save(comment2);
+            commentRepository.save(comment3);
+            commentRepository.save(comment4);
+            commentRepository.save(comment5);
 
 
 
