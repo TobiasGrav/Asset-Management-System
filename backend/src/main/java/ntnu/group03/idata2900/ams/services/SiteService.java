@@ -1,5 +1,9 @@
 package ntnu.group03.idata2900.ams.services;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import ntnu.group03.idata2900.ams.dto.SiteDto;
+import ntnu.group03.idata2900.ams.model.Company;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.repositories.SiteRepository;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,9 @@ import java.util.Optional;
 public class SiteService {
 
     private final SiteRepository siteRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     public SiteService(SiteRepository siteRepository) {
         this.siteRepository = siteRepository;
@@ -27,7 +34,11 @@ public class SiteService {
         return this.siteRepository.findById(id);
     }
 
-    public Site createSite(Site site){
+    public Site createSite(SiteDto siteDto){
+        Site site = new Site(siteDto);
+        // Need to use entityManager to make sure the company is in the database already and fetched in the correct session
+        Company company = entityManager.find(Company.class, siteDto.getCompany().getId());
+        site.setCompany(company);
         return this.siteRepository.save(site);
     }
 
@@ -36,6 +47,10 @@ public class SiteService {
     }
 
     public void deleteSite(int id){
-        this.siteRepository.deleteById(id);
+        // Delete won't work due to foreign key constraint between site and site_users. Site should only be deactivated, not deleted.
+        Site site = this.entityManager.find(Site.class, id);
+        site.setActive(false);
+        this.siteRepository.save(site);
+        //this.siteRepository.deleteById(id);
     }
 }

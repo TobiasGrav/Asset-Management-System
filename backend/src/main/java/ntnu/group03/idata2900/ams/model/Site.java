@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.SiteDto;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class Site {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumns(
             @JoinColumn(name = "company_id", referencedColumnName = "id")
     )
@@ -49,7 +50,7 @@ public class Site {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
-    @OneToMany(mappedBy = "site")
+    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, orphanRemoval = true)
     @Schema(description = "assetOnSites on the given site")
     private Set<AssetOnSite> assetOnSites = new LinkedHashSet<>();
 
@@ -63,6 +64,14 @@ public class Site {
         this.name = name;
         this.active = true;
     }
+
+    public Site(SiteDto siteDto) {
+        this.name = siteDto.getName();
+        this.active = siteDto.isActive();
+        this.company = siteDto.getCompany();
+    }
+
+
 
     public Site(){
 

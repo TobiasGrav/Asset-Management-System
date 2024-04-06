@@ -28,7 +28,7 @@ public class Company {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @Schema(description = "sites with the given company")
     private Set<Site> sites = new LinkedHashSet<>();
 

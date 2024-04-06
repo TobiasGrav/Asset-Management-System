@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.AssetOnSiteDto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -58,6 +59,12 @@ public class AssetOnSite {
 
     public AssetOnSite(LocalDateTime commissionDate) {
         this.commissionDate = commissionDate;
+    }
+
+    public AssetOnSite(AssetOnSiteDto assetOnSiteDto){
+        this.commissionDate = assetOnSiteDto.getCommissionDate();
+        this.site = assetOnSiteDto.getSite();
+        this.asset = assetOnSiteDto.getAsset();
     }
 }
 

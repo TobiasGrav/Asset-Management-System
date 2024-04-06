@@ -1,6 +1,7 @@
 package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.services.SiteService;
 import org.springframework.http.HttpStatus;
@@ -65,7 +66,7 @@ public class SiteController {
      * @return ResponseEntity containing the created site and HTTP status code 201 (CREATED).
      */
     @PostMapping
-    public ResponseEntity<Site> createSite(@RequestBody Site site) {
+    public ResponseEntity<Site> createSite(@RequestBody SiteDto site) {
         try {
             Site createdSite = siteService.createSite(site);
             log.info("Site created with ID: {}", createdSite.getId());
@@ -86,7 +87,7 @@ public class SiteController {
      * or HTTP status code 404 (NOT_FOUND) if the site with the given ID doesn't exist.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Site> updateSite(@PathVariable int id, @RequestBody Site updatedSite) {
+    public ResponseEntity<Site> updateSite(@PathVariable int id, @RequestBody SiteDto updatedSite) {
         Optional<Site> existingSite = siteService.getSite(id);
         if (existingSite.isEmpty()) {
             log.warn(SITE_NOT_FOUND, id);
