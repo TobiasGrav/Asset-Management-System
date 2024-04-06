@@ -41,21 +41,25 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final CommentRepository commentRepository;
 
+    private final ServiceCompletedRepository serviceCompletedRepository;
+
     /**
      *
      * Creates a new instance of DummyDataInitializer.
      *
-     * @param userRepository        The repository for managing user        entities.
-     * @param roleRepository        The repository for managing role        entities.
-     * @param assetRepository       The repository for managing asset       entities.
-     * @param datasheetRepository   The repository for managing datasheet   entities.
-     * @param categoryRepository    The repository for managing category    entities.
-     * @param assetOnSiteRepository The repository for managing assetOnSite entities.
-     * @param serviceRepository     The repository for managing service     entities.
-     * @param commentRepository     The repository for managing comment     entities.
+     * @param userRepository                The repository for managing user                entities.
+     * @param roleRepository                The repository for managing role                entities.
+     * @param assetRepository               The repository for managing asset               entities.
+     * @param datasheetRepository           The repository for managing datasheet           entities.
+     * @param categoryRepository            The repository for managing category            entities.
+     * @param siteRepository                The repository for managing site                entities.
+     * @param assetOnSiteRepository         The repository for managing assetOnSite         entities.
+     * @param serviceRepository             The repository for managing service             entities.
+     * @param commentRepository             The repository for managing comment             entities.
+     * @param serviceCompletedRepository    The repository for managing serviceCompleted    entities.
      */
     public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
-                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository, CommentRepository commentRepository) {
+                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository, CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
@@ -65,6 +69,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         this.assetOnSiteRepository = assetOnSiteRepository;
         this.serviceRepository = serviceRepository;
         this.commentRepository = commentRepository;
+        this.serviceCompletedRepository = serviceCompletedRepository;
     }
 
 
@@ -371,6 +376,40 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             commentRepository.save(comment3);
             commentRepository.save(comment4);
             commentRepository.save(comment5);
+
+            // Setting up completedServices
+            ServiceCompleted serviceCompleted1 = new ServiceCompleted(null, null);
+            ServiceCompleted serviceCompleted2 = new ServiceCompleted(null, null);
+            ServiceCompleted serviceCompleted3 = new ServiceCompleted(null, null);
+            ServiceCompleted serviceCompleted4 = new ServiceCompleted(null, null);
+            ServiceCompleted serviceCompleted5 = new ServiceCompleted(null, null);
+
+            serviceCompleted1.setUser(jon);
+            serviceCompleted2.setUser(jon);
+            serviceCompleted3.setUser(jenny);
+            serviceCompleted4.setUser(jon);
+            serviceCompleted5.setUser(jenny);
+
+            serviceCompleted1.setAssetOnSite(assetOnSite1);
+            serviceCompleted2.setAssetOnSite(assetOnSite1);
+            serviceCompleted3.setAssetOnSite(assetOnSite4);
+            serviceCompleted4.setAssetOnSite(assetOnSite7);
+            serviceCompleted5.setAssetOnSite(assetOnSite9);
+
+            serviceCompleted1.setService(service1);
+            serviceCompleted2.setService(service2);
+            serviceCompleted3.setService(service3);
+            serviceCompleted4.setService(service7);
+            serviceCompleted5.setService(service4);
+
+            serviceCompletedRepository.save(serviceCompleted1);
+            serviceCompletedRepository.save(serviceCompleted2);
+            serviceCompletedRepository.save(serviceCompleted3);
+            serviceCompletedRepository.save(serviceCompleted4);
+            serviceCompletedRepository.save(serviceCompleted5);
+
+
+
 
 
 

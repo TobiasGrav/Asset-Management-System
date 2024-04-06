@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/sites/**").permitAll()
                         .requestMatchers("/api/services/**").permitAll()
                         .requestMatchers("/api/comments/**").permitAll()
+                        .requestMatchers("/api/servicesCompleted/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

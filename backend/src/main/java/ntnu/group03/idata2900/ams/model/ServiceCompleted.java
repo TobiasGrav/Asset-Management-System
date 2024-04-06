@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.ServiceCompletedDto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -68,4 +69,19 @@ public class ServiceCompleted {
     private Set<ServiceComment> serviceComments = new LinkedHashSet<>();
 
 
+    public ServiceCompleted() {
+    }
+
+    public ServiceCompleted(LocalDateTime timeCompleted, LocalDateTime lastService) {
+        this.timeCompleted = timeCompleted;
+        this.lastService = lastService;
+    }
+
+    public ServiceCompleted(ServiceCompletedDto serviceCompletedDto) {
+        this.timeCompleted = serviceCompletedDto.getTimeCompleted();
+        this.lastService = serviceCompletedDto.getLastService();
+        this.assetOnSite = serviceCompletedDto.getAssetOnSite();
+        this.service = serviceCompletedDto.getService();
+        this.user = serviceCompletedDto.getUser();
+    }
 }
