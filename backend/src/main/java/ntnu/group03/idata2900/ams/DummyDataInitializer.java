@@ -3,6 +3,7 @@ package ntnu.group03.idata2900.ams;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
+import ntnu.group03.idata2900.ams.services.ServiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -35,18 +36,22 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final AssetOnSiteRepository assetOnSiteRepository;
 
+    private final ServiceRepository serviceRepository;
+
     /**
+     *
      * Creates a new instance of DummyDataInitializer.
      *
-     * @param userRepository        The repository for managing user       entities.
-     * @param roleRepository        The repository for managing role       entities.
-     * @param assetRepository       The repository for managing asset      entities.
-     * @param datasheetRepository   The repository for managing datasheet  entities.
-     * @param categoryRepository    The repository for managing category   entities.
-     * @param siteRepository        The repository for managing site       entities.
+     * @param userRepository        The repository for managing user        entities.
+     * @param roleRepository        The repository for managing role        entities.
+     * @param assetRepository       The repository for managing asset       entities.
+     * @param datasheetRepository   The repository for managing datasheet   entities.
+     * @param categoryRepository    The repository for managing category    entities.
+     * @param assetOnSiteRepository The repository for managing assetOnSite entities.
+     * @param serviceRepository     The repository for managing service     entities.
      */
     public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
-                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository) {
+                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
@@ -54,6 +59,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         this.categoryRepository = categoryRepository;
         this.siteRepository = siteRepository;
         this.assetOnSiteRepository = assetOnSiteRepository;
+        this.serviceRepository = serviceRepository;
     }
 
 
@@ -307,6 +313,46 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             assetOnSiteRepository.save(assetOnSite8);
             assetOnSiteRepository.save(assetOnSite9);
 
+
+            // Setting up services
+            Service service1 = new Service("Change Oil", "12 months");
+            Service service2 = new Service("Change fuel", "5 weeks");
+            Service service3 = new Service("Change pump", "12 weeks");
+            Service service4 = new Service("Change vent", "5 months");
+            Service service5 = new Service("Change motor", "1 months");
+            Service service6 = new Service("Change water", "2 months");
+            Service service7 = new Service("Change bolt", "3 months");
+            Service service8 = new Service("Change light", "4 months");
+            Service service9 = new Service("Change tank", "5 months");
+            Service service10 = new Service("Change wheel", "6 months");
+            Service service11 = new Service("Change everything", "7 months");
+            Service service12 = new Service("Change bed", "9 months");
+
+            service1.setAsset(asset1);
+            service2.setAsset(asset2);
+            service3.setAsset(asset3);
+            service4.setAsset(asset4);
+            service5.setAsset(asset5);
+            service6.setAsset(asset6);
+            service7.setAsset(asset7);
+            service8.setAsset(asset8);
+            service9.setAsset(asset9);
+            service10.setAsset(asset10);
+            service11.setAsset(asset11);
+            service12.setAsset(asset12);
+
+            serviceRepository.save(service1);
+            serviceRepository.save(service2);
+            serviceRepository.save(service3);
+            serviceRepository.save(service4);
+            serviceRepository.save(service5);
+            serviceRepository.save(service6);
+            serviceRepository.save(service7);
+            serviceRepository.save(service8);
+            serviceRepository.save(service9);
+            serviceRepository.save(service10);
+            serviceRepository.save(service11);
+            serviceRepository.save(service12);
 
 
 

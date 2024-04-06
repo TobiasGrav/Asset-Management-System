@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.ServiceDto;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -55,5 +56,11 @@ public class Service {
     public Service(String description, String intervalName) {
         this.description = description;
         this.intervalName = intervalName;
+    }
+
+    public Service(ServiceDto serviceDto) {
+        this.description = serviceDto.getDescription();
+        this.intervalName = serviceDto.getIntervalName();
+        this.asset = serviceDto.getAsset();
     }
 }

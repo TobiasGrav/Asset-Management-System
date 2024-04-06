@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/assets/**").permitAll()
                         .requestMatchers("/api/assetOnSites/**").permitAll()
                         .requestMatchers("/api/sites/**").permitAll()
+                        .requestMatchers("/api/services/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
