@@ -42,6 +42,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final SparePartRepository sparePartRepository;
 
+    private final ServiceCommentRepository serviceCommentRepository;
+
     /**
      *
      * Creates a new instance of DummyDataInitializer.
@@ -57,10 +59,11 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
      * @param commentRepository             The repository for managing comment             entities.
      * @param serviceCompletedRepository    The repository for managing serviceCompleted    entities.
      * @param sparePartRepository           The repository for managing sparePart           entities.
+     * @param serviceCommentRepository      The repository for managing serviceComment      entities.
      */
     public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
                                 CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository,
-                                CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository, SparePartRepository sparePartRepository) {
+                                CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository, SparePartRepository sparePartRepository, ServiceCommentRepository serviceCommentRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
@@ -72,6 +75,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         this.commentRepository = commentRepository;
         this.serviceCompletedRepository = serviceCompletedRepository;
         this.sparePartRepository = sparePartRepository;
+        this.serviceCommentRepository = serviceCommentRepository;
     }
 
 
@@ -453,8 +457,30 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             serviceCompletedRepository.save(serviceCompleted5);
 
 
+            // Setting up ServiceComments
+            ServiceComment serviceComment1 = new ServiceComment();
+            ServiceComment serviceComment2 = new ServiceComment();
+            ServiceComment serviceComment3 = new ServiceComment();
+            ServiceComment serviceComment4 = new ServiceComment();
+            ServiceComment serviceComment5 = new ServiceComment();
 
+            serviceComment1.setComment(comment1);
+            serviceComment2.setComment(comment2);
+            serviceComment3.setComment(comment3);
+            serviceComment4.setComment(comment4);
+            serviceComment5.setComment(comment5);
 
+            serviceComment1.setServiceCompleted(serviceCompleted1);
+            serviceComment2.setServiceCompleted(serviceCompleted2);
+            serviceComment3.setServiceCompleted(serviceCompleted3);
+            serviceComment4.setServiceCompleted(serviceCompleted4);
+            serviceComment5.setServiceCompleted(serviceCompleted5);
+
+            serviceCommentRepository.save(serviceComment1);
+            serviceCommentRepository.save(serviceComment2);
+            serviceCommentRepository.save(serviceComment3);
+            serviceCommentRepository.save(serviceComment4);
+            serviceCommentRepository.save(serviceComment5);
 
 
             log.info("DONE importing test data");
