@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.DatasheetDto;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -59,4 +60,9 @@ public class Datasheet {
 
     }
 
+    public Datasheet(DatasheetDto datasheetDto) {
+        this.name = datasheetDto.getName();
+        this.pdfUrl = datasheetDto.getPdfUrl();
+        this.referenceNumber = datasheetDto.getReferenceNumber();
+    }
 }

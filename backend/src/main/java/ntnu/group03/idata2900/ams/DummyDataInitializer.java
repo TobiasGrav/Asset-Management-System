@@ -40,6 +40,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final ServiceCompletedRepository serviceCompletedRepository;
 
+    private final SparePartRepository sparePartRepository;
+
     /**
      *
      * Creates a new instance of DummyDataInitializer.
@@ -54,9 +56,11 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
      * @param serviceRepository             The repository for managing service             entities.
      * @param commentRepository             The repository for managing comment             entities.
      * @param serviceCompletedRepository    The repository for managing serviceCompleted    entities.
+     * @param sparePartRepository           The repository for managing sparePart           entities.
      */
     public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
-                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository, CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository) {
+                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository,
+                                CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository, SparePartRepository sparePartRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
@@ -67,6 +71,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         this.serviceRepository = serviceRepository;
         this.commentRepository = commentRepository;
         this.serviceCompletedRepository = serviceCompletedRepository;
+        this.sparePartRepository = sparePartRepository;
     }
 
 
@@ -279,6 +284,46 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             assetRepository.save(asset10);
             assetRepository.save(asset11);
             assetRepository.save(asset12);
+
+            // Setting up SpareParts
+            SparePart sparePart1 = new SparePart("https://sparePart1.pdf", 4);
+            SparePart sparePart2 = new SparePart("https://sparePart2.pdf", 5);
+            SparePart sparePart3 = new SparePart("https://sparePart3.pdf", 6);
+            SparePart sparePart4 = new SparePart("https://sparePart4.pdf", 7);
+            SparePart sparePart5 = new SparePart("https://sparePart5.pdf", 8);
+            SparePart sparePart6 = new SparePart("https://sparePart6.pdf", 9);
+            SparePart sparePart7 = new SparePart("https://sparePart7.pdf", 10);
+            SparePart sparePart8 = new SparePart("https://sparePart8.pdf", 11);
+            SparePart sparePart9 = new SparePart("https://sparePart9.pdf", 42);
+            SparePart sparePart10 = new SparePart("https://sparePart10.pdf", 34);
+            SparePart sparePart11 = new SparePart("https://sparePart11.pdf", 43);
+            SparePart sparePart12 = new SparePart("https://sparePart12.pdf", 444);
+
+            sparePart1.setAsset(asset1);
+            sparePart2.setAsset(asset2);
+            sparePart3.setAsset(asset3);
+            sparePart4.setAsset(asset4);
+            sparePart5.setAsset(asset5);
+            sparePart6.setAsset(asset6);
+            sparePart7.setAsset(asset7);
+            sparePart8.setAsset(asset8);
+            sparePart9.setAsset(asset9);
+            sparePart10.setAsset(asset10);
+            sparePart11.setAsset(asset11);
+            sparePart12.setAsset(asset12);
+
+            sparePartRepository.save(sparePart1);
+            sparePartRepository.save(sparePart2);
+            sparePartRepository.save(sparePart3);
+            sparePartRepository.save(sparePart4);
+            sparePartRepository.save(sparePart5);
+            sparePartRepository.save(sparePart6);
+            sparePartRepository.save(sparePart7);
+            sparePartRepository.save(sparePart8);
+            sparePartRepository.save(sparePart9);
+            sparePartRepository.save(sparePart10);
+            sparePartRepository.save(sparePart11);
+            sparePartRepository.save(sparePart12);
 
 
             // Setting up AssetOnSite
