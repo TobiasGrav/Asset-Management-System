@@ -6,9 +6,12 @@ import Table from '../components/AssetTable'
 import Asset from '../components/Asset'
 import { jwtDecode } from 'jwt-decode'
 
+import { useEffect } from 'react';
+
 import './Home.css'
 import { Route, Router, Routes, useNavigate } from 'react-router'
 import { useCookies } from 'react-cookie'
+import HTTPRequest from '../tools/HTTPRequest'
 
 const Main = ({children}) => {
 
@@ -16,19 +19,33 @@ const Main = ({children}) => {
 
   const navigate = useNavigate();
 
-  console.log(jwtDecode(cookies.JWT));
+  // If user doesn't have a JWT cookie it will redirect them to the login page.
+  useEffect(() => {
+    if(cookies.JWT == null) {
+        navigate('/login');
+    }
+  }, []);
 
   const asset = () => {
     navigate("/asset/");
-  }
+  };
 
   const company = () => {
     navigate("/company/");
-  }
+  };
 
   const site = () => {
     navigate("/site/");
-  }
+  };
+
+  const profile = () => {
+    navigate('/profile');
+  };
+
+  const logout = () => {
+    deleteCookie('JWT');
+    window.location.reload();
+  };
 
   return (
     <div className="body">
@@ -54,11 +71,17 @@ const Main = ({children}) => {
             src={require('./resources/bell.png')}
             className="utilityIcon"
           />
-          <img
-            alt="image"
-            src={require('./resources/frame.png')}
-            className="utilityIcon"
-          />
+          <div class='dropdown'><img
+              alt="image"
+              src={require('./resources/user.png')}
+              className="utilityIcon"
+              on
+            />
+            <div class='profileDropdown'>
+              <a class='dropdownText' onClick={profile}>My profile</a>
+              <a class='dropdownText' onClick={logout}>Logout</a>
+            </div>
+          </div>
         </div>
       </div>
       <div className="mainContainer">

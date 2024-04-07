@@ -8,7 +8,6 @@
     flex-direction: column;
     justify-content: flex-start;
     background-color: #C9D7DD;
-    resize: ;
     overflow-y: scroll;
     font-family: 'Open Sans', sans-serif;
   }
@@ -55,8 +54,8 @@
   .utilityIcon {
     width: auto;
     margin-top: 0px;
-    margin-left: 16px;
-    margin-right: 16px;
+    /*margin-left: 16px;
+    margin-right: 16px;*/
     margin-bottom: 0px;
   }
   .navText {
@@ -73,7 +72,9 @@
     cursor: pointer;
   }
   .utilityContainer {
+    margin-right: 32px;
     flex: 0 0 auto;
+    gap:32px;
     width: auto;
     height: 75px;
     display: flex;
@@ -126,6 +127,33 @@
     align-items: center;
     min-height: 100px;
   }
+
+  .dropdown:hover {
+    background-color: #A5BDC7;
+    border-radius: 5px 5px 0px 0px;
+  }
+
+  .profileDropdown {
+    display: none;
+  }
+
+  .dropdown:hover .profileDropdown {
+    display: flex;
+    flex-direction: column;
+    background-color: #A5BDC7;
+    z-index: 1000;
+    position: absolute;
+    padding: 10px 10px;
+  }
+
+  .dropdownText {
+    color: #01232D;
+  }
+  .dropdownText:hover {
+    color: #E7EDF0;
+    cursor: pointer;
+  }
+
 
   /* width */
   ::-webkit-scrollbar {

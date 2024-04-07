@@ -9,6 +9,7 @@ import Company from './components/Company';
 import CompanyTable from './components/CompanyTable';
 import SiteTable from './components/SiteTable';
 import Site from './components/Site';
+import Welcome from './components/Welcome';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/site" element={<Home><SiteTable /></Home>} />
           <Route path="/site/:id" element={<Home><Site /></Home>} />
           <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home><Welcome /></Home>} />
         </Routes>
       </Router>
   );
