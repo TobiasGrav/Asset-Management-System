@@ -94,7 +94,7 @@ const Main = (props) => {
       setAttachmentLink(asset.datasheet.pdfUrl);
     })
     .catch(error => {console.log(error)});
-  }, [id, cookies.JWT]);
+  }, [id]);
 
   const handleSubmit = async (e) => {
       e.preventDefault();

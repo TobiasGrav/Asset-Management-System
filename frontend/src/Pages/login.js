@@ -23,7 +23,7 @@ const Login = (props) => {
     .then(response => {
       if(response.status == 200) {
         console.log("login successful")
-        setCookie('JWT', response.data.response, {maxAge: 12*3600});
+        setCookie('JWT', response.data.response, {maxAge: 12*3600, path: '/'});
         window.location.href = '/asset/';
       }
       console.log(response);

@@ -43,7 +43,7 @@ const Main = ({children}) => {
   };
 
   const logout = () => {
-    deleteCookie('JWT');
+    deleteCookie('JWT', {path: '/'});
     window.location.reload();
   };
 
