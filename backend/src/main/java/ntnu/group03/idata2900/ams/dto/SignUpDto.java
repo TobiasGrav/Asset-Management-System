@@ -1,7 +1,7 @@
 package ntnu.group03.idata2900.ams.dto;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.Setter;""
 
 /**
  * Represents data from user needed to sign up

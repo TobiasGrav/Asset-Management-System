@@ -3,10 +3,7 @@ package ntnu.group03.idata2900.ams;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
-import ntnu.group03.idata2900.ams.services.ServiceService;
 import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -119,7 +116,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
             jenny.setRoles(setUserOnly);
 
-            // Setting up site
+            // Setting up sites
             Site site1 = new Site("Nordlandsbåten");
             Site site2 = new Site("Bodøbåten");
             Site site3 = new Site("Ålesundbåten");
@@ -132,6 +129,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             setAllSites.add(site3);
 
             setSiteUsers1.add(site1);
+
+            // Setting up Companies
 
             Company company1 = new Company("CFlow");
             Company company2 = new Company("Facebook");

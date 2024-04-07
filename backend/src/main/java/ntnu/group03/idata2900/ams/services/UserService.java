@@ -1,13 +1,15 @@
 package ntnu.group03.idata2900.ams.services;
 
+import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.model.Role;
+import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.repositories.RoleRepository;
+import ntnu.group03.idata2900.ams.repositories.SiteRepository;
 import ntnu.group03.idata2900.ams.repositories.UserRepository;
 import ntnu.group03.idata2900.ams.security.AccessUserDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,10 +18,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
@@ -27,18 +29,21 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
+    private final Optional<Role> admin;
+    private final Iterable<Site> sites;
 
     /**
      * creates a new instance of userService.
      *
      * @param userRepository userRepository
      * @param roleRepository roleRepository
+     * @param siteRepository siteRepository
      */
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.admin = this.roleRepository.findByName(SecurityAccessUtil.ADMIN);
+        this.sites = siteRepository.findAll();
     }
 
     /**
@@ -59,38 +64,33 @@ public class UserService implements UserDetailsService {
      */
     public void createUserForSignUp(SignUpDto userInfo) {
         if (!validEmail(userInfo.getEmail())) {
-            logger.error("Invalid email format: {}", userInfo.getEmail());
+            log.error("Invalid email format: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Invalid email format.");
         }
 
         if (!validPassword(userInfo.getPassword())) {
-            logger.error("Invalid password: {}", userInfo.getEmail());
+            log.error("Invalid password: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Invalid password.");
         }
 
         if (userInfo.getFirstName().trim().equals("") || userInfo.getLastName().trim().equals("")) {
-            logger.error("Name fields must be filled out for user: {}", userInfo.getEmail());
+            log.error("Name fields must be filled out for user: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Name fields must be filled out.");
         }
 
         try {
             // Thrown when user is found
             loadUserByUsername(userInfo.getEmail());
-            logger.error("Email already registered: {}", userInfo.getEmail());
+            log.error("Email already registered: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Email already registered.");
         } catch (NullPointerException e) {
             userInfo.setPassword(createHash(userInfo.getPassword()));
             User user = new User(userInfo);
 
-            Role userRole = roleRepository.findByName("user").orElseThrow(() -> {
-                logger.error("Role user not found");
-                return new IllegalArgumentException("Role user not found");
-            });
-
-            user.getRoles().add(userRole);
+            setUserRole(user);
 
             userRepository.save(user);
-            logger.info("New user created with email: {}", userInfo.getEmail());
+            log.info("New user created with email: {}", userInfo.getEmail());
 
         }
     }
@@ -109,10 +109,30 @@ public class UserService implements UserDetailsService {
     /**
      * Creates a new user.
      *
-     * @param user The User object to be created.
+     * @param signUpDto The User object to be created.
      * @return The created User object.
      */
-    public User createUser(User user) {
+    public User createAdmin(SignUpDto signUpDto) {
+        User user = new User(signUpDto);
+        user.setPassword(createHash(user.getPassword()));
+        setUserRole(user);
+        // TODO: Should user be added to sites when created or after?
+        //setSitesForUser(user, signUpDto.getSites());
+        return userRepository.save(user);
+    }
+
+    /**
+     * Creates a new user.
+     *
+     * @param signUpDto The User object to be created.
+     * @return The created User object.
+     */
+    public User createUser(SignUpDto signUpDto){
+        User user = new User(signUpDto);
+        user.setPassword(createHash(user.getPassword()));
+        setUserRole(user);
+        setAdminRole(user);
+        setAllSitesForAdmin(user);
         return userRepository.save(user);
     }
 
@@ -121,21 +141,26 @@ public class UserService implements UserDetailsService {
      *
      * @param id          The ID of the user to be updated.
      * @param updatedUser The updated User object.
-     * @return The updated User object if successful, or null if the user is not found.
      */
-    public User updateUser(int id, User updatedUser) {
+    public void updateUser(int id, SignUpDto updatedUser) {
         Optional<User> existingUser = userRepository.findById(id);
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
             user.setEmail(updatedUser.getEmail());
+            user.setCompanyId(updatedUser.getCompanyId());
+            user.setGroupId(updatedUser.getGroupId());
+            user.setPhoneNumber(updatedUser.getPhoneNumber());
             user.setPassword(createHash(updatedUser.getPassword()));
-            logger.info("User updated: {}", updatedUser.getEmail());
-            return userRepository.save(user);
+            user.setUpdatedDate(LocalDateTime.now());
+            if (this.admin.isPresent() && user.getRoles().contains(this.admin.get())){
+                setAdminRole(user);
+            }
+            log.info("User updated: {}", updatedUser.getEmail());
+            userRepository.save(user);
         }
-        logger.error("User not found with ID: {}", id);
-        return null;
+        log.error("User not found with ID: {}", id);
     }
 
     /**
@@ -147,10 +172,40 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             userRepository.deleteById(id);
-            logger.info("User deleted with ID: {}", id);
+            log.info("User deleted with ID: {}", id);
         } else {
-            logger.error("User not found with ID: {}", id);
+            log.error("User not found with ID: {}", id);
         }
+    }
+
+
+    /**
+     * Adds user to given sites
+     *
+     * @param user user to be added to sites
+     * @param sites sites the user is added to
+     */
+    public void setSitesForUser(User user, Set<Site> sites){
+        sites.forEach(site -> user.getSites().add(site));
+    }
+
+    /**
+     * Adds admin user to all sites
+     *
+     * @param user user to get all sites
+     */
+    public void setAllSitesForAdmin(User user){
+        sites.forEach(site -> user.getSites().add(site));
+    }
+
+    /**
+     * Adds user role to user
+     *
+     * @param user user
+     */
+    public void setUserRole(User user){
+        Role userRole = roleRepository.findByName(SecurityAccessUtil.USER).orElseThrow(() -> new IllegalArgumentException("Role USER not found"));
+        user.getRoles().add(userRole);
     }
 
     /**
@@ -159,8 +214,12 @@ public class UserService implements UserDetailsService {
      * @param user user to have admin added to it
      */
     public void setAdminRole(User user) {
-        Role adminRole = roleRepository.findByName("admin").orElseThrow(() -> new IllegalArgumentException("Role admin not found"));
+        Role adminRole = roleRepository.findByName(SecurityAccessUtil.ADMIN).orElseThrow(() -> new IllegalArgumentException("Role ADMIN not found"));
         user.getRoles().add(adminRole);
+    }
+    public void removeAdminRoleFromUser(User user){
+        Role adminRole = roleRepository.findByName(SecurityAccessUtil.ADMIN).orElseThrow(() -> new IllegalArgumentException("Role ADMIN not found"));
+        user.getRoles().remove(adminRole);
     }
 
     /**
@@ -176,7 +235,7 @@ public class UserService implements UserDetailsService {
         if (user.isPresent()) {
             return new AccessUserDetails(user.get());
         } else {
-            logger.error("User with email: {} not found.", email);
+            log.error("User with email: {} not found.", email);
             throw new NullPointerException("User with email: " + email + " not found.");
         }
     }

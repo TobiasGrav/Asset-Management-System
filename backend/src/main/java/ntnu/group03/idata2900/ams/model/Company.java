@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.CompanyDto;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -37,6 +38,10 @@ public class Company {
 
     public Company(String name) {
         this.name = name;
+    }
+
+    public Company(CompanyDto companyDto){
+        this.name = companyDto.getName();
     }
 
 }
