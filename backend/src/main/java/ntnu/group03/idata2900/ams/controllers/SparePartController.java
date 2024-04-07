@@ -1,9 +1,7 @@
 package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.dto.SparePartDto;
-import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.SparePart;
 import ntnu.group03.idata2900.ams.services.SparePartService;
 import org.springframework.http.HttpStatus;
@@ -70,9 +68,9 @@ public class SparePartController {
     @PostMapping
     public ResponseEntity<SparePart> createSparePart(@RequestBody SparePartDto sparePart) {
         try {
-            SparePart createdSite = sparePartService.createSparePart(sparePart);
-            log.info("SparePart created with ID: {}", createdSite.getId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdSite);
+            SparePart createdSparePart = sparePartService.createSparePart(sparePart);
+            log.info("SparePart created with ID: {}", createdSparePart.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSparePart);
         } catch (Exception e) {
             log.error("Error creating sparePart", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -95,13 +93,13 @@ public class SparePartController {
             log.warn(SPARE_PART_NOT_FOUND, id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            SparePart siteToUpdate = existingSparePart.get();
-            siteToUpdate.setNumberOfParts(updatedSparePart.getNumberOfParts());
-            siteToUpdate.setPositionDiagramUrl(updatedSparePart.getPositionDiagramUrl());
-            siteToUpdate.setAsset(updatedSparePart.getAsset());
-            sparePartService.updateSparePart(siteToUpdate);
+            SparePart sparePartToUpdate = existingSparePart.get();
+            sparePartToUpdate.setNumberOfParts(updatedSparePart.getNumberOfParts());
+            sparePartToUpdate.setPositionDiagramUrl(updatedSparePart.getPositionDiagramUrl());
+            sparePartToUpdate.setAsset(updatedSparePart.getAsset());
+            sparePartService.updateSparePart(sparePartToUpdate);
             log.info("SparePart updated with ID: {}", id);
-            return new ResponseEntity<>(siteToUpdate, HttpStatus.OK);
+            return new ResponseEntity<>(sparePartToUpdate, HttpStatus.OK);
         }
     }
 

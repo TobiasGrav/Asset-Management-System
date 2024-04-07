@@ -1,7 +1,6 @@
 package ntnu.group03.idata2900.ams.services;
 
 import ntnu.group03.idata2900.ams.dto.SparePartDto;
-import ntnu.group03.idata2900.ams.model.Asset;
 import ntnu.group03.idata2900.ams.model.SparePart;
 import ntnu.group03.idata2900.ams.repositories.SparePartRepository;
 import org.springframework.stereotype.Service;

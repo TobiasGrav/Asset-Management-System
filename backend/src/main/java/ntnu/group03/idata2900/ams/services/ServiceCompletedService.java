@@ -1,12 +1,8 @@
 package ntnu.group03.idata2900.ams.services;
 
-import ntnu.group03.idata2900.ams.dto.AssetDto;
 import ntnu.group03.idata2900.ams.dto.ServiceCompletedDto;
-import ntnu.group03.idata2900.ams.model.Asset;
 import ntnu.group03.idata2900.ams.model.ServiceCompleted;
-import ntnu.group03.idata2900.ams.repositories.AssetRepository;
 import ntnu.group03.idata2900.ams.repositories.ServiceCompletedRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
