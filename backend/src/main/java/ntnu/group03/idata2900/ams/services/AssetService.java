@@ -6,7 +6,6 @@ import ntnu.group03.idata2900.ams.repositories.AssetRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

@@ -3,10 +3,7 @@ package ntnu.group03.idata2900.ams;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
-import ntnu.group03.idata2900.ams.services.ServiceService;
 import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -43,6 +40,10 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
     private final ServiceCompletedRepository serviceCompletedRepository;
 
+    private final SparePartRepository sparePartRepository;
+
+    private final ServiceCommentRepository serviceCommentRepository;
+
     /**
      *
      * Creates a new instance of DummyDataInitializer.
@@ -57,9 +58,12 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
      * @param serviceRepository             The repository for managing service             entities.
      * @param commentRepository             The repository for managing comment             entities.
      * @param serviceCompletedRepository    The repository for managing serviceCompleted    entities.
+     * @param sparePartRepository           The repository for managing sparePart           entities.
+     * @param serviceCommentRepository      The repository for managing serviceComment      entities.
      */
     public DummyDataInitializer(UserRepository userRepository, RoleRepository roleRepository, AssetRepository assetRepository, DatasheetRepository datasheetRepository,
-                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository, CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository) {
+                                CategoryRepository categoryRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceRepository serviceRepository,
+                                CommentRepository commentRepository, ServiceCompletedRepository serviceCompletedRepository, SparePartRepository sparePartRepository, ServiceCommentRepository serviceCommentRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetRepository = assetRepository;
@@ -70,6 +74,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
         this.serviceRepository = serviceRepository;
         this.commentRepository = commentRepository;
         this.serviceCompletedRepository = serviceCompletedRepository;
+        this.sparePartRepository = sparePartRepository;
+        this.serviceCommentRepository = serviceCommentRepository;
     }
 
 
@@ -119,7 +125,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
             jenny.setRoles(setUserOnly);
 
-            // Setting up site
+            // Setting up sites
             Site site1 = new Site("Nordlandsbåten");
             Site site2 = new Site("Bodøbåten");
             Site site3 = new Site("Ålesundbåten");
@@ -132,6 +138,8 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             setAllSites.add(site3);
 
             setSiteUsers1.add(site1);
+
+            // Setting up Companies
 
             Company company1 = new Company("CFlow");
             Company company2 = new Company("Facebook");
@@ -281,6 +289,46 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             assetRepository.save(asset11);
             assetRepository.save(asset12);
 
+            // Setting up SpareParts
+            SparePart sparePart1 = new SparePart("https://sparePart1.pdf", 4);
+            SparePart sparePart2 = new SparePart("https://sparePart2.pdf", 5);
+            SparePart sparePart3 = new SparePart("https://sparePart3.pdf", 6);
+            SparePart sparePart4 = new SparePart("https://sparePart4.pdf", 7);
+            SparePart sparePart5 = new SparePart("https://sparePart5.pdf", 8);
+            SparePart sparePart6 = new SparePart("https://sparePart6.pdf", 9);
+            SparePart sparePart7 = new SparePart("https://sparePart7.pdf", 10);
+            SparePart sparePart8 = new SparePart("https://sparePart8.pdf", 11);
+            SparePart sparePart9 = new SparePart("https://sparePart9.pdf", 42);
+            SparePart sparePart10 = new SparePart("https://sparePart10.pdf", 34);
+            SparePart sparePart11 = new SparePart("https://sparePart11.pdf", 43);
+            SparePart sparePart12 = new SparePart("https://sparePart12.pdf", 444);
+
+            sparePart1.setAsset(asset1);
+            sparePart2.setAsset(asset2);
+            sparePart3.setAsset(asset3);
+            sparePart4.setAsset(asset4);
+            sparePart5.setAsset(asset5);
+            sparePart6.setAsset(asset6);
+            sparePart7.setAsset(asset7);
+            sparePart8.setAsset(asset8);
+            sparePart9.setAsset(asset9);
+            sparePart10.setAsset(asset10);
+            sparePart11.setAsset(asset11);
+            sparePart12.setAsset(asset12);
+
+            sparePartRepository.save(sparePart1);
+            sparePartRepository.save(sparePart2);
+            sparePartRepository.save(sparePart3);
+            sparePartRepository.save(sparePart4);
+            sparePartRepository.save(sparePart5);
+            sparePartRepository.save(sparePart6);
+            sparePartRepository.save(sparePart7);
+            sparePartRepository.save(sparePart8);
+            sparePartRepository.save(sparePart9);
+            sparePartRepository.save(sparePart10);
+            sparePartRepository.save(sparePart11);
+            sparePartRepository.save(sparePart12);
+
 
             // Setting up AssetOnSite
             AssetOnSite assetOnSite1 = new AssetOnSite();
@@ -409,8 +457,30 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             serviceCompletedRepository.save(serviceCompleted5);
 
 
+            // Setting up ServiceComments
+            ServiceComment serviceComment1 = new ServiceComment();
+            ServiceComment serviceComment2 = new ServiceComment();
+            ServiceComment serviceComment3 = new ServiceComment();
+            ServiceComment serviceComment4 = new ServiceComment();
+            ServiceComment serviceComment5 = new ServiceComment();
 
+            serviceComment1.setComment(comment1);
+            serviceComment2.setComment(comment2);
+            serviceComment3.setComment(comment3);
+            serviceComment4.setComment(comment4);
+            serviceComment5.setComment(comment5);
 
+            serviceComment1.setServiceCompleted(serviceCompleted1);
+            serviceComment2.setServiceCompleted(serviceCompleted2);
+            serviceComment3.setServiceCompleted(serviceCompleted3);
+            serviceComment4.setServiceCompleted(serviceCompleted4);
+            serviceComment5.setServiceCompleted(serviceCompleted5);
+
+            serviceCommentRepository.save(serviceComment1);
+            serviceCommentRepository.save(serviceComment2);
+            serviceCommentRepository.save(serviceComment3);
+            serviceCommentRepository.save(serviceComment4);
+            serviceCommentRepository.save(serviceComment5);
 
 
             log.info("DONE importing test data");

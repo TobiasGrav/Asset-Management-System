@@ -37,4 +37,6 @@ public class ServiceComment {
     @Schema(description = "the comment to be commented on service completed")
     private Comment comment;
 
+    public ServiceComment() {
+    }
 }

@@ -1,12 +1,12 @@
 package ntnu.group03.idata2900.ams.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.SparePartDto;
 
 @Setter
 @Getter
@@ -44,5 +44,11 @@ public class SparePart {
     public SparePart(String positionDiagramUrl, int numberOfParts) {
         this.positionDiagramUrl = positionDiagramUrl;
         this.numberOfParts = numberOfParts;
+    }
+
+    public SparePart(SparePartDto sparePartDto){
+        this.positionDiagramUrl = sparePartDto.getPositionDiagramUrl();
+        this.numberOfParts = sparePartDto.getNumberOfParts();
+        this.asset = sparePartDto.getAsset();
     }
 }
