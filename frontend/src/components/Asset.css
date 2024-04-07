@@ -13,6 +13,11 @@
   font-size: 32px;
   text-align: center;
 }
+.nameInput:disabled {
+  color: black;
+  background: none;
+  border: none;
+}
 .assetContainer {
   gap: 48px;
   width: 100%;
@@ -23,7 +28,7 @@
 .assetInfoContainer {
   gap: 10px;
   flex: 0 0 auto;
-  width: 599px;
+  width: 50%;
   height: auto;
   display: flex;
   align-items: flex-start;
@@ -34,9 +39,20 @@
   width: 464px;
   height: 41px;
 }
-.textArea {
-  width: 481px;
-  height: 149px;
+.inputID:disabled {
+  color: black;
+  background: none;
+  border: none;
+}
+.descriptionText {
+  min-width: 400px;
+  min-height: 100px;
+  resize: vertical;
+}
+.descriptionText:disabled {
+  color: black;
+  background: none;
+  border: none;
 }
 .assetImage {
   width: 360px;

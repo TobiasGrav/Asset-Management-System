@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from '../components/table'
+import Table from '../components/AssetTable'
 import Asset from '../components/Asset'
 import { jwtDecode } from 'jwt-decode'
 
@@ -20,6 +20,14 @@ const Main = ({children}) => {
 
   const asset = () => {
     navigate("/asset/");
+  }
+
+  const company = () => {
+    navigate("/company/");
+  }
+
+  const site = () => {
+    navigate("/site/");
   }
 
   return (
@@ -65,6 +73,20 @@ const Main = ({children}) => {
             onClick={asset}
           >
             Asset
+          </button>
+          <button
+            type="button"
+            className="navButton"
+            onClick={company}
+          >
+            Company
+          </button>
+          <button
+            type="button"
+            className="navButton"
+            onClick={site}
+          >
+            Site
           </button>
           <button
             type="button"

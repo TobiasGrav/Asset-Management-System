@@ -1,0 +1,21 @@
+.companyBody {
+    width: auto;
+}
+
+.companyContainer {
+    display: flex;
+}
+
+.valueContainer {
+    width: auto;
+    padding-right: 20px;
+}
+
+.imageContainer {
+    width: auto;
+}
+
+.companyImage {
+    height: 360px;
+    width: 360px;
+}

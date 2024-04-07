@@ -1,0 +1,40 @@
+.inputSiteName {
+    width: 941px;
+    height: 102px;
+    font-size: 32px;
+    text-align: center;
+  }
+  
+  .inputSiteName:disabled {
+      background: none;
+      border: none;
+      color: black;
+    }
+  
+  .companyBody {
+      width: auto;
+  }
+  
+  .companyContainer {
+      display: flex;
+  }
+  
+  .valueContainer {
+      width: auto;
+      padding-right: 20px;
+  }
+  
+  .imageContainer {
+      width: auto;
+  }
+  
+  .companyImage {
+      height: 360px;
+      width: 360px;
+  }
+  
+  .inputField:disabled {
+      background: none;
+      border: none;
+      color: black;
+  }
