@@ -122,7 +122,7 @@ function Table() {
             <input placeholder='Search for company' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
             <DataTable
                 columns={columns}
-                data={data}
+                data={tableData}
                 progressPending={loading}
                 pagination
                 persistTableHead
