@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
@@ -10,8 +10,25 @@ function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const [data, setData] = useState([]);
+    const [searchData, setSearchData] = useState([]);
+    const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const searchInput = useRef(null);
+    const datatable = useRef(null);
+
+    const search = () => {
+        setSearchData([]);
+        data.forEach(element => {
+            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+                searchData.push(element);
+            } else if(element.id.toString().includes(searchInput.current.value)) {
+                searchData.push(element);
+            }
+            setTableData(searchData);
+        });
+    };
 
     useEffect(() => {
         fetchData();
@@ -22,8 +39,8 @@ function Table() {
         try {
             HTTPRequest.get('http://localhost:8080/api/sites', cookies.JWT)
             .then(response => {
-                console.log(response);
                 setData(response.data);
+                setTableData(response.data);
             })
             .catch(error => {console.log('Failed fetching data from /api/sites.', error)})
         } catch (error) {
@@ -103,15 +120,16 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Site Overview</h1></div>
-            <input placeholder='Search for company' style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
+            <input placeholder='Search for Name or ID' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
             <DataTable
                 columns={columns}
-                data={data}
+                data={tableData}
                 progressPending={loading}
                 pagination
                 persistTableHead
                 onRowClicked={handleRowClicked}
                 customStyles={customStyles}
+                ref={datatable}
             />
         </div>
     );
