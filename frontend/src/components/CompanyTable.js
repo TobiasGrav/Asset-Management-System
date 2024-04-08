@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
@@ -9,12 +9,28 @@ function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const [data, setData] = useState([]);
+    const [searchData, setSearchData] = useState([]);
+    const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const searchInput = useRef(null);
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    const search = () => {
+        setSearchData([]);
+        data.forEach(element => {
+            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+                searchData.push(element);
+            } else if(element.id.toString().includes(searchInput.current.value)) {
+                searchData.push(element);
+            }
+            setTableData(searchData);
+        });
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -103,7 +119,7 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Company Overview</h1></div>
-            <input placeholder='Search for company' style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
+            <input placeholder='Search for company' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
             <DataTable
                 columns={columns}
                 data={data}
