@@ -44,8 +44,8 @@ public class CompanyService {
 
     public void deleteCompany(int id){
         // TODO: Should be disabled and not deleted
-        Optional<Company> company = companyRepository.findById(id);
-        company.ifPresent(companyRepository::save);
-        //this.companyRepository.deleteById(id);
+        //Optional<Company> company = companyRepository.findById(id);
+        //company.ifPresent(companyRepository::save);
+        this.companyRepository.deleteById(id);
     }
 }
