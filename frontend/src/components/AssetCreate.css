@@ -1,0 +1,40 @@
+.center {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+}
+
+.imageContainer {
+  display: flex;
+  flex-direction: column;
+  padding-left: 50px;
+}
+
+.buttonContainer1 {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.button {
+  margin-right: 25px;
+  background: none;
+  border: none;
+  color: #083F4C;
+}
+.button:hover {
+  color: #C9D7DD;
+  cursor: pointer;
+}
+
+.description {
+  min-width: 100%;
+}

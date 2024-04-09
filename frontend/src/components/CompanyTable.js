@@ -42,6 +42,7 @@ function Table() {
                   'Content-Type': "application/json"
                 }});
             setData(response.data);
+            setTableData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -119,7 +120,7 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Company Overview</h1></div>
-            <input placeholder='Search for company' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
+            <input placeholder='Search for company' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
             <DataTable
                 columns={columns}
                 data={tableData}

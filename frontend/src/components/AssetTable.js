@@ -32,6 +32,10 @@ function Table() {
         });
     };
 
+    const create = () => {
+        navigate('/asset/create');
+    };
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -134,7 +138,8 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Asset Overview</h1></div>
-            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px"}}></input>
+            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
             <DataTable
                 columns={columns}
                 data={tableData}

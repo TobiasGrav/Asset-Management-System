@@ -10,6 +10,7 @@ import CompanyTable from './components/CompanyTable';
 import SiteTable from './components/SiteTable';
 import Site from './components/Site';
 import Welcome from './components/Welcome';
+import AssetCreate from './components/AssetCreate';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 
 
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/asset" element={<Home><Table /></Home>} />
           <Route path="/asset/:id" element={<Home><Asset /></Home>} />
+          <Route path="/asset/create" element={<Home><AssetCreate /></Home>} />
           <Route path="/company" element={<Home><CompanyTable /></Home>} />
           <Route path="/company/:id" element={<Home><Company /></Home>} />
           <Route path="/site" element={<Home><SiteTable /></Home>} />

@@ -8,8 +8,8 @@
   flex-direction: column;
 }
 .nameInput {
-  width: 941px;
-  height: 102px;
+  width: 80%;
+  height: auto;
   font-size: 32px;
   text-align: center;
 }
