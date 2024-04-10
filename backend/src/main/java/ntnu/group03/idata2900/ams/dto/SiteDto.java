@@ -19,4 +19,8 @@ public class SiteDto {
         this.active = active;
         this.company = company;
     }
+
+    public SiteDto(){
+
+    }
 }

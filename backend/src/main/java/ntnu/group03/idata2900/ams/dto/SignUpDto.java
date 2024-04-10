@@ -39,4 +39,8 @@ public class SignUpDto {
         this.phoneNumber = phoneNumber;
     }
 
+    public SignUpDto(){
+
+    }
+
 }

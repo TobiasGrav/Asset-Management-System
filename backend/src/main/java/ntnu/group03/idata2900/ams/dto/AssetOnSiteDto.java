@@ -22,4 +22,8 @@ public class AssetOnSiteDto {
         this.site = site;
         this.asset = asset;
     }
+
+    public AssetOnSiteDto(){
+
+    }
 }

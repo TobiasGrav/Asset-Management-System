@@ -19,4 +19,8 @@ public class ServiceDto {
         this.description = description;
         this.asset = asset;
     }
+
+    public ServiceDto(){
+
+    }
 }

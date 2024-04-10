@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ntnu.group03.idata2900.ams.dto.CategoryDto;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -40,6 +41,10 @@ public class Category {
      */
     public Category(String name) {
         this.name = name;
+    }
+
+    public Category(CategoryDto categoryDto){
+        this.name = categoryDto.getName();
     }
 
     public Category(){

@@ -28,4 +28,8 @@ public class ServiceCompletedDto {
         this.service = service;
         this.user = user;
     }
+
+    public ServiceCompletedDto(){
+
+    }
 }

@@ -15,4 +15,8 @@ public class DatasheetDto {
         this.referenceNumber = referenceNumber;
         this.pdfUrl = pdfUrl;
     }
+
+    public DatasheetDto(){
+
+    }
 }

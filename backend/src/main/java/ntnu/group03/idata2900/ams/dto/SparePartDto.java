@@ -16,4 +16,8 @@ public class SparePartDto {
         this.numberOfParts = numberOfParts;
         this.asset = asset;
     }
+
+    public SparePartDto(){
+
+    }
 }

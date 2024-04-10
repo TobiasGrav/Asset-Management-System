@@ -16,4 +16,8 @@ public class CommentDto {
         this.comment = comment;
         this.creationDate = creationDate;
     }
+
+    public CommentDto(){
+
+    }
 }
