@@ -8,6 +8,8 @@ import Login from './Pages/login';
 import Company from './components/Company';
 import CompanyTable from './components/CompanyTable';
 import SiteTable from './components/SiteTable';
+import CustomerTable from './components/CustomerTable';
+import Customer from './components/Customer';
 import Site from './components/Site';
 import Welcome from './components/Welcome';
 import AssetCreate from './components/AssetCreate';
@@ -25,6 +27,9 @@ function App() {
           <Route path="/company/:id" element={<Home><Company /></Home>} />
           <Route path="/site" element={<Home><SiteTable /></Home>} />
           <Route path="/site/:id" element={<Home><Site /></Home>} />
+          <Route path="/customer" element={<Home><CustomerTable /></Home>} />
+          <Route path="/customer/:id" element={<Home><Customer /></Home>} />
+          <Route path="/customer/create" element={<Home><AssetCreate /></Home>} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home><Welcome /></Home>} />
         </Routes>

@@ -22,15 +22,22 @@ const Main = (props) => {
   const [commissionDate, setCommissionDate] = useState();
   const [site, setSite] = useState();
   const [datasheet, setDatasheet] = useState();
+  const [image, setImage] = useState();
 
   const nameReference = useRef(null);
   const descriptionReference = useRef(null);
+  const imageInput = useRef(null);
     
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
 
   const cancel = () => {
     navigate('/asset');
+  }
+
+  const imageSelect = () => {
+    setImage(imageInput.current.value);
+    console.log(imageInput.current.value);
   }
 
   const handleSubmit = async (e) => {
@@ -78,14 +85,19 @@ const Main = (props) => {
         <div className='infoContainer'>
           <b>Description</b>
           <textarea ref={descriptionReference} onChange={handleDescriptionChange} className='description' placeholder='' />
+          <br></br>
           <b>Is active?</b>
           <select>
             <option value='yes' >yes</option>
             <option value='no' >no</option>
           </select>
+          <br></br>
+          <b>Upload Datasheet</b>
+          <input type='file' accept='.pdf'></input>
         </div>
         <div className='imageContainer'>
-          <img src={require('../Pages/resources/AssetImage.png')} style={{width:360, height:360}}></img>
+          <img src={image} style={{width:360, height:360}}></img>
+          <input ref={imageInput} onChange={imageSelect} type='file' accept='.png'></input>
         </div>
       </div>
       <div className='buttonContainer1'>

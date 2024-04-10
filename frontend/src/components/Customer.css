@@ -8,7 +8,7 @@
   flex-direction: column;
 }
 .nameInput {
-  width: 80%;
+  width: auto;
   height: auto;
   font-size: 32px;
   text-align: center;
@@ -92,10 +92,4 @@
 .button:hover {
   color: #C9D7DD;
   cursor: pointer;
-}
-
-@media (max-width: 900px) {
-  .assetContainer {
-    flex-direction: column-reverse;
-  }
 }

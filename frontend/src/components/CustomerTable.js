@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import HTTPRequest from '../tools/HTTPRequest';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -23,7 +24,12 @@ function Table() {
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+            let fullName = element.firstName + " " + element.lastName
+            if(fullName.toLowerCase().includes(searchInput.current.value)) {
+                searchData.push(element);
+            } else if(element.email.toLowerCase().includes(searchInput.current.value)) {
+                searchData.push(element);
+            } else if(element.phoneNumber.toLowerCase().includes(searchInput.current.value)) {
                 searchData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
                 searchData.push(element);
@@ -32,15 +38,20 @@ function Table() {
         });
     };
 
+    const create = () => {
+        navigate('/asset/create');
+    };
+
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/companies', {
+            const response = await axios.get('http://localhost:8080/api/users', {
                 headers: {
                   Authorization: 'Bearer ' + cookies.JWT,
                   Accept: "application/json",
                   'Content-Type': "application/json"
                 }});
+            console.log(response);
             setData(response.data);
             setTableData(response.data);
         } catch (error) {
@@ -50,22 +61,41 @@ function Table() {
         }
     };
 
+    const formatLocalDateTime = (localDateTime) => {
+        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
+    };
+
     const columns = [
         {
             name: 'Name',
-            selector: row => row.name,
+            selector: row => row.firstName + " " + row.lastName,
             sortable: true,
         },
         {
-            name: 'ID',
-            selector: row => row.id,
+            name: 'Email',
+            selector: row => row.email,
+            sortable: true,
+        },
+        {
+            name: 'Phone number',
+            selector: row => row.phoneNumber,
+            sortable: true,
+        },
+        {
+            name: 'Creation Date',
+            selector: row => formatLocalDateTime(row.creationDate),
+            sortable: true,
+        },
+        {
+            name: 'Active',
+            selector: row => row.active ? 'Yes' : 'No',
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/company/${row.id}`); // Use navigate to change the route
+        navigate(`/customer/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
@@ -119,8 +149,9 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Company Overview</h1></div>
-            <input placeholder='Search for company' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>User Overview</h1></div>
+            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
             <DataTable
                 columns={columns}
                 data={tableData}

@@ -38,6 +38,10 @@ const Main = ({children}) => {
     navigate("/site/");
   };
 
+  const customer = () => {
+    navigate("/customer/");
+  };
+
   const profile = () => {
     navigate('/profile');
   };
@@ -114,8 +118,9 @@ const Main = ({children}) => {
           <button
             type="button"
             className="navButton"
+            onClick={customer}
           >
-            Customer
+            User
           </button>
           <button
             type="button"
