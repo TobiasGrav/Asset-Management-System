@@ -33,6 +33,12 @@ public class Company {
     @Schema(description = "sites with the given company")
     private Set<Site> sites = new LinkedHashSet<>();
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonBackReference
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @Schema(description = "users within the given company")
+    private Set<User> users = new LinkedHashSet<>();
+
     public Company() {
     }
 

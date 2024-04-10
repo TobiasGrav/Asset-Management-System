@@ -26,14 +26,6 @@ public class User {
     private int id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "company_id", nullable = false, unique = false)
-    @Schema(description = "company id of the user")
-    private String companyId;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "group_id", nullable = false, unique = false)
-    @Schema(description = "group id of the user")
-    private String groupId;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "first_name", nullable = false, unique = false)
     @Schema(description = "First name of the user")
     private String firstName;
@@ -92,13 +84,20 @@ public class User {
     @Schema(description = "services completed on asset")
     private Set<ServiceCompleted> servicesCompleted = new LinkedHashSet<>();
 
+    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
+    @JsonManagedReference
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumns(
+            @JoinColumn(name = "company_id", referencedColumnName = "id")
+    )
+    @Schema(description = "Company of the given user")
+    private Company company;
+
 
 
     /**
      * Constructor with parameters
      *
-     * @param companyId    users company id.
-     * @param groupId      users group id.
      * @param firstName    first and middle name(s) name of user.
      * @param lastName     lastname of user.
      * @param email        users email.
@@ -106,13 +105,11 @@ public class User {
      * @param phoneNumber  users phone number.
      * @param creationDate creation date of user
      */
-    public User(String companyId, String groupId, String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime creationDate) {
+    public User(String firstName, String lastName, String email, String password, String phoneNumber, LocalDateTime creationDate) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-        this.companyId = companyId;
-        this.groupId = groupId;
         this.phoneNumber = phoneNumber;
         this.creationDate = creationDate;
         this.active = true;
@@ -128,10 +125,9 @@ public class User {
         this.firstName = userInfo.getFirstName();
         this.lastName = userInfo.getLastName();
         this.password = userInfo.getPassword();
-        this.companyId = userInfo.getCompanyId();
-        this.groupId = userInfo.getGroupId();
         this.phoneNumber = userInfo.getPhoneNumber();
         this.creationDate = LocalDateTime.now();
+        this.company = userInfo.getCompany();
         this.active = true;
     }
 

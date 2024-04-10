@@ -102,8 +102,6 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
             // Setting up test users
             User jon = new User(
-                    "CompanyID#01",
-                    "GroupID#01",
                     "Jon",
                     "Smith",
                     "Jons@ntnu.no",
@@ -114,8 +112,6 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             jon.setRoles(setUserAdmin);
 
             User jenny = new User(
-                    "CompanyID#02",
-                    "GroupID#01",
                     "Jenny",
                     "Dow",
                     "Jend@ntnu.no",

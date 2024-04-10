@@ -148,9 +148,7 @@ public class UserService implements UserDetailsService {
             User user = existingUser.get();
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
-            user.setEmail(updatedUser.getEmail());
-            user.setCompanyId(updatedUser.getCompanyId());
-            user.setGroupId(updatedUser.getGroupId());
+            user.setEmail(updatedUser.getEmail());;
             user.setPhoneNumber(updatedUser.getPhoneNumber());
             user.setPassword(createHash(updatedUser.getPassword()));
             user.setUpdatedDate(LocalDateTime.now());
