@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../tools/HTTPRequest';
+import {jwtDecode} from "jwt-decode";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -36,18 +37,36 @@ function Table() {
 
     const fetchData = async () => {
         setLoading(true);
-        try {
-            HTTPRequest.get('http://localhost:8080/api/sites', cookies.JWT)
-            .then(response => {
-                setData(response.data);
-                setTableData(response.data);
-            })
-            .catch(error => {console.log('Failed fetching data from /api/sites.', error)})
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
-        }
+
+        jwtDecode(cookies.JWT).roles.forEach(role => {
+            if(role.authority === "ADMIN") {
+                try{
+                    HTTPRequest.get(`http://localhost:8080/api/admin/sites`, cookies.JWT)
+                        .then(response => {
+                            setData(response.data);
+                            setTableData(response.data);
+                        })
+                        .catch(error => {console.log('Failed fetching data from /api/admin/sites.', error)})
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                try{
+                    HTTPRequest.get(`http://localhost:8080/api/user/sites`, cookies.JWT)
+                        .then(response => {
+                            setData(response.data);
+                            setTableData(response.data);
+                        })
+                        .catch(error => {console.log('Failed fetching data from /api/user/sites.', error)})
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        })
     };
 
     const columns = [

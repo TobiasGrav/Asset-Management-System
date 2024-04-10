@@ -44,7 +44,7 @@ const Main = (props) => {
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
     jwtDecode(cookies.JWT).roles.forEach(role => {
-      if(role.authority == "ADMIN") {
+      if(role.authority === "ADMIN") {
             setIsAdmin(true);
       }
     })

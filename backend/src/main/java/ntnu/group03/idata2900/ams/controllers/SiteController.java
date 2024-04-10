@@ -3,21 +3,25 @@ package ntnu.group03.idata2900.ams.controllers;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.Site;
+import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.SiteService;
+import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/sites")
+@RequestMapping("/api")
 public class SiteController {
 
     private final SiteService siteService;
+    private final UserService userService;
 
     private static final String SITE_NOT_FOUND = "Site not found with id: {}";
 
@@ -25,9 +29,11 @@ public class SiteController {
      * Creates a new instance of SiteController.
      *
      * @param siteService siteService
+     * @param userService userService
      */
-    public SiteController(SiteService siteService) {
+    public SiteController(SiteService siteService, UserService userService) {
         this.siteService = siteService;
+        this.userService = userService;
     }
 
     /**
@@ -35,9 +41,19 @@ public class SiteController {
      *
      * @return List of all sites in database
      */
-    @GetMapping
+    @GetMapping("/admin/sites")
     public List<Site> getAll() {
         return siteService.getAll();
+    }
+
+    /**
+     * Returns list of all sites the user has access to
+     *
+     * @return set of all sites the user has access to
+     */
+    @GetMapping("/user/sites")
+    public Set<Site> getAllSitesForUser(){
+        return userService.getSessionUser().getSites();
     }
 
     /**
