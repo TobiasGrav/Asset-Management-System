@@ -48,7 +48,7 @@ public class UserController {
      * @param id potential id of a user
      * @return a user object in JSON format
      */
-    @GetMapping("/admin/{id}")
+    @GetMapping("/admin/users/{id}")
     public ResponseEntity<User> getUser(@PathVariable int id) {
         Optional<User> user = this.userService.getUserById(id);
         if (user.isEmpty()) {
@@ -66,7 +66,7 @@ public class UserController {
      * @param id potential id of user
      * @return all sites of a given user
      */
-    @GetMapping("/admin/{id}/sites")
+    @GetMapping("/admin/users/{id}/sites")
     public ResponseEntity<Set<Site>> getAllSitesOfUser(@PathVariable int id){
         Optional<User> user = this.userService.getUserById(id);
         if (user.isEmpty()){
@@ -86,7 +86,7 @@ public class UserController {
      * @param user The user object to be created.
      * @return ResponseEntity containing the created user and HTTP status code 201 (CREATED).
      */
-    @PostMapping
+    @PostMapping("/admin/users")
     public ResponseEntity<User> createUser(@RequestBody SignUpDto user) {
         try {
             User createdUser = userService.createUser(user);
@@ -107,7 +107,7 @@ public class UserController {
      * @return ResponseEntity containing the updated user (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the user with the given ID doesn't exist.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/admin/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody SignUpDto updatedUser) {
         Optional<User> existingUser = userService.getUserById(id);
         if (existingUser.isEmpty()) {
@@ -128,7 +128,7 @@ public class UserController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the user with the given ID doesn't exist.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/users/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable int id) {
         Optional<User> existingUser = userService.getUserById(id);
         if (existingUser.isEmpty()) {
