@@ -16,7 +16,7 @@ import java.util.Set;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/user/users")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -37,7 +37,7 @@ public class UserController {
      *
      * @return List of all users in database
      */
-    @GetMapping
+    @GetMapping("/admin/users")
     public List<User> getAll() {
         return userService.getAll();
     }
@@ -48,7 +48,7 @@ public class UserController {
      * @param id potential id of a user
      * @return a user object in JSON format
      */
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public ResponseEntity<User> getUser(@PathVariable int id) {
         Optional<User> user = this.userService.getUserById(id);
         if (user.isEmpty()) {
@@ -66,7 +66,7 @@ public class UserController {
      * @param id potential id of user
      * @return all sites of a given user
      */
-    @GetMapping("/{id}/sites")
+    @GetMapping("/admin/{id}/sites")
     public ResponseEntity<Set<Site>> getAllSitesOfUser(@PathVariable int id){
         Optional<User> user = this.userService.getUserById(id);
         if (user.isEmpty()){
