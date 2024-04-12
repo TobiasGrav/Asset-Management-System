@@ -62,7 +62,7 @@ public class SiteController {
      * @param id potential id of a site
      * @return a site object in JSON format
      */
-    @GetMapping("/admin/{id}")
+    @GetMapping("/admin/sites/{id}")
     public ResponseEntity<Site> getSiteAdmin(@PathVariable int id) {
         Optional<Site> site = this.siteService.getSite(id);
         if (site.isEmpty()) {
@@ -80,7 +80,7 @@ public class SiteController {
      * @param id potential id of a site
      * @return a site object in JSON format
      */
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/sites/{id}")
     public ResponseEntity<Site> getSiteUser(@PathVariable int id) {
         Optional<Site> site = this.siteService.getSite(id);
         if (site.isEmpty()) {
