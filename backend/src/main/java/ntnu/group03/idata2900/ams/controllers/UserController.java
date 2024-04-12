@@ -2,6 +2,7 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
+import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -10,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user/users")
 public class UserController {
 
     private final UserService userService;
@@ -44,7 +46,7 @@ public class UserController {
      * Get a user from database matching given id if it exists.
      *
      * @param id potential id of a user
-     * @return a ModelAndView containing user in JSON format
+     * @return a user object in JSON format
      */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable int id) {
@@ -57,6 +59,25 @@ public class UserController {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         }
     }
+
+    /**
+     * Get a user from database matching given id if exists and return all its sites
+     *
+     * @param id potential id of user
+     * @return all sites of a given user
+     */
+    @GetMapping("/{id}/sites")
+    public ResponseEntity<Set<Site>> getAllSitesOfUser(@PathVariable int id){
+        Optional<User> user = this.userService.getUserById(id);
+        if (user.isEmpty()){
+            log.warn(USER_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("User found with ID: {}", id);
+            return new ResponseEntity<>(user.get().getSites(), HttpStatus.OK);
+        }
+    }
+
 
 
     /**
