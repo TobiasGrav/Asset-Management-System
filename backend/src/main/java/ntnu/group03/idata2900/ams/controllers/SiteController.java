@@ -60,10 +60,28 @@ public class SiteController {
      * Get a site from database matching given id if it exists.
      *
      * @param id potential id of a site
-     * @return a ModelAndView containing site in JSON format
+     * @return a site object in JSON format
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<Site> getSite(@PathVariable int id) {
+    @GetMapping("admin/{id}")
+    public ResponseEntity<Site> getSiteAdmin(@PathVariable int id) {
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()) {
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("Site found with ID: {}", id);
+            return new ResponseEntity<>(site.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Get a site from database matching given id if it exists.
+     *
+     * @param id potential id of a site
+     * @return a site object in JSON format
+     */
+    @GetMapping("user/{id}")
+    public ResponseEntity<Site> getSiteUser(@PathVariable int id) {
         Optional<Site> site = this.siteService.getSite(id);
         if (site.isEmpty()) {
             log.warn(SITE_NOT_FOUND, id);
