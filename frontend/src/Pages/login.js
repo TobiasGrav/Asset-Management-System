@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
+import { useDropzone } from 'react-dropzone';
 
 
 import './login.css';
@@ -33,6 +34,25 @@ const Login = (props) => {
       console.log(error);
     });
 
+  };
+
+  const loginUser = () => {
+    axios.post('http://localhost:8080/api/authenticate', {
+      email: "Jend@ntnu.no",
+      password: "12RulesForLife"
+    })
+    .then(response => {
+      if(response.status == 200) {
+        console.log("login successful")
+        setCookie('JWT', response.data.response, {maxAge: 12*3600, path: '/'});
+        window.location.href = '/asset/';
+      }
+      console.log(response);
+    })
+    .catch(error => {
+      // Handle error
+      console.log(error);
+    });
   }
 
   return (
@@ -60,6 +80,12 @@ const Login = (props) => {
           <button onClick={login} type='button' className="button">
             <span>
               <span>Login</span>
+              <br></br>
+            </span>
+          </button>
+          <button onClick={loginUser} type='button' className="button">
+            <span>
+              <span>Login User</span>
               <br></br>
             </span>
           </button>

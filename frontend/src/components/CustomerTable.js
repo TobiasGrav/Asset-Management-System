@@ -45,11 +45,11 @@ function Table() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/users', {
+            const response = await axios.get('http://localhost:8080/api/admin/users', {
                 headers: {
                   Authorization: 'Bearer ' + cookies.JWT,
                   Accept: "application/json",
-                  'Content-Type': "application/json"
+                  'Content-Type': "application/json",
                 }});
             console.log(response);
             setData(response.data);

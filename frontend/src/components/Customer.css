@@ -25,10 +25,20 @@
   align-items: center;
   justify-content: center;
 }
-.assetInfoContainer {
-  gap: 10px;
+.containerLeft {
+  gap: 5px;
   flex: 0 0 auto;
-  width: 50%;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+}
+.containerCenter {
+  gap: 5px;
+  flex: 0 0 auto;
+  width: auto;
   height: auto;
   display: flex;
   align-items: flex-start;
@@ -92,4 +102,9 @@
 .button:hover {
   color: #C9D7DD;
   cursor: pointer;
+}
+.input:disabled {
+  background: none;
+  color: black;
+  border: 2px;
 }

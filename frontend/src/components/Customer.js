@@ -1,17 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 
-import { Helmet } from 'react-helmet'
+import URL from '../tools/URL';
 
-import Table from './AssetTable'
+import { Helmet } from 'react-helmet';
 
-import './Customer.css'
-import { useParams } from 'react-router'
-import axios from 'axios'
-import { useCookies } from 'react-cookie'
-import { useNavigate } from 'react-router-dom'
-import HTTPRequest from '../tools/HTTPRequest'
-import { jwtDecode } from 'jwt-decode'
-import QRCode from 'qrcode.react'
+import Table from './AssetTable';
+
+import './Customer.css';
+import { useParams } from 'react-router';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import HTTPRequest from '../tools/HTTPRequest';
+import { jwtDecode } from 'jwt-decode';
+import QRCode from 'qrcode.react';
+import DataTable from 'react-data-table-component';
 
 const Main = (props) => {
 
@@ -25,7 +28,9 @@ const Main = (props) => {
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
-  
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
@@ -38,12 +43,14 @@ const Main = (props) => {
 
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
-    jwtDecode(cookies.JWT).roles.forEach(role => {
-      if(role.authority == "ADMIN") {
-            setIsAdmin(true);
-      }
-    })
-  })
+    if(cookies.JWT != null) {
+      jwtDecode(cookies.JWT).roles.forEach(role => {
+        if(role.authority == "ADMIN") {
+              setIsAdmin(true);
+        }
+      })
+    }
+  }, []);
 
 
 // // Prevents the user from inputing values when not in editing mode.
@@ -57,7 +64,7 @@ const Main = (props) => {
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
   const back = () => {
-    navigate('/customer/');
+    document.referrer;
   }
 
   const edit = () => {
@@ -76,7 +83,7 @@ const Main = (props) => {
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`http://localhost:8080/api/users/${id}`, cookies.JWT)
+    HTTPRequest.get(URL.URL + `/api/admin/users/${id}`, cookies.JWT)
     .then(response => {
       console.log(response);
       let asset = response.data;
@@ -93,6 +100,16 @@ const Main = (props) => {
     .catch(error => {console.log(error)});
   }, [id]);
 
+  useEffect(() => {
+    HTTPRequest.get(URL.URL + '/api/user/sites', cookies.JWT)
+    .then(response => {
+      console.log(response);
+      setData(response.data);
+    })
+    .catch(error => {console.log(error)});
+  }, []);
+  
+
   const handleSubmit = async (e) => {
       e.preventDefault();
       const updatedAsset = {
@@ -106,7 +123,7 @@ const Main = (props) => {
       };
       console.log(updatedAsset);
       try {
-          await axios.put(`http://localhost:8080/api/users/${id}`, updatedAsset, {
+          await axios.put(URL.URL + `/api/admin/users/${id}`, updatedAsset, {
               headers: {
                   Authorization: `Bearer ${cookies.JWT}`,
                   'Content-Type': 'application/json',
@@ -131,6 +148,75 @@ const Main = (props) => {
 
   };
 
+    const columns = [
+      {
+          name: 'Name',
+          selector: row => row.name,
+          sortable: true,
+      },
+      {
+          name: 'Site ID',
+          selector: row => row.id,
+          sortable: true,
+      },
+  ];
+
+  // Handler for row click event using navigate
+  const handleRowClicked = (row) => {
+      navigate(`/site/${row.id}`); // Use navigate to change the route
+  };
+
+  const customStyles = {
+      headCells: {
+          style: {
+              backgroundColor: '#E7EDF0',
+              color: '#333',
+              paddingLeft: '12px',
+              paddingRight: '12px',
+          },
+      },
+      cells: {
+          style: {
+              paddingLeft: '12px',
+              paddingRight: '12px',
+              borderColor: '#ddd',
+              cursor: 'default', // Ensures the cursor indicates the cell is not editable
+          },
+      },
+      rows: {
+          style: {
+              '&:nth-of-type(even)': {
+                  backgroundColor: '#E7EDF0', // Even rows background color
+              },
+              '&:nth-of-type(odd)': {
+                  backgroundColor: '#F9FBFC', // Even rows background color
+              },
+              '&:hover': {
+                  backgroundColor: '#ddd', // Hover row background color
+              },
+              borderColor: '#ddd', // Row border color
+          },
+      },
+      pagination: {
+          style: {
+              marginTop: '20px', // Pagination margin top
+          },
+          pageButtonsStyle: {
+              borderRadius: '4px', // Pagination buttons border radius
+              backgroundColor: '#E7EDF0', // Pagination buttons background color
+              borderColor: '#ddd', // Pagination buttons border color
+              color: '#333', // Pagination buttons text color
+              height: 'auto',
+              padding: '8px', // Pagination buttons padding
+              '&:hover': {
+                  backgroundColor: '#ddd', // Pagination buttons hover background color
+              },
+          },
+      },
+  };
+
+  const noDataComponent = <b style={{padding:"10px"}}>Does not belong to any site</b>;
+
   return (
     <div className="assetBody">
       <div style={{display:'flex', width:'auto'}}>
@@ -138,17 +224,31 @@ const Main = (props) => {
       </div>
       <br></br>
       <div className="assetContainer">
-        <div className="assetInfoContainer">
+        <div className="containerLeft">
           <b>First Name</b>
-          <input placeholder="Enter First Name" value={firstName} disabled={true}></input>
+          <input className='input' placeholder="Enter First Name" value={firstName} disabled={!isEditing}></input>
           <b>Last Name</b>
-          <input placeholder="Enter Last Name" value={lastName} disabled={true}></input>
+          <input className='input' placeholder="Enter Last Name" value={lastName} disabled={!isEditing}></input>
           <b>Email:</b>
-          <input placeholder="Enter Email" value={email} disabled={true}></input>
+          <input className='input' placeholder="Enter Email" value={email} disabled={!isEditing}></input>
           <b>Phone number:</b>
-          <input placeholder="Enter Phone number" value={phoneNumber} disabled={true}></input>
+          <input className='input' placeholder="Enter Phone number" value={phoneNumber} disabled={!isEditing}></input>
           <b>Customer ID</b>
-          <input placeholder="Enter Customer ID" value={id} disabled={true}></input>
+          <input className='input' placeholder="Enter Customer ID" value={id} disabled={!isEditing}></input>
+        </div>
+        <div className="containerCenter">
+          <b>Company:</b>
+          <input className='input' placeholder="Enter First Name" value={firstName} disabled={!isEditing}></input>
+          <DataTable
+                columns={columns}
+                data={data}
+                progressPending={loading}
+                pagination
+                persistTableHead
+                onRowClicked={handleRowClicked}
+                customStyles={customStyles}
+                noDataComponent={noDataComponent}
+            />
         </div>
         <img alt="image" src={require("../Pages/resources/profileImage.png")} className="assetImage"/>
       </div>

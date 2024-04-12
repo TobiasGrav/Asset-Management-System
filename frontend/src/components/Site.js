@@ -71,7 +71,7 @@ const Company = (props) => {
     };
 
     useEffect(() => {
-        HTTPRequest.get(`http://localhost:8080/api/sites/${id}`, cookies.JWT)
+        HTTPRequest.get(`http://localhost:8080/api/user/sites/${id}`, cookies.JWT)
         .then(response => {
           console.log(response);
           setSiteName(response.data.name);

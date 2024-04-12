@@ -6,7 +6,7 @@ import Table from '../components/AssetTable'
 import Asset from '../components/Asset'
 import { jwtDecode } from 'jwt-decode'
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import './Home.css'
 import { Route, Router, Routes, useNavigate } from 'react-router'
@@ -16,6 +16,7 @@ import HTTPRequest from '../tools/HTTPRequest'
 const Main = ({children}) => {
 
   const [cookies, setCookie, deleteCookie] = useCookies();
+  const [isAdmin, setIsAdmin] = useState();
 
   const navigate = useNavigate();
 
