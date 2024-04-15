@@ -86,7 +86,7 @@ public class User {
 
     @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumns(
             @JoinColumn(name = "company_id", referencedColumnName = "id")
     )
