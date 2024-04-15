@@ -2,6 +2,7 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SiteDto;
+import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.SiteService;
@@ -24,6 +25,7 @@ public class SiteController {
     private final UserService userService;
 
     private static final String SITE_NOT_FOUND = "Site not found with id: {}";
+    private static final String SITE_FOUND = "Site found with ID: {}";
 
     /**
      * Creates a new instance of SiteController.
@@ -69,8 +71,27 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info("Site found with ID: {}", id);
+            log.info(SITE_FOUND, id);
             return new ResponseEntity<>(site.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Returns all assets on site matching given site id.
+     *
+     * @param id site id
+     *
+     * @return returns all assets on site
+     */
+    @GetMapping("/admin/sites/{id}/assetsOnSite")
+    public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSite(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info(SITE_FOUND, id);
+            return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
         }
     }
 
@@ -87,7 +108,7 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info("Site found with ID: {}", id);
+            log.info(SITE_FOUND, id);
             return new ResponseEntity<>(site.get(), HttpStatus.OK);
         }
     }
