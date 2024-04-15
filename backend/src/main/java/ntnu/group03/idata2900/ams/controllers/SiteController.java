@@ -5,6 +5,7 @@ import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
+import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
 import ntnu.group03.idata2900.ams.services.SiteService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class SiteController {
 
     private final SiteService siteService;
     private final UserService userService;
+    private final AssetOnSiteService assetOnSiteService;
 
     private static final String SITE_NOT_FOUND = "Site not found with id: {}";
     private static final String SITE_FOUND = "Site found with ID: {}";
@@ -32,10 +34,12 @@ public class SiteController {
      *
      * @param siteService siteService
      * @param userService userService
+     * @param assetOnSiteService assetOnSiteService
      */
-    public SiteController(SiteService siteService, UserService userService) {
+    public SiteController(SiteService siteService, UserService userService, AssetOnSiteService assetOnSiteService) {
         this.siteService = siteService;
         this.userService = userService;
+        this.assetOnSiteService = assetOnSiteService;
     }
 
     /**
@@ -77,11 +81,11 @@ public class SiteController {
     }
 
     /**
-     * Returns all assets on site matching given site id.
+     * Returns set of all assets on site matching given site id.
      *
      * @param id site id
      *
-     * @return returns all assets on site
+     * @return returns set of all assets on site
      */
     @GetMapping("/admin/sites/{id}/assetsOnSite")
     public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSite(@PathVariable int id){
@@ -90,8 +94,28 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info(SITE_FOUND, id);
+            log.info("Assets on site found with ID: {}", id);
             return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Returns asset on site matching given id.
+     *
+     * @param id site id
+     *
+     * @return returns asset on site
+     */
+    @GetMapping("/admin/sites/{id}/assetsOnSite/{aosId}")
+    public ResponseEntity<AssetOnSite> getAssetsOnSite(@PathVariable int id, @PathVariable int aosId){
+        Optional<Site> site = this.siteService.getSite(id);
+        Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
+        if (site.isEmpty() && asset.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("Asset on site found with ID: {}", id);
+            return new ResponseEntity<>(asset.get(), HttpStatus.OK);
         }
     }
 
