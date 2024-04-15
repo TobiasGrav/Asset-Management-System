@@ -103,7 +103,7 @@ public class SiteController {
      * Returns asset on site matching given id.
      *
      * @param id site id
-     *
+     * @param aosId asset on site id
      * @return returns asset on site
      */
     @GetMapping("/admin/sites/{id}/assetsOnSite/{aosId}")
