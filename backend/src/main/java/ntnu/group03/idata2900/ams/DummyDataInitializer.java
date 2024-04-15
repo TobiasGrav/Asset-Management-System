@@ -150,9 +150,10 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             siteRepository.save(site3);
 
             jon.setSites(setAllSites);
+            jon.setCompany(company1);
 
             jenny.setSites(setSiteUsers1);
-
+            jenny.setCompany(company3);
 
 
             userRepository.save(jon);
