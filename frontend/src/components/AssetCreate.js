@@ -13,21 +13,23 @@ const Main = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   // information variables
-  const { id } = useParams();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
-  const [attachmentLink, setAttachmentLink] = useState();
-  const [attachmentName, setAttachmentName] = useState();
-  const [category, setCategory] = useState();
-  const [commissionDate, setCommissionDate] = useState();
-  const [site, setSite] = useState();
-  const [datasheet, setDatasheet] = useState();
+  const [datasheetName, setDatasheetName] = useState();
+  const [referenceNumber, setReferenceNumber] = useState();
+  const [pdfUrl, setPdfUrl] = useState();
   const [image, setImage] = useState();
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState();
 
   const nameReference = useRef(null);
   const descriptionReference = useRef(null);
+  const datasheetNameReference = useRef(null);
+  const referenceNumberReference = useRef(null);
+  const pdfUrlReference = useRef(null);
   const imageInput = useRef(null);
-    
+  const selectedCategoryReference = useRef(null);
+
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
 
@@ -40,32 +42,67 @@ const Main = (props) => {
     console.log(imageInput.current.value);
   }
 
-  const handleSubmit = async (e) => {
-      e.preventDefault();
-      const updatedAsset = {
-          id: id,
-          name: name,
-          description: description,
-          commissionDate: commissionDate,
-          category: category,
-          site: site,
-          datasheet: datasheet
-      };
-      console.log(updatedAsset);
-      try {
-          await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
-              headers: {
-                  Authorization: `Bearer ${cookies.JWT}`,
-                  'Content-Type': 'application/json',
-              },
-          });
-          alert("Asset updated successfully!");
-      } catch (error) {
-          console.error("Error updating the asset:", error);
-          alert("Failed to update the asset.");
-      }
-      setIsEditing(false);
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+
+        try{
+            const datasheetResponse = await axios.post(
+                'http://localhost:8080/api/datasheets',
+                {
+                    name: datasheetName,
+                    referenceNumber: referenceNumber,
+                    pdfUrl: pdfUrl
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${cookies.JWT}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            const datasheet = datasheetResponse.data;
+
+            await axios.post(
+                `http://localhost:8080/api/assets`,
+                {
+                    name: name,
+                    description: description,
+                    category: selectedCategory,
+                    datasheet: datasheet
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${cookies.JWT}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            alert('Asset created successfully!');
+        } catch (error) {
+            console.error('Error creating the asset:', error);
+            alert('Failed to create the asset.');
+        }
+    };
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(
+                    'http://localhost:8080/api/categories', {
+                        headers: {
+                            Authorization: `Bearer ${cookies.JWT}`,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                setCategories(response.data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
   // lets the user input values
   const handleNameChange = (event) => {
@@ -78,32 +115,63 @@ const Main = (props) => {
 
   };
 
+    const handleDatasheetNameChange = (event) => {
+        setDatasheetName(event.target.value);
+
+    };
+
+    const handleReferenceNumberChange = (event) => {
+        setReferenceNumber(event.target.value);
+
+    };
+
+    const handlePdfUrlChange = (event) => {
+        setPdfUrl(event.target.value);
+
+    };
+
+    const handleCategoryChange = (event) => {
+        setSelectedCategory(event.target.value ? JSON.parse(event.target.value) : null);
+    };
+
   return (
     <div>
-      <div style={{textAlign:'center', width:'100%', marginBottom:'32px'}}><input ref={nameReference} onChange={handleNameChange} placeholder='Input Name' style={{width:'100%', textAlign:'center', fontSize:32}} /></div>
-      <div className='center'>
-        <div className='infoContainer'>
-          <b>Description</b>
-          <textarea ref={descriptionReference} onChange={handleDescriptionChange} className='description' placeholder='' />
-          <br></br>
-          <b>Is active?</b>
-          <select>
-            <option value='yes' >yes</option>
-            <option value='no' >no</option>
-          </select>
-          <br></br>
-          <b>Upload Datasheet</b>
-          <input type='file' accept='.pdf'></input>
-        </div>
-        <div className='imageContainer'>
-          <img src={image} style={{width:360, height:360}}></img>
-          <input ref={imageInput} onChange={imageSelect} type='file' accept='.png'></input>
-        </div>
-      </div>
-      <div className='buttonContainer1'>
-        <button className='button' onClick={cancel} >Cancel</button>
-        <button className='button' onSubmit={handleDescriptionChange} >Create</button>
-      </div>
+        <form onSubmit={handleSubmit}>
+            <div style={{textAlign: 'center', width: '100%', marginBottom: '32px'}}><input ref={nameReference} onChange={handleNameChange} placeholder='Input Name' style={{width: '100%', textAlign: 'center', fontSize: 32}}/></div>
+            <div className='center'>
+                <div className='infoContainer'>
+                    <b>Description</b>
+                    <textarea ref={descriptionReference} onChange={handleDescriptionChange} className='description'
+                              placeholder=''/>
+                    <br></br>
+                    <b>Category</b>
+                    <select value={selectedCategory ? JSON.stringify(selectedCategory) : ""} onChange={handleCategoryChange}>
+                        <option value="">Select a category</option>
+                        {categories.map(category => (
+                            <option key={category.id} value={JSON.stringify(category)}>{category.name}</option>
+                        ))}
+                    </select>
+                    <br></br>
+                    <h3>Datasheet</h3>
+                    <b>Datasheet Name</b>
+                    <input ref={datasheetNameReference} onChange={handleDatasheetNameChange}></input>
+                    <br></br>
+                    <b>Datasheet Reference Number</b>
+                    <input ref={referenceNumberReference} onChange={handleReferenceNumberChange}></input>
+                    <br></br>
+                    <b>Datasheet Pdf Url</b>
+                    <input ref={pdfUrlReference} onChange={handlePdfUrlChange}></input>
+                </div>
+                <div className='imageContainer'>
+                    <img src={image} style={{width: 360, height: 360}}></img>
+                    <input ref={imageInput} onChange={imageSelect} type='file' accept='.png'></input>
+                </div>
+            </div>
+            <div className='buttonContainer1'>
+                <button className='button' onClick={cancel}>Cancel</button>
+                <button className='button' type="submit" onSubmit={handleSubmit}>Create</button>
+            </div>
+        </form>
     </div>
   )
 }
