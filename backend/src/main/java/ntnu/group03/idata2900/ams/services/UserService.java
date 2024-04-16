@@ -218,6 +218,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void addUserToSite(User user, Site site){
+        user.getSites().add(site);
+        userRepository.save(user);
+    }
+
     /**
      * Adds admin role to the user
      *
