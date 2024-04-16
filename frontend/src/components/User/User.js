@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import URL from '../tools/URL';
+import URL from '../../tools/URL';
 
 import { Helmet } from 'react-helmet';
 
-import Table from './AssetTable';
+import Table from '../Asset/AssetTable';
 
-import './Customer.css';
+import './User.css';
 import { useParams } from 'react-router';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import HTTPRequest from '../tools/HTTPRequest';
+import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import QRCode from 'qrcode.react';
 import DataTable from 'react-data-table-component';
@@ -28,6 +28,9 @@ const Main = (props) => {
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
+
+  const [companyName, setCompanyName] = useState(null);
+  const [companyID, setCompanyID] = useState(null);
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -81,6 +84,10 @@ const Main = (props) => {
     setIsEditing(false);
   }
 
+  const showSites = () => {
+    navigate('/user/' + id + '/sites');
+  }
+
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
     HTTPRequest.get(URL.URL + `/api/admin/users/${id}`, cookies.JWT)
@@ -91,6 +98,8 @@ const Main = (props) => {
       setLastName(response.data.lastName);
       setEmail(response.data.email);
       setPhoneNumber(response.data.phoneNumber);
+      setCompanyName(response.data.company.name);
+      setCompanyID(response.data.company.id);
       if(response.data.roles.length > 1) {
         setRole("Admin");
       } else {
@@ -101,7 +110,7 @@ const Main = (props) => {
   }, [id]);
 
   useEffect(() => {
-    HTTPRequest.get(URL.URL + '/api/user/sites', cookies.JWT)
+    HTTPRequest.get(URL.URL + '/api/admin/users/' + id + '/sites', cookies.JWT)
     .then(response => {
       console.log(response);
       setData(response.data);
@@ -238,19 +247,11 @@ const Main = (props) => {
         </div>
         <div className="containerCenter">
           <b>Company:</b>
-          <input className='input' placeholder="Enter First Name" value={firstName} disabled={!isEditing}></input>
-          <DataTable
-                columns={columns}
-                data={data}
-                progressPending={loading}
-                pagination
-                persistTableHead
-                onRowClicked={handleRowClicked}
-                customStyles={customStyles}
-                noDataComponent={noDataComponent}
-            />
+          <input className='companyInput' placeholder="Enter First Name" value={companyName} disabled={true}></input>
+          <b>Options:</b>
+          <button className='button' onClick={showSites}>Show sites</button>
         </div>
-        <img alt="image" src={require("../Pages/resources/profileImage.png")} className="assetImage"/>
+        <img alt="image" src={require("../../Pages/resources/profileImage.png")} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">

@@ -5,7 +5,7 @@ import { useParams } from 'react-router'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
-import HTTPRequest from '../tools/HTTPRequest'
+import HTTPRequest from '../../tools/HTTPRequest'
 
 const Main = (props) => {
 

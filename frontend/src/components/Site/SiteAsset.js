@@ -2,14 +2,16 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from './AssetTable'
+import Table from '../Asset/AssetTable'
 
-import './Asset.css'
+import URL from '../../tools/URL';
+
+import '../Asset/Asset.css'
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
-import HTTPRequest from '../tools/HTTPRequest'
+import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 import QRCode from 'qrcode.react'
 
@@ -19,7 +21,8 @@ const Main = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   // information variables
-  const { id } = useParams();
+  const { assetID } = useParams();
+  const { siteID } = useParams();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [attachmentLink, setAttachmentLink] = useState();
@@ -43,6 +46,7 @@ const Main = (props) => {
 
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
+    console.log(siteID);
     jwtDecode(cookies.JWT).roles.forEach(role => {
       if(role.authority === "ADMIN") {
             setIsAdmin(true);
@@ -62,7 +66,7 @@ const Main = (props) => {
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
   const back = () => {
-    navigate('/asset/');
+    navigate(`/site/${siteID}/assets`);
   }
 
   const edit = () => {
@@ -81,47 +85,47 @@ const Main = (props) => {
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`http://localhost:8080/api/assets/${id}`, cookies.JWT)
+    HTTPRequest.get(`http://localhost:8080/api/assetOnSites/${assetID}`, cookies.JWT)
     .then(response => {
       console.log(response);
       let asset = response.data;
-      setName(asset.name);
-      setDescription(asset.description);
-      setCommissionDate(asset.commissionDate);
-      setCategory(asset.category);
-      setSite(asset.site);
-      setAttachmentName(asset.datasheet.name);
-      setAttachmentLink(asset.datasheet.pdfUrl);
+      setName(response.data.asset.name);
+      setDescription(response.data.asset.description);
+      setCommissionDate(response.data.asset.commissionDate);
+      setCategory(response.data.asset.category);
+      setSite(response.data.asset.site);
+      setAttachmentName(response.data.asset.datasheet.name);
+      setAttachmentLink(response.data.asset.datasheet.pdfUrl);
     })
     .catch(error => {console.log(error)});
-  }, [id]);
+  }, [assetID]);
 
-  const handleSubmit = async (e) => {
-      e.preventDefault();
-      const updatedAsset = {
-          id: id,
-          name: name,
-          description: description,
-          commissionDate: commissionDate,
-          category: category,
-          site: site,
-          datasheet: datasheet
-      };
-      console.log(updatedAsset);
-      try {
-          await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
-              headers: {
-                  Authorization: `Bearer ${cookies.JWT}`,
-                  'Content-Type': 'application/json',
-              },
-          });
-          alert("Asset updated successfully!");
-      } catch (error) {
-          console.error("Error updating the asset:", error);
-          alert("Failed to update the asset.");
-      }
-      setIsEditing(false);
-  };
+  //const handleSubmit = async (e) => {
+  //    e.preventDefault();
+  //    const updatedAsset = {
+  //        id: id,
+  //        name: name,
+  //        description: description,
+  //        commissionDate: commissionDate,
+  //        category: category,
+  //        site: site,
+  //        datasheet: datasheet
+  //    };
+  //    console.log(updatedAsset);
+  //    try {
+  //        await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
+  //            headers: {
+  //                Authorization: `Bearer ${cookies.JWT}`,
+  //                'Content-Type': 'application/json',
+  //            },
+  //        });
+  //        alert("Asset updated successfully!");
+  //    } catch (error) {
+  //        console.error("Error updating the asset:", error);
+  //        alert("Failed to update the asset.");
+  //    }
+  //    setIsEditing(false);
+  //};
 
   // lets the user input values
   const handleNameChange = (event) => {
@@ -140,8 +144,8 @@ const Main = (props) => {
       <br></br>
       <div className="assetContainer">
         <div className="assetInfoContainer">
-          <b>Asset ID</b>
-          <input placeholder="Enter Asset ID" value={id} disabled={true}></input>
+          <b>Asset Site ID</b>
+          <input placeholder="Enter Asset ID" value={assetID} disabled={true}></input>
           <span><b>Description</b><br></br></span>
           <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description} value={description} onChange={handleDescriptionChange} disabled={!isEditing}/>
           <span><b>Asset Datasheet</b><br></br></span>
@@ -150,9 +154,9 @@ const Main = (props) => {
           </a>
           <br></br>
           <b>Asset QR Code</b>
-          <QRCode value={"http://localhost:8080/assets/" + id} size={256} level={"H"} bgColor={"#ffffff"} fgColor={"#000000"} includeMargin={true}/>
+          <QRCode value={`${URL.URL}/site/${siteID}/assets/${assetID}`} size={256} level={"H"} bgColor={"#ffffff"} fgColor={"#000000"} includeMargin={true}/>
         </div>
-        <img alt="image" src={require("../Pages/resources/AssetImage.png")} className="assetImage"/>
+        <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">

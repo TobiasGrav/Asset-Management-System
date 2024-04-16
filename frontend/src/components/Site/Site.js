@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from './AssetTable'
+import Table from '../Asset/AssetTable'
 
-import './Company.css'
+import '../Asset/Asset.css'
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
-import HTTPRequest from '../tools/HTTPRequest'
+import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 
 const Company = (props) => {
@@ -18,6 +18,9 @@ const Company = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isEditing, setIsEditing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
+
+  const [siteName, setSiteName] = useState();
+  const [siteID, setSiteID] = useState();
 
   const [companyName, setCompanyName] = useState();
   const [companyID, setCompanyID] = useState();
@@ -28,7 +31,7 @@ const Company = (props) => {
     // back button functionality, goes back to the last page /asset.
     const navigate = useNavigate();
     const back = () => {
-      navigate('/company/');
+      navigate('/site/');
     }
 
     const edit = () => {
@@ -40,9 +43,8 @@ const Company = (props) => {
 
     }
 
-    const confirm = () => {
-      console.log("confimed edit");
-      setIsEditing(false);
+    const showAssets = () => {
+      navigate('/site/' + id + '/assets');
     }
 
     const handleSubmit = async (e) => {
@@ -72,26 +74,34 @@ const Company = (props) => {
         setIsEditing(false);
     };
 
-    //useEffect(() => {
-    //    HTTPRequest.get(`http://localhost:8080/api/sites/${id}`, cookies.JWT)
-    //    .then(response => {
-    //      console.log(response);
-    //      setCompanyName(response.data.company.name);
-    //      setCompanyID(response.data.company.id);
-    //    })
-    //    .catch(error => {console.log(error)});
-    //}, [id, cookies.JWT]);
+    useEffect(() => {
+        HTTPRequest.get(`http://localhost:8080/api/user/sites/${id}`, cookies.JWT)
+        .then(response => {
+          console.log(response);
+          setSiteName(response.data.name);
+          setSiteID(response.data.id);
+          setCompanyName(response.data.company.name);
+          setCompanyID(response.data.company.id);
+        })
+        .catch(error => {console.log(error)});
+    }, [id, cookies.JWT]);
 
   return (
     <div className='companyBody'>
-        <div style={{textAlign:'center'}}><h1>Company name</h1></div>
+        <div style={{textAlign:'center'}}><input className='inputSiteName' value={siteName} disabled={!isEditing} /></div>
         <div className='companyContainer'>
             <div className='valueContainer'>
+                <p>Site ID</p>
+                <input className='inputField' value={siteID} disabled={!isEditing}></input>
+                <p>This site belongs to:</p>
+                <p>Company Name</p>
+                <input className='inputField' value={companyName} disabled={!isEditing}></input>
                 <p>Company ID</p>
-                <input value={"text"}></input>
+                <input className='inputField' value={companyID} disabled={!isEditing}></input>
+                <button onClick={showAssets}>Show Assets</button>
             </div>
             <div className='imageContainer'>
-                <img alt="image" src={require("../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
+                <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
             </div>
         </div>
         <div className="buttonContainer">

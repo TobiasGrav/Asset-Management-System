@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import HTTPRequest from '../tools/HTTPRequest';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
+    const { siteID } = useParams();
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
@@ -19,17 +19,13 @@ function Table() {
 
     useEffect(() => {
         fetchData();
+        console.log(siteID);
     }, []);
 
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            let fullName = element.firstName + " " + element.lastName
-            if(fullName.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.email.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.phoneNumber.toLowerCase().includes(searchInput.current.value)) {
+            if(element.name.toLowerCase().includes(searchInput.current.value)) {
                 searchData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
                 searchData.push(element);
@@ -45,13 +41,12 @@ function Table() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/admin/users', {
+            const response = await axios.get('http://localhost:8080/api/assets', {
                 headers: {
                   Authorization: 'Bearer ' + cookies.JWT,
                   Accept: "application/json",
-                  'Content-Type': "application/json",
+                  'Content-Type': "application/json"
                 }});
-            console.log(response);
             setData(response.data);
             setTableData(response.data);
         } catch (error) {
@@ -68,17 +63,12 @@ function Table() {
     const columns = [
         {
             name: 'Name',
-            selector: row => row.firstName + " " + row.lastName,
+            selector: row => row.name,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: row => row.email,
-            sortable: true,
-        },
-        {
-            name: 'Phone number',
-            selector: row => row.phoneNumber,
+            name: 'Description',
+            selector: row => row.description,
             sortable: true,
         },
         {
@@ -95,7 +85,8 @@ function Table() {
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/customer/${row.id}`); // Use navigate to change the route
+        console.log(siteID);
+        navigate(`/site/${siteID}/assets/add/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
@@ -149,9 +140,8 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>User Overview</h1></div>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Add asset</h1></div>
             <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
             <DataTable
                 columns={columns}
                 data={tableData}

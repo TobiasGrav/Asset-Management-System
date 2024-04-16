@@ -22,28 +22,23 @@
   gap: 48px;
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: top;
+  align-items: normal;
 }
 .containerLeft {
   gap: 5px;
-  flex: 0 0 auto;
   width: auto;
   height: auto;
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
-  justify-content: center;
 }
 .containerCenter {
   gap: 5px;
-  flex: 0 0 auto;
   width: auto;
   height: auto;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  justify-content: center;
 }
 .inputID {
   width: 464px;
@@ -107,4 +102,17 @@
   background: none;
   color: black;
   border: 2px;
+}
+
+.companyInput {
+  color: #083F4C;
+  background: none;
+  border: none;
+  width: auto;
+  margin-bottom: 16px;
+}
+
+.companyInput:hover {
+  color: #083F4C;
+  cursor: pointer;
 }

@@ -11,7 +11,40 @@ class HTTPRequest {
                   .catch(error => { 
                    console.error("get request for " + url + " failed", error) 
                  });
-      }
+  }
+
+  static post(url, data, token) {
+    const header = {headers: {Authorization: `Bearer ` + token}};
+    return axios.post(url, data, header)
+                .then(res => {
+                   return res;
+                })
+                .catch(error => { 
+                 console.error("post request for " + url + " failed", error) 
+               });
+  }
+
+  static put(url, data, token) {
+    const header = {headers: {Authorization: `Bearer ` + token}};
+    return axios.put(url, data, header)
+                .then(res => {
+                   return res;
+                })
+                .catch(error => { 
+                 console.error("put request for " + url + " failed", error) 
+               });
+  }
+
+  static delete(url, token) {
+    const header = {headers: {Authorization: `Bearer ` + token}};
+    return axios.delete(url, header)
+                .then(res => {
+                   return res;
+                })
+                .catch(error => { 
+                 console.error("delete request for " + url + " failed", error) 
+               });
+  }
 
 }
 

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from '../components/AssetTable'
-import Asset from '../components/Asset'
+import Table from '../components/Asset/AssetTable'
+import Asset from '../components/Asset/Asset'
 import { jwtDecode } from 'jwt-decode'
 
 import { useState, useEffect } from 'react';
