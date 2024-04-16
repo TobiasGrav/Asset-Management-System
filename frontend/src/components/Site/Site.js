@@ -1,16 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet';
 
-import Table from '../Asset/AssetTable'
+import Table from '../Asset/AssetTable';
 
-import './Site.css'
-import { useParams } from 'react-router'
-import axios from 'axios'
-import { useCookies } from 'react-cookie'
-import { useNavigate } from 'react-router-dom'
-import HTTPRequest from '../../tools/HTTPRequest'
-import { jwtDecode } from 'jwt-decode'
+import './Site.css';
+import { useParams } from 'react-router';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import HTTPRequest from '../../tools/HTTPRequest';
+import { jwtDecode } from 'jwt-decode';
+import URL from '../../tools/URL';
 
 const Company = (props) => {
 
@@ -60,7 +61,7 @@ const Company = (props) => {
         };
         console.log(updatedAsset);
         try {
-            await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
+            await axios.put(`${URL.URL}/api/assets/${id}`, updatedAsset, {
                 headers: {
                     Authorization: `Bearer ${cookies.JWT}`,
                     'Content-Type': 'application/json',
@@ -75,15 +76,14 @@ const Company = (props) => {
     };
 
     useEffect(() => {
-        HTTPRequest.get(`http://localhost:8080/api/user/sites/${id}`, cookies.JWT)
+        HTTPRequest.get(`${URL.URL}/api/user/sites/${id}`, cookies.JWT)
         .then(response => {
           console.log(response);
           setSiteName(response.data.name);
           setSiteID(response.data.id);
           setCompanyName(response.data.company.name);
           setCompanyID(response.data.company.id);
-        })
-        .catch(error => {console.log(error)});
+        });
     }, [id, cookies.JWT]);
 
   return (

@@ -6,14 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
 import {jwtDecode} from "jwt-decode";
+import URL from '../../tools/URL';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
+    const [isAdmin, setIsAdmin] = useState();
+
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
@@ -32,41 +35,34 @@ function Table() {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        setLoading(true);
-
         jwtDecode(cookies.JWT).roles.forEach(role => {
             if(role.authority === "ADMIN") {
-                try{
-                    HTTPRequest.get(`http://localhost:8080/api/admin/sites`, cookies.JWT)
-                        .then(response => {
-                            setData(response.data);
-                            setTableData(response.data);
-                        })
-                        .catch(error => {console.log('Failed fetching data from /api/admin/sites.', error)})
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                } finally {
-                    setLoading(false);
-                }
-            } else {
-                try{
-                    HTTPRequest.get(`http://localhost:8080/api/user/sites`, cookies.JWT)
-                        .then(response => {
-                            setData(response.data);
-                            setTableData(response.data);
-                        })
-                        .catch(error => {console.log('Failed fetching data from /api/user/sites.', error)})
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                } finally {
-                    setLoading(false);
-                }
+                setIsAdmin(true);
             }
-        })
+        });
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [isAdmin])
+
+    const fetchData = () => {
+        if(isAdmin) {
+            HTTPRequest.get(`${URL.URL}/api/admin/sites`, cookies.JWT)
+            .then(response => {
+                setData(response.data);
+                setTableData(response.data);
+                setLoading(false);
+            })
+            .catch(error => {setLoading(false)})
+        } else {
+            HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
+            .then(response => {
+                    setData(response.data);
+                    setTableData(response.data);
+            })
+            .catch(error => {setLoading(false)})
+        };
     };
 
     const columns = [

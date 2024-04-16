@@ -85,7 +85,7 @@ const Main = (props) => {
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`http://localhost:8080/api/assetOnSites/${assetID}`, cookies.JWT)
+    HTTPRequest.get(`${URL.URL}/api/assetOnSites/${assetID}`, cookies.JWT)
     .then(response => {
       console.log(response);
       let asset = response.data;
@@ -96,8 +96,7 @@ const Main = (props) => {
       setSite(response.data.asset.site);
       setAttachmentName(response.data.asset.datasheet.name);
       setAttachmentLink(response.data.asset.datasheet.pdfUrl);
-    })
-    .catch(error => {console.log(error)});
+    });
   }, [assetID]);
 
   //const handleSubmit = async (e) => {

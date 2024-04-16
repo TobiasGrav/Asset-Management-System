@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import URL from '../../tools/URL';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -41,7 +42,7 @@ function Table() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/assets', {
+            const response = await axios.get(`${URL.URL}/api/assets`, {
                 headers: {
                   Authorization: 'Bearer ' + cookies.JWT,
                   Accept: "application/json",

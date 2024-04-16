@@ -4,6 +4,8 @@ import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import HTTPRequest from '../../tools/HTTPRequest';
+import URL from '../../tools/URL';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -12,14 +14,25 @@ function Table() {
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState();
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
 
     useEffect(() => {
-        fetchData();
+        HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}/assetsOnSite`, cookies.JWT)
+            .then(response => {
+                setData(response.data);
+                setTableData(response.data);
+                console.log(response);
+                if(response.data.length == 0) {
+                    setTitle("No assets on this site");
+                } else {
+                    setTitle("Assets on " + response.data[0].site.name);
+                }
+                setLoading(false);
+            });
     }, []);
 
     const search = () => {
@@ -36,30 +49,6 @@ function Table() {
 
     const addAsset = () => {
         navigate(`/site/${siteID}/assets/add`);
-    };
-
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`http://localhost:8080/api/admin/sites/${siteID}/assetsOnSite`, {
-                headers: {
-                  Authorization: 'Bearer ' + cookies.JWT,
-                  Accept: "application/json",
-                  'Content-Type': "application/json"
-                }});
-            setData(response.data);
-            setTableData(response.data);
-            console.log(response);
-            if(response.data.length == 0) {
-                setTitle("No assets on this site");
-            } else {
-                setTitle("Assets on " + response.data[0].site.name);
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
-        }
     };
 
     const formatLocalDateTime = (localDateTime) => {

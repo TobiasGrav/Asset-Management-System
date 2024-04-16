@@ -49,7 +49,7 @@ const Main = (props) => {
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`http://localhost:8080/api/assets/${assetID}`, cookies.JWT)
+    HTTPRequest.get(`${URL.URL}/api/assets/${assetID}`, cookies.JWT)
     .then(response => {
       setAsset(response.data);
       setName(response.data.name);
