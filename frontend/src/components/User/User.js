@@ -28,6 +28,7 @@ const Main = (props) => {
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
+  const [image, setImage] = useState("../../Pages/resources/nerd.png");
 
   const [companyName, setCompanyName] = useState(null);
   const [companyID, setCompanyID] = useState(null);
@@ -102,8 +103,10 @@ const Main = (props) => {
       setCompanyID(response.data.company.id);
       if(response.data.roles.length > 1) {
         setRole("Admin");
+        setImage(require('../../Pages/resources/superior.png'));
       } else {
         setRole("User");
+        setImage(require('../../Pages/resources/nerd.png'));
       }
     })
     .catch(error => {console.log(error)});
@@ -251,7 +254,7 @@ const Main = (props) => {
           <b>Options:</b>
           <button className='button' onClick={showSites}>Show sites</button>
         </div>
-        <img alt="image" src={require("../../Pages/resources/profileImage.png")} className="assetImage"/>
+        <img alt="image" src={image} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">

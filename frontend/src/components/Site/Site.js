@@ -23,11 +23,12 @@ const Company = (props) => {
   const [siteName, setSiteName] = useState();
   const [siteID, setSiteID] = useState();
 
-  const [companyName, setCompanyName] = useState();
-  const [companyID, setCompanyID] = useState();
+  const [compName, setCompanyName] = useState();
+  const [compID, setCompanyID] = useState();
 
   // information variables
   const { id } = useParams();
+  const { companyID } = useParams();
 
     // back button functionality, goes back to the last page /asset.
     const navigate = useNavigate();
@@ -45,11 +46,11 @@ const Company = (props) => {
     }
 
     const showAssets = () => {
-      navigate('/site/' + id + '/assets');
+      navigate(`/company/${companyID}/site/${id}/assets`);
     }
 
     const showUsers = () => {
-      navigate('/site/' + id + '/users');
+      navigate(`/company/${companyID}/site/${id}/users`);
     }
 
     const handleSubmit = async (e) => {
@@ -99,9 +100,9 @@ const Company = (props) => {
                 <input className='inputField' value={siteID} disabled={!isEditing}></input>
                 <p>This site belongs to:</p>
                 <p>Company Name</p>
-                <input className='inputField' value={companyName} disabled={!isEditing}></input>
+                <input className='inputField' value={compName} disabled={!isEditing}></input>
                 <p>Company ID</p>
-                <input className='inputField' value={companyID} disabled={!isEditing}></input>
+                <input className='inputField' value={compID} disabled={!isEditing}></input>
                 <button onClick={showAssets}>Show Assets</button>
                 <button onClick={showUsers}>Show Users</button>
             </div>

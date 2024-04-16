@@ -51,3 +51,16 @@
     background-color: #fc83a1;
     cursor: pointer;
   }
+
+  .addButton {
+    color:#297A5D;
+    background-color: #ADF1CC;
+    border: none;
+    border-radius: 20px;
+  }
+
+  .addButton:hover {
+    color:#184a38;
+    background-color: #83f2b5;
+    cursor: pointer;
+  }

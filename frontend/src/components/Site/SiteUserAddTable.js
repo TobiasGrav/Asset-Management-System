@@ -4,10 +4,8 @@ import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import HTTPRequest from '../../tools/HTTPRequest';
 import URL from '../../tools/URL';
-import { hover } from '@testing-library/user-event/dist/hover';
-import './Site.css';
+import HTTPRequest from '../../tools/HTTPRequest';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -15,57 +13,54 @@ function Table() {
     const { siteID } = useParams();
     const { companyID } = useParams();
     const [data, setData] = useState([]);
-    const [updateData, setUpdateData] = useState([]);
+    const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [title, setTitle] = useState();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/users`, cookies.JWT)
-            .then(response => {
-                setData(response.data);
-                setTableData(response.data);
-                console.log(response);
-                if(response.data.length == 0) {
-                    setTitle("No users on this site");
-                } else {
-                    response.data[0].sites.forEach(site => {
-                        if(site.id == siteID) {
-                            setTitle(`Users belonging to ${site.name}`);
-                        };
-                    });
-                }
-                setLoading(false);
-            });
+        fetchData();
+        console.log(siteID);
     }, []);
 
     const search = () => {
-        setUpdateData([]);
+        setSearchData([]);
         data.forEach(element => {
-            if(element.asset.name.toLowerCase().includes(searchInput.current.value)) {
-                updateData.push(element);
+            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+                searchData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
-                updateData.push(element);
+                searchData.push(element);
             }
-            setTableData(updateData);
+            setTableData(searchData);
         });
     };
 
-    const addUser = () => {
-        navigate(`/company/${companyID}/site/${siteID}/users/add`);
+    const create = () => {
+        navigate('/asset/create');
+    };
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`${URL.BACKEND}/api/companies/${companyID}/users`, {
+                headers: {
+                  Authorization: 'Bearer ' + cookies.JWT,
+                  Accept: "application/json",
+                  'Content-Type': "application/json"
+                }});
+            setData(response.data);
+            setTableData(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const formatLocalDateTime = (localDateTime) => {
-        let formattedTime;
-        if(localDateTime == null) {
-            formattedTime = "Not in use";
-        } else {
-            formattedTime = format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
-        }
-        return formattedTime;
+        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
     };
 
     const columns = [
@@ -96,8 +91,8 @@ function Table() {
         },
         {
             name: 'Action',
-            selector: row => <button className='removeButton' onClick={() => {
-                HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${row.id}`, cookies.JWT)
+            selector: row => <button className='addButton' onClick={() => {
+                HTTPRequest.post(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${row.id}`, cookies.JWT)
                 .then(reponse => {
                     setUpdateData([]);
                     data.forEach(user => {
@@ -108,14 +103,15 @@ function Table() {
                     setData(updateData);
                     setTableData(updateData);
                 })
-                .catch(error => {alert('Something went wrong, user not removed from site!')});
-            }} >Remove</button>,
+                .catch(error => {alert('Something went wrong, user not added to site!')});
+            }} >Add</button>,
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
+        console.log(siteID);
         navigate(`/user/${row.id}`); // Use navigate to change the route
     };
 
@@ -170,9 +166,8 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Add user</h1></div>
             <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={addUser} >Add User</button>
             <DataTable
                 columns={columns}
                 data={tableData}

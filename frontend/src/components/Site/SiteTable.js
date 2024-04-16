@@ -55,6 +55,7 @@ function Table() {
                 setData(response.data);
                 setTableData(response.data);
                 setLoading(false);
+                console.log(response);
             })
             .catch(error => {setLoading(false)});
         } else {
@@ -75,6 +76,11 @@ function Table() {
             sortable: true,
         },
         {
+            name: 'Company',
+            selector: row => row.company.name,
+            sortable: true,
+        },
+        {
             name: 'ID',
             selector: row => row.id,
             sortable: true,
@@ -83,7 +89,7 @@ function Table() {
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/site/${row.id}`); // Use navigate to change the route
+        navigate(`/company/${row.company.id}/site/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {

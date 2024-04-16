@@ -19,6 +19,7 @@ import SiteAssetAddTable from './components/Site/SiteAssetAddTable';
 import SiteAssetAdd from './components/Site/SiteAssetAdd'
 import SiteAsset from './components/Site/SiteAsset';
 import SiteUserTable from './components/Site/SiteUserTable';
+import SiteUserAddTable from './components/Site/SiteUserAddTable';
 import AccessDenied from './components/AccessDenied';
 import NotFound from './components/NotFound';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
@@ -35,13 +36,14 @@ function App() {
           <Route path="/company/:id" element={<Home><Company /></Home>} />
 
           <Route path="/site" element={<Home><SiteTable /></Home>} />
-          <Route path="/site/:id" element={<Home><Site /></Home>} />
-          <Route path="/site/:siteID/assets" element={<Home><SiteAssetTable /></Home>} />
-          <Route path="/site/:siteID/assets/add" element={<Home><SiteAssetAddTable /></Home>} />
-          <Route path="/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
-          <Route path="/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
-          <Route path="/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
-          <Route path="/site/:siteID/users/:userID" element={<Home><SiteAssetTable /></Home>} />
+          <Route path="/company/:companyID/site/:id" element={<Home><Site /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/assets" element={<Home><SiteAssetTable /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/assets/add" element={<Home><SiteAssetAddTable /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/users/:userID" element={<Home><SiteAssetTable /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/users/add" element={<Home><SiteUserAddTable /></Home>} />
 
           <Route path="/user" element={<Home><CustomerTable /></Home>} />
           <Route path="/user/:id" element={<Home><Customer /></Home>} />
