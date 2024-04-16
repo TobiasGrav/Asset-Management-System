@@ -10,6 +10,7 @@ import CompanyTable from './components/Company/CompanyTable';
 import SiteTable from './components/Site/SiteTable';
 import CustomerTable from './components/User/UserTable';
 import Customer from './components/User/User';
+import UserSiteTable from './components/User/UserSiteTable';
 import Site from './components/Site/Site';
 import Welcome from './components/Welcome';
 import AssetCreate from './components/Asset/AssetCreate';
@@ -36,11 +37,13 @@ function App() {
           <Route path="/site/:siteID/assets/add" element={<Home><SiteAssetAddTable /></Home>} />
           <Route path="/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
           <Route path="/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
+          <Route path="/site/:siteID/users" element={<Home><SiteAssetTable /></Home>} />
+          <Route path="/site/:siteID/users/:userID" element={<Home><SiteAssetTable /></Home>} />
 
-          <Route path="/customer" element={<Home><CustomerTable /></Home>} />
-          <Route path="/customer/:id" element={<Home><Customer /></Home>} />
-          <Route path="/customer/create" element={<Home><AssetCreate /></Home>} />
-          <Route path="/user/:id/sites" element={<Home><SiteTable /></Home>} />
+          <Route path="/user" element={<Home><CustomerTable /></Home>} />
+          <Route path="/user/:id" element={<Home><Customer /></Home>} />
+          <Route path="/user/create" element={<Home><AssetCreate /></Home>} />
+          <Route path="/user/:userID/sites" element={<Home><UserSiteTable /></Home>} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home><Welcome /></Home>} />
         </Routes>

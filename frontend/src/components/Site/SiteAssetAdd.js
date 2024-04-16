@@ -1,18 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet';
 
-import Table from '../Asset/AssetTable'
-import URL from '../../tools/URL'
+import Table from '../Asset/AssetTable';
+import URL from '../../tools/URL';
 
-import '../Asset/Asset.css'
-import { useParams } from 'react-router'
-import axios from 'axios'
-import { useCookies } from 'react-cookie'
-import { useNavigate } from 'react-router-dom'
-import HTTPRequest from '../../tools/HTTPRequest'
-import { jwtDecode } from 'jwt-decode'
-import QRCode from 'qrcode.react'
+import '../Asset/Asset.css';
+import { useParams } from 'react-router';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import HTTPRequest from '../../tools/HTTPRequest';
+import { jwtDecode } from 'jwt-decode';
+import QRCode from 'qrcode.react';
 
 const Main = (props) => {
 

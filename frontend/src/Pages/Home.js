@@ -40,7 +40,7 @@ const Main = ({children}) => {
   };
 
   const customer = () => {
-    navigate("/customer/");
+    navigate("/user/");
   };
 
   const profile = () => {

@@ -2,34 +2,43 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
+import URL from '../../tools/URL';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
+    const { siteID } = useParams();
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState();
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
 
     useEffect(() => {
-        fetchData();
+        HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}/assetsOnSite`, cookies.JWT)
+            .then(response => {
+                setData(response.data);
+                setTableData(response.data);
+                console.log(response);
+                if(response.data.length == 0) {
+                    setTitle("No assets on this site");
+                } else {
+                    setTitle("Assets on " + response.data[0].site.name);
+                }
+                setLoading(false);
+            });
     }, []);
 
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            let fullName = element.firstName + " " + element.lastName
-            if(fullName.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.email.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.phoneNumber.toLowerCase().includes(searchInput.current.value)) {
+            if(element.asset.name.toLowerCase().includes(searchInput.current.value)) {
                 searchData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
                 searchData.push(element);
@@ -38,64 +47,46 @@ function Table() {
         });
     };
 
-    const create = () => {
-        navigate('/asset/create');
-    };
-
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get('http://localhost:8080/api/admin/users', {
-                headers: {
-                  Authorization: 'Bearer ' + cookies.JWT,
-                  Accept: "application/json",
-                  'Content-Type': "application/json",
-                }});
-            console.log(response);
-            setData(response.data);
-            setTableData(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
-        }
+    const addAsset = () => {
+        navigate(`/site/${siteID}/assets/add`);
     };
 
     const formatLocalDateTime = (localDateTime) => {
-        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
+        let formattedTime;
+        if(localDateTime == null) {
+            formattedTime = "Not in use";
+        } else {
+            formattedTime = format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
+        }
+        return formattedTime;
     };
 
     const columns = [
         {
             name: 'Name',
-            selector: row => row.firstName + " " + row.lastName,
+            selector: row => row.asset.name,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: row => row.email,
+            name: 'Commision date',
+            selector: row => formatLocalDateTime(row.commissionDate),
             sortable: true,
         },
+        //{
+        //    name: 'Creation Date',
+        //    selector: row => formatLocalDateTime(row.creationDate),
+        //    sortable: true,
+        //},
         {
-            name: 'Phone number',
-            selector: row => row.phoneNumber,
-            sortable: true,
-        },
-        {
-            name: 'Creation Date',
-            selector: row => formatLocalDateTime(row.creationDate),
-            sortable: true,
-        },
-        {
-            name: 'Active',
-            selector: row => row.active ? 'Yes' : 'No',
+            name: 'ID',
+            selector: row => row.id,
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/user/${row.id}`); // Use navigate to change the route
+        navigate(`/site/${siteID}/assets/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
@@ -149,9 +140,9 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>User Overview</h1></div>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
             <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
+            <button className='button' style={{marginLeft:'16px'}} onClick={addAsset} >Add Asset</button>
             <DataTable
                 columns={columns}
                 data={tableData}

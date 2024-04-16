@@ -2,34 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
+import {jwtDecode} from "jwt-decode";
+import URL from '../../tools/URL';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
+    const [isAdmin, setIsAdmin] = useState();
+
+    const { userID } = useParams();
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const datatable = useRef(null);
 
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            let fullName = element.firstName + " " + element.lastName
-            if(fullName.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.email.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.phoneNumber.toLowerCase().includes(searchInput.current.value)) {
+            if(element.name.toLowerCase().includes(searchInput.current.value)) {
                 searchData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
                 searchData.push(element);
@@ -38,64 +35,54 @@ function Table() {
         });
     };
 
-    const create = () => {
-        navigate('/asset/create');
-    };
+    useEffect(() => {
+        jwtDecode(cookies.JWT).roles.forEach(role => {
+            if(role.authority === "ADMIN") {
+                setIsAdmin(true);
+            }
+        });
+    }, []);
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get('http://localhost:8080/api/admin/users', {
-                headers: {
-                  Authorization: 'Bearer ' + cookies.JWT,
-                  Accept: "application/json",
-                  'Content-Type': "application/json",
-                }});
-            console.log(response);
-            setData(response.data);
-            setTableData(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    useEffect(() => {
+        fetchData();
+    }, [isAdmin])
 
-    const formatLocalDateTime = (localDateTime) => {
-        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
+    const fetchData = () => {
+        if(!isAdmin) {
+            HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
+            .then(response => {
+                    setData(response.data);
+                    setTableData(response.data);
+            })
+            .catch(error => {setLoading(false)});
+        } else {
+            HTTPRequest.get(`${URL.URL}/api/admin/users/${userID}/sites`, cookies.JWT)
+            .then(response => {
+                setData(response.data);
+                setTableData(response.data);
+                console.log(response);
+                setLoading(false);
+            })
+            .catch(error => {setLoading(false)});
+        };
     };
 
     const columns = [
         {
             name: 'Name',
-            selector: row => row.firstName + " " + row.lastName,
+            selector: row => row.name,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: row => row.email,
-            sortable: true,
-        },
-        {
-            name: 'Phone number',
-            selector: row => row.phoneNumber,
-            sortable: true,
-        },
-        {
-            name: 'Creation Date',
-            selector: row => formatLocalDateTime(row.creationDate),
-            sortable: true,
-        },
-        {
-            name: 'Active',
-            selector: row => row.active ? 'Yes' : 'No',
+            name: 'ID',
+            selector: row => row.id,
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/user/${row.id}`); // Use navigate to change the route
+        navigate(`/site/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
@@ -149,9 +136,8 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>User Overview</h1></div>
-            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Site Overview</h1></div>
+            <input placeholder='Search for Name or ID' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
             <DataTable
                 columns={columns}
                 data={tableData}
@@ -160,6 +146,7 @@ function Table() {
                 persistTableHead
                 onRowClicked={handleRowClicked}
                 customStyles={customStyles}
+                ref={datatable}
             />
         </div>
     );

@@ -48,6 +48,10 @@ const Company = (props) => {
       navigate('/site/' + id + '/assets');
     }
 
+    const showUsers = () => {
+      navigate('/site/' + id + '/users');
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedAsset = {
@@ -99,6 +103,7 @@ const Company = (props) => {
                 <p>Company ID</p>
                 <input className='inputField' value={companyID} disabled={!isEditing}></input>
                 <button onClick={showAssets}>Show Assets</button>
+                <button onClick={showUsers}>Show Users</button>
             </div>
             <div className='imageContainer'>
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>

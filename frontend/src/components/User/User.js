@@ -67,7 +67,7 @@ const Main = (props) => {
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
   const back = () => {
-    document.referrer;
+    navigate(`/user`);
   }
 
   const edit = () => {
