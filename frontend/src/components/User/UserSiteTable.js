@@ -50,7 +50,7 @@ function Table() {
     const fetchData = () => {
         if(isAdmin != null) {
             if(isAdmin) {
-                HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
+                HTTPRequest.get(`${URL.BACKEND}/api/user/sites`, cookies.JWT)
                 .then(response => {
                     setData(response.data);
                     setTableData(response.data);
@@ -59,7 +59,7 @@ function Table() {
                 })
                 .catch(error => {setLoading(false)});
             } else {
-                HTTPRequest.get(`${URL.URL}/api/admin/users/${userID}/sites`, cookies.JWT)
+                HTTPRequest.get(`${URL.BACKEND}/api/admin/users/${userID}/sites`, cookies.JWT)
                 .then(response => {
                     setData(response.data);
                     setTableData(response.data);

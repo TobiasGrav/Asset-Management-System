@@ -24,6 +24,12 @@ const Main = ({children}) => {
   useEffect(() => {
     if(cookies.JWT == null) {
         navigate('/login');
+    } else {
+      jwtDecode(cookies.JWT).roles.forEach(role => {
+        if(role.authority === "ADMIN") {
+            setIsAdmin(true);
+        }
+    });
     }
   }, []);
 

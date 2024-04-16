@@ -35,11 +35,13 @@ function Table() {
     };
 
     useEffect(() => {
-        jwtDecode(cookies.JWT).roles.forEach(role => {
-            if(role.authority === "ADMIN") {
-                setIsAdmin(true);
-            }
-        });
+        if(cookies.JWT != null) {
+            jwtDecode(cookies.JWT).roles.forEach(role => {
+                if(role.authority === "ADMIN") {
+                    setIsAdmin(true);
+                }
+            });
+        }
     }, []);
 
     useEffect(() => {
@@ -48,7 +50,7 @@ function Table() {
 
     const fetchData = () => {
         if(isAdmin) {
-            HTTPRequest.get(`${URL.URL}/api/admin/sites`, cookies.JWT)
+            HTTPRequest.get(`${URL.BACKEND}/api/admin/sites`, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);
@@ -56,7 +58,7 @@ function Table() {
             })
             .catch(error => {setLoading(false)});
         } else {
-            HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
+            HTTPRequest.get(`${URL.BACKEND}/api/user/sites`, cookies.JWT)
             .then(response => {
                     setData(response.data);
                     setTableData(response.data);

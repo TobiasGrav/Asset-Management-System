@@ -65,7 +65,7 @@ const Company = (props) => {
         };
         console.log(updatedAsset);
         try {
-            await axios.put(`${URL.URL}/api/assets/${id}`, updatedAsset, {
+            await axios.put(`${URL.BACKEND}/api/assets/${id}`, updatedAsset, {
                 headers: {
                     Authorization: `Bearer ${cookies.JWT}`,
                     'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ const Company = (props) => {
     };
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.URL}/api/user/sites/${id}`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/user/sites/${id}`, cookies.JWT)
         .then(response => {
           console.log(response);
           setSiteName(response.data.name);

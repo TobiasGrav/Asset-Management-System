@@ -42,7 +42,7 @@ function Table() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${URL.URL}/api/assets`, {
+            const response = await axios.get(`${URL.BACKEND}/api/assets`, {
                 headers: {
                   Authorization: 'Bearer ' + cookies.JWT,
                   Accept: "application/json",

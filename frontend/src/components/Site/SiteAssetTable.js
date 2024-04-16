@@ -21,7 +21,7 @@ function Table() {
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}/assetsOnSite`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/assetsOnSite`, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);

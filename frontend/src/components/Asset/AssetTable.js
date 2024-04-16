@@ -38,7 +38,7 @@ function Table() {
 
     const fetchData = async () => {
         setLoading(true);
-        HTTPRequest.get(`${URL.URL}/api/assets`, cookies.JWT).then(response => {
+        HTTPRequest.get(`${URL.BACKEND}/api/assets`, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
             setLoading(false);

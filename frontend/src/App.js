@@ -19,6 +19,8 @@ import SiteAssetAddTable from './components/Site/SiteAssetAddTable';
 import SiteAssetAdd from './components/Site/SiteAssetAdd'
 import SiteAsset from './components/Site/SiteAsset';
 import SiteUserTable from './components/Site/SiteUserTable';
+import AccessDenied from './components/AccessDenied';
+import NotFound from './components/NotFound';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 
 
@@ -47,6 +49,8 @@ function App() {
           <Route path="/user/:userID/sites" element={<Home><UserSiteTable /></Home>} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home><Welcome /></Home>} />
+          <Route path="/403" element={<Home><AccessDenied /></Home>} />
+          <Route path="/404" element={<Home><NotFound /></Home>} />
         </Routes>
       </Router>
   );

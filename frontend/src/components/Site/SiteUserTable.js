@@ -23,7 +23,7 @@ function Table() {
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}/users`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/users`, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);
@@ -96,6 +96,7 @@ function Table() {
         {
             name: 'Action',
             selector: row => <button className='removeButton' onClick={() => {
+                HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/`)
                 setUpdateData([]);
                 data.forEach(user => {
                     if(user.id != row.id) {

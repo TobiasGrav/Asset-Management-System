@@ -85,7 +85,7 @@ const Main = (props) => {
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`${URL.URL}/api/assetOnSites/${assetID}`, cookies.JWT)
+    HTTPRequest.get(`${URL.BACKEND}/api/assetOnSites/${assetID}`, cookies.JWT)
     .then(response => {
       console.log(response);
       let asset = response.data;
@@ -153,7 +153,7 @@ const Main = (props) => {
           </a>
           <br></br>
           <b>Asset QR Code</b>
-          <QRCode value={`${URL.URL}/site/${siteID}/assets/${assetID}`} size={256} level={"H"} bgColor={"#ffffff"} fgColor={"#000000"} includeMargin={true}/>
+          <QRCode value={`${URL.BACKEND}/site/${siteID}/assets/${assetID}`} size={256} level={"H"} bgColor={"#ffffff"} fgColor={"#000000"} includeMargin={true}/>
         </div>
         <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>

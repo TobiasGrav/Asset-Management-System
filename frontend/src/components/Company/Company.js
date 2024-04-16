@@ -53,7 +53,7 @@ const Company = (props) => {
         };
         console.log(updatedCompany);
         try {
-            HTTPRequest.put(`${URL.URL}/api/companies/${id}`, updatedCompany, cookies.JWT);
+            HTTPRequest.put(`${URL.BACKEND}/api/companies/${id}`, updatedCompany, cookies.JWT);
             alert("Company updated successfully!");
         } catch (error) {
             console.error("Error updating the company:", error);
