@@ -38,3 +38,16 @@
       border: none;
       color: black;
   }
+
+  .removeButton {
+    color:#D70134;
+    background-color: #FFC7D4;
+    border: none;
+    border-radius: 20px;
+  }
+
+  .removeButton:hover {
+    color:#450000;
+    background-color: #fc83a1;
+    cursor: pointer;
+  }

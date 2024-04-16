@@ -6,13 +6,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
 import URL from '../../tools/URL';
+import { hover } from '@testing-library/user-event/dist/hover';
+import './Site.css';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const { siteID } = useParams();
     const [data, setData] = useState([]);
-    const [searchData, setSearchData] = useState([]);
+    const [updateData, setUpdateData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState();
@@ -40,14 +42,14 @@ function Table() {
     }, []);
 
     const search = () => {
-        setSearchData([]);
+        setUpdateData([]);
         data.forEach(element => {
             if(element.asset.name.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
+                updateData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
-                searchData.push(element);
+                updateData.push(element);
             }
-            setTableData(searchData);
+            setTableData(updateData);
         });
     };
 
@@ -89,6 +91,20 @@ function Table() {
         {
             name: 'Active',
             selector: row => row.active ? 'Yes' : 'No',
+            sortable: true,
+        },
+        {
+            name: 'Action',
+            selector: row => <button className='removeButton' onClick={() => {
+                setUpdateData([]);
+                data.forEach(user => {
+                    if(user.id != row.id) {
+                        updateData.push(user);
+                    }
+                });
+                setData(updateData);
+                setTableData(updateData);
+            }} >Remove</button>,
             sortable: true,
         },
     ];

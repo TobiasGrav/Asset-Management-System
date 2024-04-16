@@ -60,6 +60,7 @@ function Table() {
             .then(response => {
                     setData(response.data);
                     setTableData(response.data);
+                    setLoading(false);
             })
             .catch(error => {setLoading(false)});
         };
