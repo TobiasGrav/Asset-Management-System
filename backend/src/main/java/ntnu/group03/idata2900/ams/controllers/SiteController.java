@@ -1,6 +1,7 @@
 package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Site;
@@ -176,6 +177,30 @@ public class SiteController {
         } catch (Exception e) {
             log.error("Error creating site", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * Adding user to site.
+     *
+     * @param id site id
+     * @param userId user id
+     * @return ResponseEntity containing the HTTP status code 200 (OK) if successful,
+     * or HTTP status code 404 (NOT_FOUND) if the site or user with the given ID doesn't exist.
+     */
+    @PutMapping("/admin/sites/{id}/users/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable int id, @PathVariable int userId){
+        Optional<Site> site = siteService.getSite(id);
+        Optional<User> user = userService.getUserById(userId);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else if (user.isEmpty()){
+            log.warn("User not found with ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            userService.addUserToSite(user.get(), site.get());
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
