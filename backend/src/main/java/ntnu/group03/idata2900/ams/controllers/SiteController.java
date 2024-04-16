@@ -94,7 +94,7 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info("Assets on site found with ID: {}", id);
+            log.info("All assets found with given site ID: {}", id);
             return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
         }
     }
@@ -114,8 +114,26 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info("Asset on site found with ID: {}", id);
+            log.info("Asset on site found with ID: {}", aosId);
             return new ResponseEntity<>(asset.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Returns set of all users by site id
+     *
+     * @param id id of site
+     * @return returns set of all users connected to given site id
+     */
+    @GetMapping( "/admin/sites/{id}/users")
+    public ResponseEntity<Set<User>> getAllUsersBySite(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("All users found with given site ID: {}", id);
+            return new ResponseEntity<>(site.get().getUsers(), HttpStatus.OK);
         }
     }
 
