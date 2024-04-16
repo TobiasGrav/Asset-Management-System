@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet'
 
 import Table from '../Asset/AssetTable'
 
-import '../Asset/Asset.css'
+import './Site.css'
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
