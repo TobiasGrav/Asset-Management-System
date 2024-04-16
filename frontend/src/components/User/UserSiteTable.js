@@ -11,7 +11,7 @@ import URL from '../../tools/URL';
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
-    const [isAdmin, setIsAdmin] = useState();
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const { userID } = useParams();
     const [data, setData] = useState([]);
@@ -48,22 +48,26 @@ function Table() {
     }, [isAdmin])
 
     const fetchData = () => {
-        if(!isAdmin) {
-            HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
-            .then(response => {
+        if(isAdmin != null) {
+            if(isAdmin) {
+                HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
+                .then(response => {
                     setData(response.data);
                     setTableData(response.data);
-            })
-            .catch(error => {setLoading(false)});
-        } else {
-            HTTPRequest.get(`${URL.URL}/api/admin/users/${userID}/sites`, cookies.JWT)
-            .then(response => {
-                setData(response.data);
-                setTableData(response.data);
-                console.log(response);
-                setLoading(false);
-            })
-            .catch(error => {setLoading(false)});
+                    setLoading(false);
+                    console.log(response);
+                })
+                .catch(error => {setLoading(false)});
+            } else {
+                HTTPRequest.get(`${URL.URL}/api/admin/users/${userID}/sites`, cookies.JWT)
+                .then(response => {
+                    setData(response.data);
+                    setTableData(response.data);
+                    console.log(response);
+                    setLoading(false);
+                })
+                .catch(error => {setLoading(false)});
+            };
         };
     };
 

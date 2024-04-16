@@ -21,7 +21,7 @@ function Table() {
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}/assetsOnSite`, cookies.JWT)
+        HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}/users`, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);
@@ -29,7 +29,11 @@ function Table() {
                 if(response.data.length == 0) {
                     setTitle("No assets on this site");
                 } else {
-                    setTitle("Assets on " + response.data[0].site.name);
+                    response.data[0].sites.forEach(site => {
+                        if(site.id == siteID) {
+                            setTitle(`Users belonging to ${site.name}`);
+                        };
+                    });
                 }
                 setLoading(false);
             });
@@ -64,29 +68,34 @@ function Table() {
     const columns = [
         {
             name: 'Name',
-            selector: row => row.asset.name,
+            selector: row => row.firstName + " " + row.lastName,
             sortable: true,
         },
         {
-            name: 'Commision date',
-            selector: row => formatLocalDateTime(row.commissionDate),
+            name: 'Email',
+            selector: row => row.email,
             sortable: true,
         },
-        //{
-        //    name: 'Creation Date',
-        //    selector: row => formatLocalDateTime(row.creationDate),
-        //    sortable: true,
-        //},
         {
-            name: 'ID',
-            selector: row => row.id,
+            name: 'Phone number',
+            selector: row => row.phoneNumber,
+            sortable: true,
+        },
+        {
+            name: 'Creation Date',
+            selector: row => formatLocalDateTime(row.creationDate),
+            sortable: true,
+        },
+        {
+            name: 'Active',
+            selector: row => row.active ? 'Yes' : 'No',
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/site/${siteID}/assets/${row.id}`); // Use navigate to change the route
+        navigate(`/user/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {

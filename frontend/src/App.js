@@ -18,6 +18,7 @@ import SiteAssetTable from './components/Site/SiteAssetTable';
 import SiteAssetAddTable from './components/Site/SiteAssetAddTable';
 import SiteAssetAdd from './components/Site/SiteAssetAdd'
 import SiteAsset from './components/Site/SiteAsset';
+import SiteUserTable from './components/Site/SiteUserTable';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 
 
@@ -37,7 +38,7 @@ function App() {
           <Route path="/site/:siteID/assets/add" element={<Home><SiteAssetAddTable /></Home>} />
           <Route path="/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
           <Route path="/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
-          <Route path="/site/:siteID/users" element={<Home><SiteAssetTable /></Home>} />
+          <Route path="/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
           <Route path="/site/:siteID/users/:userID" element={<Home><SiteAssetTable /></Home>} />
 
           <Route path="/user" element={<Home><CustomerTable /></Home>} />
