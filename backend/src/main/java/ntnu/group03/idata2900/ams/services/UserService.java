@@ -28,6 +28,7 @@ public class UserService implements UserDetailsService {
     private static final int MIN_PASSWORD_LENGTH = 4;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final SiteRepository siteRepository;
 
     private final Optional<Role> admin;
     private final Iterable<Site> sites;
@@ -43,6 +44,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.admin = this.roleRepository.findByName(SecurityAccessUtil.ADMIN);
+        this.siteRepository = siteRepository;
         this.sites = siteRepository.findAll();
     }
 
@@ -204,6 +206,16 @@ public class UserService implements UserDetailsService {
     public void setUserRole(User user){
         Role userRole = roleRepository.findByName(SecurityAccessUtil.USER).orElseThrow(() -> new IllegalArgumentException("Role USER not found"));
         user.getRoles().add(userRole);
+    }
+
+    public boolean hasAccessToSites(User user, int siteId){
+        Optional<Site> siteOptional = siteRepository.findById(siteId);
+        return siteOptional.isPresent() && user.getSites().contains(siteOptional.get());
+    }
+
+    public void removeSiteFromUser(User user, Site site){
+        user.getSites().remove(site);
+        userRepository.save(user);
     }
 
     /**

@@ -218,4 +218,29 @@ public class SiteController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    /**
+     * Removes a user from site.
+     *
+     * @param id The ID of the site.
+     * @param userId the ID of the user
+     * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
+     * or HTTP status code 404 (NOT_FOUND) if the user with the given ID doesn't exist.
+     */
+    @DeleteMapping("/admin/sites/{id}/users/{userId}")
+    public ResponseEntity<Site> deleteUserFromSite(@PathVariable int id, @PathVariable int userId) {
+        Optional<Site> existingSite = siteService.getSite(id);
+        Optional<User> existingUser = userService.getUserById(userId);
+        if (existingSite.isEmpty() ) {
+            log.warn(SITE_NOT_FOUND, id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else if (existingUser.isEmpty()){
+            log.warn("User not found with ID: {}", userId);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            userService.removeSiteFromUser(existingUser.get(), existingSite.get());
+            log.info("User removed from site with ID: {}", userId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
 }
