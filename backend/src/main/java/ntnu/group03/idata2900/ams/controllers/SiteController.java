@@ -10,7 +10,6 @@ import ntnu.group03.idata2900.ams.services.SiteService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -147,22 +146,18 @@ public class SiteController {
     @GetMapping("/user/sites/{id}")
     public ResponseEntity<Site> getSiteUser(@PathVariable int id) {
         User user = userService.getSessionUser();
-
-        // Check if the user has permission to access the requested site
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         if (!userService.hasAccessToSites(user, id)) {
             log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // Proceed to fetch the site data
-        Optional<Site> site = this.siteService.getSite(id);
-        if (site.isEmpty()) {
-            log.warn(SITE_NOT_FOUND, id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info(SITE_FOUND, id);
-            return ResponseEntity.ok(site.get());
-        }
+        log.info(SITE_FOUND, id);
+        return ResponseEntity.ok(site.get());
     }
 
 
