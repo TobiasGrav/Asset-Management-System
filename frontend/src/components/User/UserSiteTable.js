@@ -14,6 +14,7 @@ function Table() {
     const [isAdmin, setIsAdmin] = useState(false);
 
     const { userID } = useParams();
+    const { companyID } = useParams();
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
@@ -78,6 +79,11 @@ function Table() {
             sortable: true,
         },
         {
+            name: 'Company',
+            selector: row => row.company.name,
+            sortable: true,
+        },
+        {
             name: 'ID',
             selector: row => row.id,
             sortable: true,
@@ -86,7 +92,7 @@ function Table() {
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/site/${row.id}`); // Use navigate to change the route
+        navigate(`/company/${row.company.id}/site/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {

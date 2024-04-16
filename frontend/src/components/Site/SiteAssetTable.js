@@ -11,6 +11,7 @@ function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const { siteID } = useParams();
+    const { companyID } = useParams();
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
@@ -48,7 +49,7 @@ function Table() {
     };
 
     const addAsset = () => {
-        navigate(`/site/${siteID}/assets/add`);
+        navigate(`/company/${companyID}/site/${siteID}/assets/add`);
     };
 
     const formatLocalDateTime = (localDateTime) => {

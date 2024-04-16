@@ -62,6 +62,7 @@
     color: #083F4C;
   }
   .navButton {
+    text-align: left;
     margin-right: 25px;
     background: none;
     border: none;

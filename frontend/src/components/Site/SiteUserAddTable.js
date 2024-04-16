@@ -92,7 +92,7 @@ function Table() {
         {
             name: 'Action',
             selector: row => <button className='addButton' onClick={() => {
-                HTTPRequest.post(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${row.id}`, cookies.JWT)
+                HTTPRequest.put(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${row.id}`, cookies.JWT)
                 .then(reponse => {
                     setUpdateData([]);
                     data.forEach(user => {

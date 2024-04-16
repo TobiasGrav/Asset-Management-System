@@ -10,6 +10,7 @@ function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const { siteID } = useParams();
+    const { companyID } = useParams();
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
@@ -87,7 +88,7 @@ function Table() {
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
         console.log(siteID);
-        navigate(`/site/${siteID}/assets/add/${row.id}`); // Use navigate to change the route
+        navigate(`/company/${companyID}/site/${siteID}/assets/add/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
