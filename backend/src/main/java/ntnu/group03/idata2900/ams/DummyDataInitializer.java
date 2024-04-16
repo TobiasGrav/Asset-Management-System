@@ -106,7 +106,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     "Smith",
                     "Jons@ntnu.no",
                     BCrypt.hashpw("IDATA2024isbased", BCrypt.gensalt()),
-                    "12345678",
+                    "24865413",
                     LocalDateTime.now());
 
             jon.setRoles(setUserAdmin);
@@ -116,10 +116,41 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     "Dow",
                     "Jend@ntnu.no",
                     BCrypt.hashpw("12RulesForLife", BCrypt.gensalt()),
-                    "12345678",
+                    "54321547",
                     LocalDateTime.now());
 
             jenny.setRoles(setUserOnly);
+
+            User mark = new User(
+                    "Mark",
+                    "Zuckerberg",
+                    "bigboss@meta.com",
+                    BCrypt.hashpw("1234", BCrypt.gensalt()),
+                    "32156646",
+                    LocalDateTime.now());
+
+            mark.setRoles(setUserOnly);
+
+            User gunnar = new User(
+                    "Gunnar",
+                    "Grav",
+                    "gunnar@meta.com",
+                    BCrypt.hashpw("1234", BCrypt.gensalt()),
+                    "94561256",
+                    LocalDateTime.now());
+
+            gunnar.setRoles(setUserOnly);
+
+            User bob = new User(
+                    "Bob",
+                    "Bobbingson",
+                    "bob@meta.com",
+                    BCrypt.hashpw("1234", BCrypt.gensalt()),
+                    "75654125",
+                    LocalDateTime.now());
+
+            bob.setRoles(setUserOnly);
+
 
             // Setting up sites
             Site site1 = new Site("Nordlandsbåten");
@@ -155,9 +186,15 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             jenny.setSites(setSiteUsers1);
             jenny.setCompany(company3);
 
+            mark.setCompany(company2);
+            gunnar.setCompany(company2);
+            bob.setCompany(company2);
 
             userRepository.save(jon);
             userRepository.save(jenny);
+            userRepository.save(mark);
+            userRepository.save(gunnar);
+            userRepository.save(bob);
 
             // Setting up categories
             Category category1 = new Category("Pump");
