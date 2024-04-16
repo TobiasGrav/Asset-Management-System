@@ -54,14 +54,14 @@ function Table() {
                 setTableData(response.data);
                 setLoading(false);
             })
-            .catch(error => {setLoading(false)})
+            .catch(error => {setLoading(false)});
         } else {
             HTTPRequest.get(`${URL.URL}/api/user/sites`, cookies.JWT)
             .then(response => {
                     setData(response.data);
                     setTableData(response.data);
             })
-            .catch(error => {setLoading(false)})
+            .catch(error => {setLoading(false)});
         };
     };
 

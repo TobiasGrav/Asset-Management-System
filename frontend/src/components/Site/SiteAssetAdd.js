@@ -41,14 +41,18 @@ const Main = (props) => {
   }
 
   const add = () => {
-    HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}`, cookies.JWT)
-    .then(response => {console.log(response); setSite(response.data)})
-    .catch(error => {console.log(error)});
     HTTPRequest.post(URL.URL + '/api/assetOnSites', {asset, site}, cookies.JWT);
+    navigate(`/site/${siteID}/assets`);
   }
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
+    HTTPRequest.get(`${URL.URL}/api/admin/sites/${siteID}`, cookies.JWT)
+    .then(response => {
+      console.log(response); setSite(response.data)
+    })
+    .catch(error => {console.log(error)});
+
     HTTPRequest.get(`${URL.URL}/api/assets/${assetID}`, cookies.JWT)
     .then(response => {
       setAsset(response.data);
