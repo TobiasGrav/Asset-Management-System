@@ -11,6 +11,7 @@ import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
+import URL from "../../tools/URL";
 
 const Company = (props) => {
 
@@ -47,26 +48,15 @@ const Company = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const updatedAsset = {
-            id: id,
-            name: name,
-            description: description,
-            commissionDate: commissionDate,
-            category: category,
-            site: site,
-            datasheet: datasheet
+        const updatedCompany = {
+            name: companyName
         };
-        console.log(updatedAsset);
+        console.log(updatedCompany);
         try {
-            await axios.put(`http://localhost:8080/api/assets/${id}`, updatedAsset, {
-                headers: {
-                    Authorization: `Bearer ${cookies.JWT}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            alert("Asset updated successfully!");
+            HTTPRequest.put(`${URL.URL}/api/companies/${id}`, updatedCompany, cookies.JWT);
+            alert("Company updated successfully!");
         } catch (error) {
-            console.error("Error updating the asset:", error);
+            console.error("Error updating the company:", error);
             alert("Failed to update the asset.");
         }
         setIsEditing(false);

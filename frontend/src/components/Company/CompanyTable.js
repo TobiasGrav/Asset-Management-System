@@ -4,6 +4,8 @@ import DataTable from 'react-data-table-component';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import URL from "../../tools/URL";
+import HTTPRequest from "../../tools/HTTPRequest";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -23,9 +25,7 @@ function Table() {
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.id.toString().includes(searchInput.current.value)) {
+            if(element.name.toLowerCase().includes(searchInput.current.value) || element.id.toString().includes(searchInput.current.value)) {
                 searchData.push(element);
             }
             setTableData(searchData);
@@ -34,20 +34,12 @@ function Table() {
 
     const fetchData = async () => {
         setLoading(true);
-        try {
-            const response = await axios.get('http://localhost:8080/api/companies', {
-                headers: {
-                  Authorization: 'Bearer ' + cookies.JWT,
-                  Accept: "application/json",
-                  'Content-Type': "application/json"
-                }});
+
+        HTTPRequest.get(`${URL.URL}/api/companies`, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
             setLoading(false);
-        }
+        }).catch(error => {setLoading(false)})
     };
 
     const columns = [

@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import HTTPRequest from '../../tools/HTTPRequest'
+import URL from '../../tools/URL'
 
 const Main = (props) => {
 
@@ -28,7 +29,6 @@ const Main = (props) => {
   const referenceNumberReference = useRef(null);
   const pdfUrlReference = useRef(null);
   const imageInput = useRef(null);
-  const selectedCategoryReference = useRef(null);
 
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
@@ -86,19 +86,10 @@ const Main = (props) => {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            try {
-                const response = await axios.get(
-                    'http://localhost:8080/api/categories', {
-                        headers: {
-                            Authorization: `Bearer ${cookies.JWT}`,
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
+            HTTPRequest.get(URL.URL + "/api/categories", cookies.JWT).then(response => {
+                console.log(response.data);
                 setCategories(response.data);
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-            }
+                }).catch(error => {console.log(error)});
         };
 
         fetchCategories();
