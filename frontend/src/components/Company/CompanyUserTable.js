@@ -7,37 +7,30 @@ import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
 import URL from '../../tools/URL';
 import { hover } from '@testing-library/user-event/dist/hover';
-import './Site.css';
+import './Company.css';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
-    const { siteID } = useParams();
     const { companyID } = useParams();
     const [data, setData] = useState([]);
     const [updateData, setUpdateData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [title, setTitle] = useState();
+    const [title, setTitle] = useState('No users in this company!');
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/users`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/companies/${companyID}/users`, cookies.JWT)
             .then(response => {
+                if(response.data.length > 0) {
+                    setTitle('Users belongnin to ' + response.data[0].company.name);
+                }
                 setData(response.data);
                 setTableData(response.data);
                 console.log(response);
-                if(response.data.length == 0) {
-                    setTitle("No users on this site");
-                } else {
-                    response.data[0].sites.forEach(site => {
-                        if(site.id == siteID) {
-                            setTitle(`Users belonging to ${site.name}`);
-                        };
-                    });
-                }
                 setLoading(false);
             });
     }, []);
@@ -55,11 +48,11 @@ function Table() {
     };
 
     const addUser = () => {
-        navigate(`/company/${companyID}/site/${siteID}/users/add`);
+        navigate(``);
     };
 
     const removeUser = (id) => {
-        HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${id}`, cookies.JWT)
+        HTTPRequest.delete(``, cookies.JWT)
         .then(reponse => {
             setUpdateData([]);
             data.forEach(user => {
@@ -118,7 +111,7 @@ function Table() {
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/company/${companyID}/site/${siteID}/users/${row.id}`); // Use navigate to change the route
+        navigate(`/user/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {

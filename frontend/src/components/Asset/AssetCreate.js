@@ -34,7 +34,7 @@ const Main = (props) => {
   const navigate = useNavigate();
 
   const cancel = () => {
-    navigate('/asset');
+    navigate(-1);
   }
 
   const imageSelect = () => {

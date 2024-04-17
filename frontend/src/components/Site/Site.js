@@ -45,7 +45,7 @@ const Company = (props) => {
   const navigate = useNavigate();
 
   const back = () => {
-    navigate('/site/');
+    navigate(-1);
   }
   const edit = () => {
     setIsEditing(true);

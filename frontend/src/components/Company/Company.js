@@ -21,15 +21,15 @@ const Company = (props) => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   const [companyName, setCompanyName] = useState();
-  const [companyID, setCompanyID] = useState();
+  //const [companyID, setCompanyID] = useState();
 
   // information variables
-  const { id } = useParams();
+  const { companyID } = useParams();
 
     // back button functionality, goes back to the last page /asset.
     const navigate = useNavigate();
     const back = () => {
-      navigate('/company/');
+      navigate(-1);
     }
 
     const edit = () => {
@@ -46,6 +46,14 @@ const Company = (props) => {
       setIsEditing(false);
     }
 
+    const showUsers = () => {
+      navigate(`/company/${companyID}/users`);
+    }
+
+    const showSites = () => {
+      navigate(`/company/${companyID}/sites`);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedCompany = {
@@ -53,7 +61,7 @@ const Company = (props) => {
         };
         console.log(updatedCompany);
         try {
-            HTTPRequest.put(`${URL.BACKEND}/api/companies/${id}`, updatedCompany, cookies.JWT);
+            HTTPRequest.put(`${URL.BACKEND}/api/companies/${companyID}`, updatedCompany, cookies.JWT);
             alert("Company updated successfully!");
         } catch (error) {
             console.error("Error updating the company:", error);
@@ -77,8 +85,11 @@ const Company = (props) => {
         <div style={{textAlign:'center'}}><h1>Company name</h1></div>
         <div className='companyContainer'>
             <div className='valueContainer'>
-                <p>Company ID</p>
+                <b>Company ID</b>
                 <input value={"text"}></input>
+                <b>Options</b>
+                <button onClick={showUsers} >Show Users</button>
+                <button onClick={showSites} >Show Sites</button>
             </div>
             <div className='imageContainer'>
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>

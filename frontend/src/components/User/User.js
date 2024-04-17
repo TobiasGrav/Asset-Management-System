@@ -22,7 +22,7 @@ const Main = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   // information variables
-  const { id } = useParams();
+  const { userID } = useParams();
   const [role, setRole] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
@@ -66,9 +66,11 @@ const Main = (props) => {
 //   }}, [isEditing]);
 //   
   // back button functionality, goes back to the last page /asset.
+
   const navigate = useNavigate();
+
   const back = () => {
-    navigate(`/user`);
+    navigate(-1);
   }
 
   const edit = () => {
@@ -86,12 +88,12 @@ const Main = (props) => {
   }
 
   const showSites = () => {
-    navigate('/user/' + id + '/sites');
+    navigate('/user/' + userID + '/sites');
   }
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(URL.BACKEND + `/api/admin/users/${id}`, cookies.JWT)
+    HTTPRequest.get(URL.BACKEND + `/api/admin/users/${userID}`, cookies.JWT)
     .then(response => {
       console.log(response);
       let asset = response.data;
@@ -110,10 +112,10 @@ const Main = (props) => {
       }
     })
     .catch(error => {console.log(error)});
-  }, [id]);
+  }, [userID]);
 
   useEffect(() => {
-    HTTPRequest.get(URL.BACKEND + '/api/admin/users/' + id + '/sites', cookies.JWT)
+    HTTPRequest.get(URL.BACKEND + '/api/admin/users/' + userID + '/sites', cookies.JWT)
     .then(response => {
       console.log(response);
       setData(response.data);
@@ -125,7 +127,7 @@ const Main = (props) => {
   const handleSubmit = async (e) => {
       e.preventDefault();
       const updatedAsset = {
-          id: id,
+          id: userID,
           name: name,
           description: description,
           commissionDate: commissionDate,
@@ -135,7 +137,7 @@ const Main = (props) => {
       };
       console.log(updatedAsset);
       try {
-          await axios.put(URL.BACKEND + `/api/admin/users/${id}`, updatedAsset, {
+          await axios.put(URL.BACKEND + `/api/admin/users/${userID}`, updatedAsset, {
               headers: {
                   Authorization: `Bearer ${cookies.JWT}`,
                   'Content-Type': 'application/json',
@@ -160,74 +162,10 @@ const Main = (props) => {
 
   };
 
-    const columns = [
-      {
-          name: 'Name',
-          selector: row => row.name,
-          sortable: true,
-      },
-      {
-          name: 'Site ID',
-          selector: row => row.id,
-          sortable: true,
-      },
-  ];
-
   // Handler for row click event using navigate
   const handleRowClicked = (row) => {
       navigate(`/site/${row.id}`); // Use navigate to change the route
   };
-
-  const customStyles = {
-      headCells: {
-          style: {
-              backgroundColor: '#E7EDF0',
-              color: '#333',
-              paddingLeft: '12px',
-              paddingRight: '12px',
-          },
-      },
-      cells: {
-          style: {
-              paddingLeft: '12px',
-              paddingRight: '12px',
-              borderColor: '#ddd',
-              cursor: 'default', // Ensures the cursor indicates the cell is not editable
-          },
-      },
-      rows: {
-          style: {
-              '&:nth-of-type(even)': {
-                  backgroundColor: '#E7EDF0', // Even rows background color
-              },
-              '&:nth-of-type(odd)': {
-                  backgroundColor: '#F9FBFC', // Even rows background color
-              },
-              '&:hover': {
-                  backgroundColor: '#ddd', // Hover row background color
-              },
-              borderColor: '#ddd', // Row border color
-          },
-      },
-      pagination: {
-          style: {
-              marginTop: '20px', // Pagination margin top
-          },
-          pageButtonsStyle: {
-              borderRadius: '4px', // Pagination buttons border radius
-              backgroundColor: '#E7EDF0', // Pagination buttons background color
-              borderColor: '#ddd', // Pagination buttons border color
-              color: '#333', // Pagination buttons text color
-              height: 'auto',
-              padding: '8px', // Pagination buttons padding
-              '&:hover': {
-                  backgroundColor: '#ddd', // Pagination buttons hover background color
-              },
-          },
-      },
-  };
-
-  const noDataComponent = <b style={{padding:"10px"}}>Does not belong to any site</b>;
 
   return (
     <div className="assetBody">
@@ -246,7 +184,7 @@ const Main = (props) => {
           <b>Phone number:</b>
           <input className='input' placeholder="Enter Phone number" value={phoneNumber} disabled={!isEditing}></input>
           <b>Customer ID</b>
-          <input className='input' placeholder="Enter Customer ID" value={id} disabled={!isEditing}></input>
+          <input className='input' placeholder="Enter Customer ID" value={userID} disabled={!isEditing}></input>
         </div>
         <div className="containerCenter">
           <b>Company:</b>

@@ -37,7 +37,7 @@ const Main = (props) => {
   const navigate = useNavigate();
 
   const back = () => {
-    navigate(`/site/${siteID}/assets/add`);
+    navigate(-1);
   }
 
   const add = () => {
