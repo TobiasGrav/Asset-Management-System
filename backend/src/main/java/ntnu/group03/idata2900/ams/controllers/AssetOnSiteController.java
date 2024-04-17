@@ -14,7 +14,7 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/assetOnSites")
+@RequestMapping("/api")
 public class AssetOnSiteController {
 
     private final AssetOnSiteService assetOnSiteService;
@@ -35,7 +35,7 @@ public class AssetOnSiteController {
      *
      * @return List of all AssetOnSites in database
      */
-    @GetMapping
+    @GetMapping("/admin/assetOnSites")
     public List<AssetOnSite> getAll() {
         return assetOnSiteService.getAll();
     }
@@ -46,8 +46,26 @@ public class AssetOnSiteController {
      * @param id potential id of a AssetOnSite
      * @return a ModelAndView containing AssetOnSite in JSON format
      */
-    @GetMapping("/{id}")
+    @GetMapping("/admin/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> getSite(@PathVariable int id) {
+        Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
+        if (assetOnSite.isEmpty()) {
+            log.warn(ASSET_ON_SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("AssetOnSite found with ID: {}", id);
+            return new ResponseEntity<>(assetOnSite.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Get an AssetOnSite from database matching given id if it exists.
+     *
+     * @param id potential id of a AssetOnSite
+     * @return a ModelAndView containing AssetOnSite in JSON format
+     */
+    @GetMapping("/user/assetOnSites/{id}")
+    public ResponseEntity<AssetOnSite> getSiteUser(@PathVariable int id) {
         Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
         if (assetOnSite.isEmpty()) {
             log.warn(ASSET_ON_SITE_NOT_FOUND, id);
@@ -65,7 +83,7 @@ public class AssetOnSiteController {
      * @param assetOnSite The assetOnSite object to be created.
      * @return ResponseEntity containing the created assetOnSite and HTTP status code 201 (CREATED).
      */
-    @PostMapping
+    @PostMapping("/admin/assetOnSites")
     public ResponseEntity<AssetOnSite> createSite(@RequestBody AssetOnSiteDto assetOnSite) {
         try {
             AssetOnSite createdAssetOnSite = assetOnSiteService.createAssetOnSite(assetOnSite);
@@ -86,7 +104,7 @@ public class AssetOnSiteController {
      * @return ResponseEntity containing the updated AssetOnSite (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the AssetOnSite with the given ID doesn't exist.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/admin/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> updateSite(@PathVariable int id, @RequestBody AssetOnSiteDto updatedAssetOnSite) {
         Optional<AssetOnSite> existingAssetOnSite = assetOnSiteService.getAssetOnSite(id);
         if (existingAssetOnSite.isEmpty()) {
@@ -108,7 +126,7 @@ public class AssetOnSiteController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the AssetOnSite with the given ID doesn't exist.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> deleteSite(@PathVariable int id) {
         Optional<AssetOnSite> existingAssetOnSite = assetOnSiteService.getAssetOnSite(id);
         if (existingAssetOnSite.isEmpty()) {
