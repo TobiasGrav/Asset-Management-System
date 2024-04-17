@@ -23,6 +23,7 @@ const Main = (props) => {
   // information variables
   const { assetID } = useParams();
   const { siteID } = useParams();
+  const { companyID } = useParams();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [attachmentLink, setAttachmentLink] = useState();
@@ -67,8 +68,9 @@ const Main = (props) => {
     
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
+
   const back = () => {
-    navigate(`/site/${siteID}/assets`);
+    navigate(-1);
   }
 
   const edit = () => {

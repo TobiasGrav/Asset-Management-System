@@ -7,6 +7,8 @@ import Home from './Pages/Home';
 import Login from './Pages/login';
 import Company from './components/Company/Company';
 import CompanyTable from './components/Company/CompanyTable';
+import CompanyUserTable from './components/Company/CompanyUserTable';
+import CompanySiteTable from './components/Company/CompanySiteTable';
 import SiteTable from './components/Site/SiteTable';
 import CustomerTable from './components/User/UserTable';
 import Customer from './components/User/User';
@@ -32,8 +34,11 @@ function App() {
           <Route path="/asset" element={<Home><Table /></Home>} />
           <Route path="/asset/:id" element={<Home><Asset /></Home>} />
           <Route path="/asset/create" element={<Home><AssetCreate /></Home>} />
+
           <Route path="/company" element={<Home><CompanyTable /></Home>} />
-          <Route path="/company/:id" element={<Home><Company /></Home>} />
+          <Route path="/company/:companyID" element={<Home><Company /></Home>} />
+          <Route path="/company/:companyID/users" element={<Home><CompanyUserTable /></Home>} />
+          <Route path="/company/:companyID/sites" element={<Home><CompanySiteTable /></Home>} />
 
           <Route path="/site" element={<Home><SiteTable /></Home>} />
           <Route path="/company/:companyID/site/:id" element={<Home><Site /></Home>} />
@@ -42,11 +47,11 @@ function App() {
           <Route path="/company/:companyID/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
           <Route path="/company/:companyID/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
-          <Route path="/company/:companyID/site/:siteID/users/:userID" element={<Home><SiteAssetTable /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/users/:userID" element={<Home><Customer /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users/add" element={<Home><SiteUserAddTable /></Home>} />
 
           <Route path="/user" element={<Home><CustomerTable /></Home>} />
-          <Route path="/user/:id" element={<Home><Customer /></Home>} />
+          <Route path="/user/:userID" element={<Home><Customer /></Home>} />
           <Route path="/user/create" element={<Home><AssetCreate /></Home>} />
           <Route path="/user/:userID/sites" element={<Home><UserSiteTable /></Home>} />
           <Route path="/login" element={<Login />} />

@@ -62,7 +62,7 @@ const Main = (props) => {
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
   const back = () => {
-    navigate('/asset/');
+    navigate(-1);
   }
 
   const edit = () => {

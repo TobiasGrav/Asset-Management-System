@@ -5,120 +5,96 @@ import { format } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
+import {jwtDecode} from "jwt-decode";
 import URL from '../../tools/URL';
-import { hover } from '@testing-library/user-event/dist/hover';
-import './Site.css';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
-    const { siteID } = useParams();
+    const [isAdmin, setIsAdmin] = useState();
+
     const { companyID } = useParams();
+
     const [data, setData] = useState([]);
-    const [updateData, setUpdateData] = useState([]);
+    const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [title, setTitle] = useState();
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
-
-    useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/users`, cookies.JWT)
-            .then(response => {
-                setData(response.data);
-                setTableData(response.data);
-                console.log(response);
-                if(response.data.length == 0) {
-                    setTitle("No users on this site");
-                } else {
-                    response.data[0].sites.forEach(site => {
-                        if(site.id == siteID) {
-                            setTitle(`Users belonging to ${site.name}`);
-                        };
-                    });
-                }
-                setLoading(false);
-            });
-    }, []);
+    const datatable = useRef(null);
 
     const search = () => {
-        setUpdateData([]);
+        setSearchData([]);
         data.forEach(element => {
-            if(element.asset.name.toLowerCase().includes(searchInput.current.value)) {
-                updateData.push(element);
+            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+                searchData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
-                updateData.push(element);
+                searchData.push(element);
             }
-            setTableData(updateData);
+            setTableData(searchData);
         });
     };
 
-    const addUser = () => {
-        navigate(`/company/${companyID}/site/${siteID}/users/add`);
-    };
-
-    const removeUser = (id) => {
-        HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${id}`, cookies.JWT)
-        .then(reponse => {
-            setUpdateData([]);
-            data.forEach(user => {
-                if(user.id != id) {
-                    updateData.push(user);
+    useEffect(() => {
+        if(cookies.JWT != null) {
+            setIsAdmin(false);
+            jwtDecode(cookies.JWT).roles.forEach(role => {
+                if(role.authority === "ADMIN") {
+                    setIsAdmin(true);
                 }
             });
-            setData(updateData);
-            setTableData(updateData);
-        })
-        .catch(error => {alert('Something went wrong, user not removed from site!')});
-    }
-
-    const formatLocalDateTime = (localDateTime) => {
-        let formattedTime;
-        if(localDateTime == null) {
-            formattedTime = "Not in use";
-        } else {
-            formattedTime = format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
         }
-        return formattedTime;
+    }, []);
+
+    useEffect(() => {
+        if(isAdmin != null) {
+            fetchData();
+        }
+    }, [isAdmin]);
+
+    const fetchData = () => {
+        if(isAdmin) {
+            HTTPRequest.get(`${URL.BACKEND}/api/admin/sites`, cookies.JWT)
+            .then(response => {
+                setData(response.data);
+                setTableData(response.data);
+                setLoading(false);
+                console.log(response);
+            })
+            .catch(error => {setLoading(false)});
+        } else {
+            HTTPRequest.get(`${URL.BACKEND}/api/user/sites`, cookies.JWT)
+            .then(response => {
+                    setData(response.data);
+                    setTableData(response.data);
+                    setLoading(false);
+            })
+            .catch(error => {setLoading(false)});
+        };
     };
 
     const columns = [
         {
             name: 'Name',
-            selector: row => row.firstName + " " + row.lastName,
+            selector: row => row.name,
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: row => row.email,
+            name: 'Company',
+            selector: row => row.company.name,
             sortable: true,
         },
         {
-            name: 'Phone number',
-            selector: row => row.phoneNumber,
-            sortable: true,
-        },
-        {
-            name: 'Creation Date',
-            selector: row => formatLocalDateTime(row.creationDate),
-            sortable: true,
-        },
-        {
-            name: 'Active',
-            selector: row => row.active ? 'Yes' : 'No',
-            sortable: true,
-        },
-        {
-            name: 'Action',
-            selector: row => <button className='removeButton' onClick={() => {removeUser(row.id)}} >Remove</button>,
+            name: 'ID',
+            selector: row => row.id,
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/company/${companyID}/site/${siteID}/users/${row.id}`); // Use navigate to change the route
+        navigate(`/company/${row.company.id}/site/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
@@ -172,9 +148,8 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
-            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={addUser} >Add User</button>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Site Overview</h1></div>
+            <input placeholder='Search for Name or ID' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
             <DataTable
                 columns={columns}
                 data={tableData}
@@ -183,6 +158,7 @@ function Table() {
                 persistTableHead
                 onRowClicked={handleRowClicked}
                 customStyles={customStyles}
+                ref={datatable}
             />
         </div>
     );
