@@ -13,27 +13,44 @@ function Table() {
     const { siteID } = useParams();
     const { companyID } = useParams();
     const [data, setData] = useState([]);
-    const [searchData, setSearchData] = useState([]);
+    const [updateData, setUpdateData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isInSite, setIsInSite] = useState(false);
+    const [hasRun, setHasRun] = useState(false);
+
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
 
     useEffect(() => {
         fetchData();
-        console.log(siteID);
-    }, []);
+    }, [siteID, companyID]);
+
+    const fetchData = () => {
+        if(!hasRun) {
+            setLoading(true);
+            HTTPRequest.get(`${URL.BACKEND}/api/companies/${companyID}/users`, cookies.JWT)
+            .then(response => {
+                let filteredData = (response.data.filter((user) => !user.sites.some(site => site.id == siteID)));
+                setTableData(filteredData);
+                setData(filteredData);
+                setLoading(false);
+            })
+            .catch(error => {console.log(error); setLoading(false)});
+        }
+        setHasRun(true);
+    };
 
     const search = () => {
-        setSearchData([]);
+        setUpdateData([]);
         data.forEach(element => {
             if(element.name.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
+                updateData.push(element);
             } else if(element.id.toString().includes(searchInput.current.value)) {
-                searchData.push(element);
+                updateData.push(element);
             }
-            setTableData(searchData);
+            setTableData(updateData);
         });
     };
 
@@ -41,23 +58,21 @@ function Table() {
         navigate('/asset/create');
     };
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`${URL.BACKEND}/api/companies/${companyID}/users`, {
-                headers: {
-                  Authorization: 'Bearer ' + cookies.JWT,
-                  Accept: "application/json",
-                  'Content-Type': "application/json"
-                }});
-            setData(response.data);
-            setTableData(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
-        }
+    const addUser = (id) => {
+        HTTPRequest.put(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${id}`, null, cookies.JWT)
+        .then(response => {
+            setUpdateData([]);
+            data.forEach(user => {
+                if(user.id != id) {
+                    updateData.push(user);
+                }
+            });
+            setData(updateData);
+            setTableData(updateData);
+        })
+        .catch(error => {alert('Something went wrong, user not added to site!'); console.error(error)});
     };
+
 
     const formatLocalDateTime = (localDateTime) => {
         return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
@@ -91,20 +106,7 @@ function Table() {
         },
         {
             name: 'Action',
-            selector: row => <button className='addButton' onClick={() => {
-                HTTPRequest.put(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${row.id}`, cookies.JWT)
-                .then(reponse => {
-                    setUpdateData([]);
-                    data.forEach(user => {
-                        if(user.id != row.id) {
-                            updateData.push(user);
-                        }
-                    });
-                    setData(updateData);
-                    setTableData(updateData);
-                })
-                .catch(error => {alert('Something went wrong, user not added to site!')});
-            }} >Add</button>,
+            selector: row => <button className='addButton' onClick={() => {addUser(row.id)}} >Add</button>,
             sortable: true,
         },
     ];

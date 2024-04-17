@@ -49,7 +49,7 @@ const Main = (props) => {
   useEffect(() => {
     HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}`, cookies.JWT)
     .then(response => {
-      console.log(response); 
+      console.log(response);
       setSite(response.data);
     })
     .catch(error => {console.log(error)});

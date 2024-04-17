@@ -34,7 +34,7 @@ const Main = (props) => {
 
   // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState();
 
   const nameReference = useRef(null);
   const idReference = useRef(null);
@@ -46,12 +46,14 @@ const Main = (props) => {
 
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
-    console.log(siteID);
-    jwtDecode(cookies.JWT).roles.forEach(role => {
-      if(role.authority === "ADMIN") {
-            setIsAdmin(true);
-      }
-    })
+    if(cookies.JWT != null) {
+      setUserRole("user");
+      jwtDecode(cookies.JWT).roles.forEach(role => {
+        if(role.authority === "ADMIN") {
+              setUserRole("admin");
+        }
+      });
+    }
   })
 
 
@@ -85,19 +87,21 @@ const Main = (props) => {
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`${URL.BACKEND}/api/assetOnSites/${assetID}`, cookies.JWT)
-    .then(response => {
-      console.log(response);
-      let asset = response.data;
-      setName(response.data.asset.name);
-      setDescription(response.data.asset.description);
-      setCommissionDate(response.data.asset.commissionDate);
-      setCategory(response.data.asset.category);
-      setSite(response.data.asset.site);
-      setAttachmentName(response.data.asset.datasheet.name);
-      setAttachmentLink(response.data.asset.datasheet.pdfUrl);
-    });
-  }, [assetID]);
+    if(userRole != null) {
+      HTTPRequest.get(`${URL.BACKEND}/api/${userRole}/assetOnSites/${assetID}`, cookies.JWT)
+      .then(response => {
+        console.log(response);
+        let asset = response.data;
+        setName(response.data.asset.name);
+        setDescription(response.data.asset.description);
+        setCommissionDate(response.data.asset.commissionDate);
+        setCategory(response.data.asset.category);
+        setSite(response.data.asset.site);
+        setAttachmentName(response.data.asset.datasheet.name);
+        setAttachmentLink(response.data.asset.datasheet.pdfUrl);
+      });
+    }
+  }, [userRole]);
 
   //const handleSubmit = async (e) => {
   //    e.preventDefault();
@@ -169,7 +173,7 @@ const Main = (props) => {
           {isEditing &&
               <button type="button" className="button" onClick={cancel} ref={ cancelButtonReference }>Cancel</button>}
 
-          {!isEditing && isAdmin &&
+          {!isEditing && userRole &&
               <button type="button" className="button" onClick={edit} ref={ editButtonReference }>Edit</button>}
 
           {isEditing &&

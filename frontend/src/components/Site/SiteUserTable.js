@@ -58,6 +58,21 @@ function Table() {
         navigate(`/company/${companyID}/site/${siteID}/users/add`);
     };
 
+    const removeUser = (id) => {
+        HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${id}`, cookies.JWT)
+        .then(reponse => {
+            setUpdateData([]);
+            data.forEach(user => {
+                if(user.id != id) {
+                    updateData.push(user);
+                }
+            });
+            setData(updateData);
+            setTableData(updateData);
+        })
+        .catch(error => {alert('Something went wrong, user not removed from site!')});
+    }
+
     const formatLocalDateTime = (localDateTime) => {
         let formattedTime;
         if(localDateTime == null) {
@@ -96,20 +111,7 @@ function Table() {
         },
         {
             name: 'Action',
-            selector: row => <button className='removeButton' onClick={() => {
-                HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${row.id}`, cookies.JWT)
-                .then(reponse => {
-                    setUpdateData([]);
-                    data.forEach(user => {
-                        if(user.id != row.id) {
-                            updateData.push(user);
-                        }
-                    });
-                    setData(updateData);
-                    setTableData(updateData);
-                })
-                .catch(error => {alert('Something went wrong, user not removed from site!')});
-            }} >Remove</button>,
+            selector: row => <button className='removeButton' onClick={() => {removeUser(row.id)}} >Remove</button>,
             sortable: true,
         },
     ];

@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
 import URL from '../../tools/URL';
+import { jwtDecode } from 'jwt-decode';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -17,12 +18,25 @@ function Table() {
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState();
+    const [userRole, setUserRole] = useState();
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/assetsOnSite`, cookies.JWT)
+        if(cookies.JWT != null) {
+            setUserRole("user");
+            jwtDecode(cookies.JWT).roles.forEach(role => {
+                if(role.authority === "ADMIN") {
+                    setUserRole("admin");
+                }
+            });
+        }
+      }, []);
+
+    useEffect(() => {
+        if(userRole != null) {
+            HTTPRequest.get(`${URL.BACKEND}/api/${userRole}/sites/${siteID}/assetsOnSite`, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);
@@ -34,7 +48,8 @@ function Table() {
                 }
                 setLoading(false);
             });
-    }, []);
+        }
+    }, [userRole]);
 
     const search = () => {
         setSearchData([]);
@@ -87,7 +102,7 @@ function Table() {
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/site/${siteID}/assets/${row.id}`); // Use navigate to change the route
+        navigate(`/company/${companyID}/site/${siteID}/assets/${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {

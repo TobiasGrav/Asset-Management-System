@@ -42,23 +42,16 @@ function Table() {
         navigate('/asset/create');
     };
 
-    const fetchData = async () => {
+    const fetchData = () => {
         setLoading(true);
-        try {
-            const response = await axios.get('http://localhost:8080/api/admin/users', {
-                headers: {
-                  Authorization: 'Bearer ' + cookies.JWT,
-                  Accept: "application/json",
-                  'Content-Type': "application/json",
-                }});
+        HTTPRequest.get('http://localhost:8080/api/admin/users', cookies.JWT)
+        .then(response => {
             console.log(response);
             setData(response.data);
             setTableData(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
             setLoading(false);
-        }
+        })
+        .catch(error => {setLoading(false)});
     };
 
     const formatLocalDateTime = (localDateTime) => {

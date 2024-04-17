@@ -18,7 +18,7 @@ const Company = (props) => {
   // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState();
 
   const [siteName, setSiteName] = useState();
   const [siteID, setSiteID] = useState();
@@ -30,66 +30,73 @@ const Company = (props) => {
   const { id } = useParams();
   const { companyID } = useParams();
 
-    // back button functionality, goes back to the last page /asset.
-    const navigate = useNavigate();
-    const back = () => {
-      navigate('/site/');
-    }
-
-    const edit = () => {
-      setIsEditing(true);
-    }
-
-    const cancel = () => {
-      setIsEditing(false);
-
-    }
-
-    const showAssets = () => {
-      navigate(`/company/${companyID}/site/${id}/assets`);
-    }
-
-    const showUsers = () => {
-      navigate(`/company/${companyID}/site/${id}/users`);
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const updatedAsset = {
-            id: id,
-            name: name,
-            description: description,
-            commissionDate: commissionDate,
-            category: category,
-            site: site,
-            datasheet: datasheet
-        };
-        console.log(updatedAsset);
-        try {
-            await axios.put(`${URL.BACKEND}/api/assets/${id}`, updatedAsset, {
-                headers: {
-                    Authorization: `Bearer ${cookies.JWT}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            alert("Asset updated successfully!");
-        } catch (error) {
-            console.error("Error updating the asset:", error);
-            alert("Failed to update the asset.");
-        }
-        setIsEditing(false);
-    };
-
-    useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/user/sites/${id}`, cookies.JWT)
-        .then(response => {
-          console.log(response);
-          setSiteName(response.data.name);
-          setSiteID(response.data.id);
-          setCompanyName(response.data.company.name);
-          setCompanyID(response.data.company.id);
+  useEffect(() => {
+    if(cookies.JWT != null) {
+        setIsAdmin("user");
+        jwtDecode(cookies.JWT).roles.forEach(role => {
+            if(role.authority === "ADMIN") {
+                setIsAdmin("admin");
+            }
         });
-    }, [id, cookies.JWT]);
+    }
+  }, []);
+
+  // back button functionality, goes back to the last page /asset.
+  const navigate = useNavigate();
+
+  const back = () => {
+    navigate('/site/');
+  }
+  const edit = () => {
+    setIsEditing(true);
+  }
+  const cancel = () => {
+    setIsEditing(false);
+  }
+  const showAssets = () => {
+    navigate(`/company/${companyID}/site/${id}/assets`);
+  }
+  const showUsers = () => {
+    navigate(`/company/${companyID}/site/${id}/users`);
+  }
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      const updatedAsset = {
+          id: id,
+          name: name,
+          description: description,
+          commissionDate: commissionDate,
+          category: category,
+          site: site,
+          datasheet: datasheet
+      };
+      console.log(updatedAsset);
+      try {
+          await axios.put(`${URL.BACKEND}/api/assets/${id}`, updatedAsset, {
+              headers: {
+                  Authorization: `Bearer ${cookies.JWT}`,
+                  'Content-Type': 'application/json',
+              },
+          });
+          alert("Asset updated successfully!");
+      } catch (error) {
+          console.error("Error updating the asset:", error);
+          alert("Failed to update the asset.");
+      }
+      setIsEditing(false);
+  };
+  useEffect(() => {
+    if(isAdmin != null) {
+      HTTPRequest.get(`${URL.BACKEND}/api/${isAdmin}/sites/${id}`, cookies.JWT)
+      .then(response => {
+        console.log(response);
+        setSiteName(response.data.name);
+        setSiteID(response.data.id);
+        setCompanyName(response.data.company.name);
+        setCompanyID(response.data.company.id);
+      });
+    }
+  }, [isAdmin]);
 
   return (
     <div className='companyBody'>

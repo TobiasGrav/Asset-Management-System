@@ -36,6 +36,7 @@ function Table() {
 
     useEffect(() => {
         if(cookies.JWT != null) {
+            setIsAdmin(false);
             jwtDecode(cookies.JWT).roles.forEach(role => {
                 if(role.authority === "ADMIN") {
                     setIsAdmin(true);
@@ -45,8 +46,10 @@ function Table() {
     }, []);
 
     useEffect(() => {
-        fetchData();
-    }, [isAdmin])
+        if(isAdmin != null) {
+            fetchData();
+        }
+    }, [isAdmin]);
 
     const fetchData = () => {
         if(isAdmin) {
