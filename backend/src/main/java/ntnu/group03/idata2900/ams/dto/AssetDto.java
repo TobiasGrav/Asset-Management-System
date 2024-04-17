@@ -1,10 +1,7 @@
 package ntnu.group03.idata2900.ams.dto;
 
-
-
 import lombok.Getter;
 import lombok.Setter;
-import ntnu.group03.idata2900.ams.model.Asset;
 import ntnu.group03.idata2900.ams.model.Category;
 import ntnu.group03.idata2900.ams.model.Datasheet;
 

@@ -108,7 +108,27 @@ public class SiteController {
      * @return returns asset on site
      */
     @GetMapping("/admin/sites/{id}/assetsOnSite/{aosId}")
-    public ResponseEntity<AssetOnSite> getAssetsOnSite(@PathVariable int id, @PathVariable int aosId){
+    public ResponseEntity<AssetOnSite> getAssetsOnSiteAdmin(@PathVariable int id, @PathVariable int aosId){
+        Optional<Site> site = this.siteService.getSite(id);
+        Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
+        if (site.isEmpty() && asset.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("Asset on site found with ID: {}", aosId);
+            return new ResponseEntity<>(asset.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Returns asset on site matching given id.
+     *
+     * @param id site id
+     * @param aosId asset on site id
+     * @return returns asset on site
+     */
+    @GetMapping("/user/sites/{id}/assetsOnSite/{aosId}")
+    public ResponseEntity<AssetOnSite> getAssetsOnSiteUser(@PathVariable int id, @PathVariable int aosId){
         Optional<Site> site = this.siteService.getSite(id);
         Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
         if (site.isEmpty() && asset.isEmpty()){
