@@ -6,9 +6,11 @@ import Asset from './components/Asset/Asset';
 import Home from './Pages/Home';
 import Login from './Pages/login';
 import Company from './components/Company/Company';
+import CompanyCreate from './components/Company/CompanyCreate';
 import CompanyTable from './components/Company/CompanyTable';
 import CompanyUserTable from './components/Company/CompanyUserTable';
 import CompanySiteTable from './components/Company/CompanySiteTable';
+import CompanySiteCreate from './components/Company/CompanySiteCreate';
 import SiteTable from './components/Site/SiteTable';
 import CustomerTable from './components/User/UserTable';
 import Customer from './components/User/User';
@@ -37,8 +39,10 @@ function App() {
 
           <Route path="/company" element={<Home><CompanyTable /></Home>} />
           <Route path="/company/:companyID" element={<Home><Company /></Home>} />
+          <Route path="/company/create" element={<Home><CompanyCreate /></Home>} />
           <Route path="/company/:companyID/users" element={<Home><CompanyUserTable /></Home>} />
           <Route path="/company/:companyID/sites" element={<Home><CompanySiteTable /></Home>} />
+          <Route path="/company/:companyID/sites/create" element={<Home><CompanySiteCreate /></Home>} />
 
           <Route path="/site" element={<Home><SiteTable /></Home>} />
           <Route path="/company/:companyID/site/:id" element={<Home><Site /></Home>} />

@@ -70,23 +70,22 @@ const Company = (props) => {
         setIsEditing(false);
     };
 
-    //useEffect(() => {
-    //    HTTPRequest.get(`http://localhost:8080/api/sites/${id}`, cookies.JWT)
-    //    .then(response => {
-    //      console.log(response);
-    //      setCompanyName(response.data.company.name);
-    //      setCompanyID(response.data.company.id);
-    //    })
-    //    .catch(error => {console.log(error)});
-    //}, [id, cookies.JWT]);
+    useEffect(() => {
+        HTTPRequest.get(`http://localhost:8080/api/admin/companies/${companyID}`, cookies.JWT)
+        .then(response => {
+          setCompanyName(response.data.name);
+          setCompanyID(response.data.id);
+        })
+        .catch(error => {console.log(error)});
+    }, [companyID, cookies.JWT]);
 
   return (
     <div className='companyBody'>
-        <div style={{textAlign:'center'}}><h1>Company name</h1></div>
+        <div style={{textAlign:'center'}}><h1>{companyName}</h1></div>
         <div className='companyContainer'>
             <div className='valueContainer'>
                 <b>Company ID</b>
-                <input value={"text"}></input>
+                <input value={companyID}></input>
                 <b>Options</b>
                 <button onClick={showUsers} >Show Users</button>
                 <button onClick={showSites} >Show Sites</button>

@@ -13,6 +13,10 @@
     flex-direction: column;
 }
 
+.infoContainer {
+    gap: 8px;
+}
+
 .imageContainer {
     width: auto;
 }

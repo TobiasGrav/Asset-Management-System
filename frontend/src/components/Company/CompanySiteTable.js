@@ -19,6 +19,7 @@ function Table() {
     const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState();
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
@@ -35,6 +36,10 @@ function Table() {
             setTableData(searchData);
         });
     };
+
+    const create = () => {
+        navigate('create');
+    }
 
     useEffect(() => {
         if(cookies.JWT != null) {
@@ -54,24 +59,17 @@ function Table() {
     }, [isAdmin]);
 
     const fetchData = () => {
-        if(isAdmin) {
-            HTTPRequest.get(`${URL.BACKEND}/api/admin/sites`, cookies.JWT)
-            .then(response => {
-                setData(response.data);
-                setTableData(response.data);
-                setLoading(false);
-                console.log(response);
-            })
-            .catch(error => {setLoading(false)});
-        } else {
-            HTTPRequest.get(`${URL.BACKEND}/api/user/sites`, cookies.JWT)
-            .then(response => {
-                    setData(response.data);
-                    setTableData(response.data);
-                    setLoading(false);
-            })
-            .catch(error => {setLoading(false)});
-        };
+        HTTPRequest.get(`${URL.BACKEND}/api/admin/companies/${companyID}/sites`, cookies.JWT)
+        .then(response => {
+            if(response.data.length > 0) {
+                setTitle(response.data[0].company.name + "'s site overview");
+            }
+            setData(response.data);
+            setTableData(response.data);
+            setLoading(false);
+            console.log(response);
+        })
+        .catch(error => {setLoading(false)});
     };
 
     const columns = [
@@ -148,8 +146,9 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Site Overview</h1></div>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
             <input placeholder='Search for Name or ID' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new company</button>
             <DataTable
                 columns={columns}
                 data={tableData}

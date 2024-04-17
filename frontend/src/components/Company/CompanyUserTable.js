@@ -23,7 +23,7 @@ function Table() {
     const searchInput = useRef(null);
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/companies/${companyID}/users`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/admin/companies/${companyID}/users`, cookies.JWT)
             .then(response => {
                 if(response.data.length > 0) {
                     setTitle('Users belongnin to ' + response.data[0].company.name);
