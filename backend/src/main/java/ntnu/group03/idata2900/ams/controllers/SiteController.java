@@ -101,6 +101,25 @@ public class SiteController {
     }
 
     /**
+     * Returns set of all assets on site matching given site id.
+     *
+     * @param id site id
+     *
+     * @return returns set of all assets on site
+     */
+    @GetMapping("/user/sites/{id}/assetsOnSite")
+    public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSiteUser(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("All assets found with given site ID: {}", id);
+            return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
+        }
+    }
+
+    /**
      * Returns asset on site matching given id.
      *
      * @param id site id
