@@ -110,13 +110,19 @@ public class SiteController {
     @GetMapping("/user/sites/{id}/assetsOnSite")
     public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSiteUser(@PathVariable int id){
         Optional<Site> site = this.siteService.getSite(id);
+        User user = userService.getSessionUser();
         if (site.isEmpty()){
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info("All assets found with given site ID: {}", id);
-            return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
         }
+
+        if (!userService.hasAccessToSites(user, id)) {
+            log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        log.info("All assets found with given site ID: {}", id);
+        return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
     }
 
     /**
