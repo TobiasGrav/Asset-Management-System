@@ -3,7 +3,9 @@ package ntnu.group03.idata2900.ams.controllers;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.AssetOnSiteDto;
 import ntnu.group03.idata2900.ams.model.AssetOnSite;
+import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
+import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class AssetOnSiteController {
 
     private final AssetOnSiteService assetOnSiteService;
+    private final UserService userService;
 
     private static final String ASSET_ON_SITE_NOT_FOUND = "AssetOnSite not found with id: {}";
 
@@ -25,9 +28,11 @@ public class AssetOnSiteController {
      * Creates a new instance of AssetOnSiteController.
      *
      * @param assetOnSiteService assetOnSiteService
+     * @param userService userService
      */
-    public AssetOnSiteController(AssetOnSiteService assetOnSiteService) {
+    public AssetOnSiteController(AssetOnSiteService assetOnSiteService, UserService userService) {
         this.assetOnSiteService = assetOnSiteService;
+        this.userService = userService;
     }
 
     /**
@@ -67,13 +72,19 @@ public class AssetOnSiteController {
     @GetMapping("/user/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> getSiteUser(@PathVariable int id) {
         Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
+        User user = userService.getSessionUser();
         if (assetOnSite.isEmpty()) {
             log.warn(ASSET_ON_SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info("AssetOnSite found with ID: {}", id);
-            return new ResponseEntity<>(assetOnSite.get(), HttpStatus.OK);
         }
+        if (userService.hasAccessToAssetOnSite(user, id)) {
+            log.warn("User {} is not authorized to access assetOnSite with ID {}", user.getId(), id);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        log.info("AssetOnSite found with ID: {}", id);
+        return new ResponseEntity<>(assetOnSite.get(), HttpStatus.OK);
+
     }
 
 

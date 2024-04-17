@@ -2,6 +2,7 @@ package ntnu.group03.idata2900.ams.services;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
+import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Role;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
@@ -210,7 +211,13 @@ public class UserService implements UserDetailsService {
 
     public boolean hasAccessToSites(User user, int siteId){
         Optional<Site> siteOptional = siteRepository.findById(siteId);
-        return siteOptional.isPresent() && user.getSites().contains(siteOptional.get());
+        return siteOptional.isEmpty() || !user.getSites().contains(siteOptional.get());
+    }
+
+    public boolean hasAccessToAssetOnSite(User user, int aosId) {
+        return user.getSites().stream()
+                .flatMap(site -> site.getAssetOnSites().stream())
+                .anyMatch(assetOnSite -> assetOnSite.getId() == aosId);
     }
 
     public void removeSiteFromUser(User user, Site site){

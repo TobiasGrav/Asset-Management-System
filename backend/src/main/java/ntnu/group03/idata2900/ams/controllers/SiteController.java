@@ -1,7 +1,6 @@
 package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Site;
@@ -116,7 +115,7 @@ public class SiteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        if (!userService.hasAccessToSites(user, id)) {
+        if (userService.hasAccessToSites(user, id)) {
             log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -197,7 +196,7 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        if (!userService.hasAccessToSites(user, id)) {
+        if (userService.hasAccessToSites(user, id)) {
             log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
