@@ -30,7 +30,7 @@ function Table() {
     const fetchData = () => {
         if(!hasRun) {
             setLoading(true);
-            HTTPRequest.get(`${URL.BACKEND}/api/companies/${companyID}/users`, cookies.JWT)
+            HTTPRequest.get(`${URL.BACKEND}/api/admin/companies/${companyID}/users`, cookies.JWT)
             .then(response => {
                 let filteredData = (response.data.filter((user) => !user.sites.some(site => site.id == siteID)));
                 setTableData(filteredData);

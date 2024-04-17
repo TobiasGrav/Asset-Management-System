@@ -17,7 +17,7 @@ function Table() {
     const [updateData, setUpdateData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [title, setTitle] = useState('No users in this company!');
+    const [title, setTitle] = useState();
     const navigate = useNavigate();
 
     const searchInput = useRef(null);
@@ -27,6 +27,8 @@ function Table() {
             .then(response => {
                 if(response.data.length > 0) {
                     setTitle('Users belongnin to ' + response.data[0].company.name);
+                } else {
+                    setTitle('No users in this company!');
                 }
                 setData(response.data);
                 setTableData(response.data);
@@ -48,7 +50,7 @@ function Table() {
     };
 
     const addUser = () => {
-        navigate(``);
+        navigate('create');
     };
 
     const removeUser = (id) => {
