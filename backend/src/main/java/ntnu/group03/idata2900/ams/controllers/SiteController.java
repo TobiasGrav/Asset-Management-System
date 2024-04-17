@@ -5,6 +5,7 @@ import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
+import ntnu.group03.idata2900.ams.services.CompanyService;
 import ntnu.group03.idata2900.ams.services.SiteService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,6 @@ public class SiteController {
 
     private final SiteService siteService;
     private final UserService userService;
-    private final AssetOnSiteService assetOnSiteService;
 
     private static final String SITE_NOT_FOUND = "Site not found with id: {}";
     private static final String SITE_FOUND = "Site found with ID: {}";
@@ -33,12 +33,10 @@ public class SiteController {
      *
      * @param siteService siteService
      * @param userService userService
-     * @param assetOnSiteService assetOnSiteService
      */
-    public SiteController(SiteService siteService, UserService userService, AssetOnSiteService assetOnSiteService) {
+    public SiteController(SiteService siteService, UserService userService) {
         this.siteService = siteService;
         this.userService = userService;
-        this.assetOnSiteService = assetOnSiteService;
     }
 
     /**

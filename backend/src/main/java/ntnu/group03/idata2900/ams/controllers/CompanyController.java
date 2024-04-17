@@ -3,6 +3,7 @@ package ntnu.group03.idata2900.ams.controllers;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.CompanyDto;
 import ntnu.group03.idata2900.ams.model.Company;
+import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.CompanyService;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/companies")
+@RequestMapping("/api/admin/companies")
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -75,6 +76,18 @@ public class CompanyController {
         } else {
             log.info("Company found with ID: {}", id);
             return new ResponseEntity<>(company.get().getUsers(), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/{id}/sites")
+    public ResponseEntity<Set<Site>> getAllSitesToCompany(@PathVariable int id){
+        Optional<Company> company = this.companyService.getCompany(id);
+        if (company.isEmpty()){
+            log.warn(COMPANY_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("Company found with ID: {}", id);
+            return new ResponseEntity<>(company.get().getSites(), HttpStatus.OK);
         }
     }
 
