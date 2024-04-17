@@ -2,7 +2,6 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SiteDto;
-import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
@@ -81,108 +80,6 @@ public class SiteController {
     }
 
     /**
-     * Returns set of all assets on site matching given site id.
-     *
-     * @param id site id
-     *
-     * @return returns set of all assets on site
-     */
-    @GetMapping("/admin/sites/{id}/assetsOnSite")
-    public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSite(@PathVariable int id){
-        Optional<Site> site = this.siteService.getSite(id);
-        if (site.isEmpty()){
-            log.warn(SITE_NOT_FOUND, id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info("All assets found with given site ID: {}", id);
-            return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
-        }
-    }
-
-    /**
-     * Returns set of all assets on site matching given site id.
-     *
-     * @param id site id
-     *
-     * @return returns set of all assets on site
-     */
-    @GetMapping("/user/sites/{id}/assetsOnSite")
-    public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSiteUser(@PathVariable int id){
-        Optional<Site> site = this.siteService.getSite(id);
-        User user = userService.getSessionUser();
-        if (site.isEmpty()){
-            log.warn(SITE_NOT_FOUND, id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        if (userService.hasAccessToSites(user, id)) {
-            log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        log.info("All assets found with given site ID: {}", id);
-        return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
-    }
-
-    /**
-     * Returns asset on site matching given id.
-     *
-     * @param id site id
-     * @param aosId asset on site id
-     * @return returns asset on site
-     */
-    @GetMapping("/admin/sites/{id}/assetsOnSite/{aosId}")
-    public ResponseEntity<AssetOnSite> getAssetsOnSiteAdmin(@PathVariable int id, @PathVariable int aosId){
-        Optional<Site> site = this.siteService.getSite(id);
-        Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
-        if (site.isEmpty() && asset.isEmpty()){
-            log.warn(SITE_NOT_FOUND, id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info("Asset on site found with ID: {}", aosId);
-            return new ResponseEntity<>(asset.get(), HttpStatus.OK);
-        }
-    }
-
-    /**
-     * Returns asset on site matching given id.
-     *
-     * @param id site id
-     * @param aosId asset on site id
-     * @return returns asset on site
-     */
-    @GetMapping("/user/sites/{id}/assetsOnSite/{aosId}")
-    public ResponseEntity<AssetOnSite> getAssetsOnSiteUser(@PathVariable int id, @PathVariable int aosId){
-        Optional<Site> site = this.siteService.getSite(id);
-        Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
-        if (site.isEmpty() && asset.isEmpty()){
-            log.warn(SITE_NOT_FOUND, id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info("Asset on site found with ID: {}", aosId);
-            return new ResponseEntity<>(asset.get(), HttpStatus.OK);
-        }
-    }
-
-    /**
-     * Returns set of all users by site id
-     *
-     * @param id id of site
-     * @return returns set of all users connected to given site id
-     */
-    @GetMapping( "/admin/sites/{id}/users")
-    public ResponseEntity<Set<User>> getAllUsersBySite(@PathVariable int id){
-        Optional<Site> site = this.siteService.getSite(id);
-        if (site.isEmpty()){
-            log.warn(SITE_NOT_FOUND, id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            log.info("All users found with given site ID: {}", id);
-            return new ResponseEntity<>(site.get().getUsers(), HttpStatus.OK);
-        }
-    }
-
-    /**
      * Get a site from database matching given id if it exists.
      *
      * @param id potential id of a site
@@ -196,7 +93,7 @@ public class SiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        if (userService.hasAccessToSites(user, id)) {
+        if (userService.hasAccessToSite(user, id)) {
             log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

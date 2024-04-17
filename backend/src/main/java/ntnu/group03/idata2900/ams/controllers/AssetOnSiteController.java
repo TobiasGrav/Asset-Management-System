@@ -3,8 +3,10 @@ package ntnu.group03.idata2900.ams.controllers;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.AssetOnSiteDto;
 import ntnu.group03.idata2900.ams.model.AssetOnSite;
+import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
+import ntnu.group03.idata2900.ams.services.SiteService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @CrossOrigin
@@ -21,18 +24,22 @@ public class AssetOnSiteController {
 
     private final AssetOnSiteService assetOnSiteService;
     private final UserService userService;
+    private final SiteService siteService;
 
     private static final String ASSET_ON_SITE_NOT_FOUND = "AssetOnSite not found with id: {}";
+    private static final String SITE_NOT_FOUND = "Site not found with id: {}";
 
     /**
      * Creates a new instance of AssetOnSiteController.
      *
      * @param assetOnSiteService assetOnSiteService
      * @param userService userService
+     * @param siteService siteService
      */
-    public AssetOnSiteController(AssetOnSiteService assetOnSiteService, UserService userService) {
+    public AssetOnSiteController(AssetOnSiteService assetOnSiteService, UserService userService, SiteService siteService) {
         this.assetOnSiteService = assetOnSiteService;
         this.userService = userService;
+        this.siteService = siteService;
     }
 
     /**
@@ -46,45 +53,95 @@ public class AssetOnSiteController {
     }
 
     /**
-     * Get an AssetOnSite from database matching given id if it exists.
+     * Returns set of all assets on site matching given site id for admin.
      *
-     * @param id potential id of a AssetOnSite
-     * @return a ModelAndView containing AssetOnSite in JSON format
+     * @param id site id
+     *
+     * @return returns set of all assets on site
      */
-    @GetMapping("/admin/assetOnSites/{id}")
-    public ResponseEntity<AssetOnSite> getSite(@PathVariable int id) {
-        Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
-        if (assetOnSite.isEmpty()) {
-            log.warn(ASSET_ON_SITE_NOT_FOUND, id);
+    @GetMapping("/admin/sites/{id}/assetsOnSite")
+    public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSite(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info("AssetOnSite found with ID: {}", id);
-            return new ResponseEntity<>(assetOnSite.get(), HttpStatus.OK);
+            log.info("All assets found with given site ID: {}", id);
+            return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
         }
     }
 
     /**
-     * Get an AssetOnSite from database matching given id if it exists.
+     * Returns set of all assets on site matching given site id for user.
      *
-     * @param id potential id of a AssetOnSite
-     * @return a ModelAndView containing AssetOnSite in JSON format
+     * @param id site id
+     *
+     * @return returns set of all assets on site
      */
-    @GetMapping("/user/assetOnSites/{id}")
-    public ResponseEntity<AssetOnSite> getSiteUser(@PathVariable int id) {
-        Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
+    @GetMapping("/user/sites/{id}/assetsOnSite")
+    public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSiteUser(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
         User user = userService.getSessionUser();
-        if (assetOnSite.isEmpty()) {
-            log.warn(ASSET_ON_SITE_NOT_FOUND, id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        if (userService.hasAccessToAssetOnSite(user, id)) {
-            log.warn("User {} is not authorized to access assetOnSite with ID {}", user.getId(), id);
+        if (userService.hasAccessToSite(user, id)) {
+            log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        log.info("AssetOnSite found with ID: {}", id);
-        return new ResponseEntity<>(assetOnSite.get(), HttpStatus.OK);
+        log.info("All assets found with given site ID: {}", id);
+        return new ResponseEntity<>(site.get().getAssetOnSites(), HttpStatus.OK);
+    }
 
+    /**
+     * Returns asset on site matching given id for admin.
+     *
+     * @param id site id
+     * @param aosId asset on site id
+     * @return returns asset on site
+     */
+    @GetMapping("/admin/sites/{id}/assetsOnSite/{aosId}")
+    public ResponseEntity<AssetOnSite> getAssetsOnSiteAdmin(@PathVariable int id, @PathVariable int aosId){
+        Optional<Site> site = this.siteService.getSite(id);
+        Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
+        if (site.isEmpty() && asset.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("Asset on site found with ID: {}", aosId);
+            return new ResponseEntity<>(asset.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Returns asset on site matching given id for user.
+     *
+     * @param id site id
+     * @param aosId asset on site id
+     * @return returns asset on site
+     */
+    @GetMapping("/user/sites/{id}/assetsOnSite/{aosId}")
+    public ResponseEntity<AssetOnSite> getAssetsOnSiteUser(@PathVariable int id, @PathVariable int aosId){
+        Optional<Site> site = this.siteService.getSite(id);
+        Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
+        User user = userService.getSessionUser();
+
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else if (asset.isEmpty()){
+            log.warn("Asset on site not found with ID: {}", aosId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        if (!userService.hasAccessToAssetOnSite(user, id, aosId)) {
+            log.warn("User {} is not authorized to access site with ID {}", user.getId(), id);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        log.info("Asset on site found with ID: {}", aosId);
+        return new ResponseEntity<>(asset.get(), HttpStatus.OK);
     }
 
 

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
+import ntnu.group03.idata2900.ams.services.SiteService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +21,21 @@ import java.util.Set;
 public class UserController {
 
     private final UserService userService;
+    private final SiteService siteService;
 
     private static final String USER_NOT_FOUND = "User not found with id: {}";
+
+    private static final String SITE_NOT_FOUND = "Site not found with id: {}";
 
     /**
      * Creates a new instance of UserController.
      *
      * @param userService userService
+     * @param siteService siteService
      */
-    public UserController(UserService userService) {
+    public UserController(UserService userService, SiteService siteService) {
         this.userService = userService;
+        this.siteService = siteService;
     }
 
     /**
@@ -57,6 +63,24 @@ public class UserController {
         } else {
             log.info("User found with ID: {}", id);
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Returns set of all users by site id
+     *
+     * @param id id of site
+     * @return returns set of all users connected to given site id
+     */
+    @GetMapping( "/admin/sites/{id}/users")
+    public ResponseEntity<Set<User>> getAllUsersBySite(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("All users found with given site ID: {}", id);
+            return new ResponseEntity<>(site.get().getUsers(), HttpStatus.OK);
         }
     }
 

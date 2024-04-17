@@ -6,6 +6,7 @@ import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Role;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
+import ntnu.group03.idata2900.ams.repositories.AssetOnSiteRepository;
 import ntnu.group03.idata2900.ams.repositories.RoleRepository;
 import ntnu.group03.idata2900.ams.repositories.SiteRepository;
 import ntnu.group03.idata2900.ams.repositories.UserRepository;
@@ -30,6 +31,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SiteRepository siteRepository;
+    private final AssetOnSiteRepository assetOnSiteRepository;
 
     private final Optional<Role> admin;
     private final Iterable<Site> sites;
@@ -40,10 +42,12 @@ public class UserService implements UserDetailsService {
      * @param userRepository userRepository
      * @param roleRepository roleRepository
      * @param siteRepository siteRepository
+     * @param assetOnSiteRepository assetOnSiteRepository
      */
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.assetOnSiteRepository = assetOnSiteRepository;
         this.admin = this.roleRepository.findByName(SecurityAccessUtil.ADMIN);
         this.siteRepository = siteRepository;
         this.sites = siteRepository.findAll();
@@ -209,22 +213,52 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(userRole);
     }
 
-    public boolean hasAccessToSites(User user, int siteId){
-        Optional<Site> siteOptional = siteRepository.findById(siteId);
-        return siteOptional.isEmpty() || !user.getSites().contains(siteOptional.get());
+    /**
+     * Checks if user has access to the site
+     *
+     * @param user user to be checked for access
+     * @param siteId site id to check
+     * @return returns true if user has access, false if not
+     */
+    public boolean hasAccessToSite(User user, int siteId){
+        Optional<Site> site = siteRepository.findById(siteId);
+        return site.filter(value -> user.getSites().contains(value)).isEmpty();
     }
 
-    public boolean hasAccessToAssetOnSite(User user, int aosId) {
-        return user.getSites().stream()
-                .flatMap(site -> site.getAssetOnSites().stream())
-                .anyMatch(assetOnSite -> assetOnSite.getId() == aosId);
+    /**
+     * Checks if user has access to the given asset on site
+     *
+     * @param user user to be checked for access
+     * @param siteId site id to be checked
+     * @param aosId asset on site id to be checked
+     * @return returns true if user has access, false if not
+     */
+    public boolean hasAccessToAssetOnSite(User user, int siteId, int aosId) {
+        Optional<AssetOnSite> assetOnSite = assetOnSiteRepository.findById(aosId);
+        Optional<Site> site = siteRepository.findById(siteId);
+        if (site.isEmpty() || !user.getSites().contains(site.get()) || assetOnSite.isEmpty()){
+            return false;
+        }
+        return site.get().getAssetOnSites().contains(assetOnSite.get());
     }
 
+    /**
+     * Removes site from user
+     *
+     * @param user user to have site removed
+     * @param site site to be removed
+     */
     public void removeSiteFromUser(User user, Site site){
         user.getSites().remove(site);
         userRepository.save(user);
     }
 
+    /**
+     * Adds user to site
+     *
+     * @param user user to have site added
+     * @param site site to be added
+     */
     public void addUserToSite(User user, Site site){
         user.getSites().add(site);
         userRepository.save(user);
