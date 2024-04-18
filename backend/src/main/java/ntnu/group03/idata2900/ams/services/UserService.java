@@ -349,51 +349,24 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Checks if a submitted email follows the email format.
-     * <b>Currently checks if:
-     * -email contains an @-symbol, and only one @-symbol
-     * -email does not contain empty spaces
-     * -there is at least one character before the @-symbol
-     * -there is at least one full stop after @-symbol
-     * -there are no instances of two full stops with no text in between
-     * -there are at least one character before and after the first and last full stop after the @-symbol</b>
+     * Validates if a submitted email adheres to a specified email format.
+     * <b>Validation includes checks that:
+     * - The email contains exactly one '@' symbol.
+     * - The email does not contain any empty spaces.
+     * - There is at least one character before the '@' symbol.
+     * - The local part (before the '@') does not start or end with a dot ('.'),
+     *   and does not contain consecutive dots.
+     * - The domain part (after the '@') starts with a non-hyphen character,
+     *   contains only letters, digits, or hyphens, and ends with a dot followed by
+     *   a top-level domain (TLD) of at least two letters.
+     * - The overall length of the local part does not exceed 64 characters.</b>
      *
-     * @param potentialEmail submitted email
-     * @return true if submitted email is following a valid format, false otherwise.
+     * @param potentialEmail The submitted email to validate.
+     * @return true if the submitted email follows the valid format, false otherwise.
      */
     private static boolean validEmail(String potentialEmail) {
-        boolean valid = false;
-        //Confirms the String contains a @-symbol.
-        boolean containsAt = potentialEmail.contains("@");
-        //Checks for spaces which are not allowed in an email address.
-        boolean containsSpace = potentialEmail.contains(" ");
-        if (containsAt && !containsSpace) {
-            String[] splitString = potentialEmail.split("@");
-            //If there is exactly one @-symbol int the String the split will produce an array of length 2.
-            boolean oneAt = splitString.length == 2;
-            if (oneAt) {
-                String s1 = splitString[0];
-                String s2 = splitString[1];
-                //The first part of en emil address can not be empty.
-                boolean s1Valid = !s1.isEmpty();
-                //The second part of an email address must be at least 3 characters long and contain a full stop.
-                boolean s2Valid = s2.contains(".");
-                if (s2Valid) {
-                    String[] s2Sections = s2.split("\\.");
-                    int i = 0;
-                    //Checks if each section is empty.
-                    while (s2Valid && i < s2Sections.length) {
-                        String currentSection = s2Sections[0];
-                        if (currentSection.equals("")) {
-                            s2Valid = false;
-                        }
-                        i++;
-                    }
-                }
-                valid = s1Valid && s2Valid;
-            }
-        }
-        return valid;
+        String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@*[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return potentialEmail.matches(emailRegex);
     }
 
     /**
