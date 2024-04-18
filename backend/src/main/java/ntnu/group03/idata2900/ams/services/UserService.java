@@ -83,7 +83,7 @@ public class UserService implements UserDetailsService {
      *
      * @param userInfo information provided by SignUpDto instance
      */
-    public void createUserForSignUp(SignUpDto userInfo) {
+    public User createUserForSignUp(SignUpDto userInfo) {
         if (!validEmail(userInfo.getEmail())) {
             log.error("Invalid email format: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Invalid email format.");
@@ -112,7 +112,7 @@ public class UserService implements UserDetailsService {
 
             userRepository.save(user);
             log.info("New user created with email: {}", userInfo.getEmail());
-
+            return user;
         }
     }
 

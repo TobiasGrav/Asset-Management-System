@@ -113,7 +113,7 @@ public class UserController {
     @PostMapping("/admin/users")
     public ResponseEntity<User> createUser(@RequestBody SignUpDto user) {
         try {
-            User createdUser = userService.createUser(user);
+            User createdUser = userService.createUserForSignUp(user);
             log.info("User created with ID: {}", createdUser.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (Exception e) {
