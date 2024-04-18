@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -54,14 +55,27 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * returns all users stored in user repository.
+     * Convert all users to SignupDTO and exclude password. Then return list of all signupDTOs.
      *
-     * @return all users stored in user repository
+     * @return return list of all signupDTOs with password excluded
      */
-    public List<User> getAll() {
-        List<User> users = new LinkedList<>();
-        userRepository.findAll().forEach(users::add);
-        return users;
+    public List<SignUpDto> getAll() {
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .map(user -> {
+                    SignUpDto signUpDto = new SignUpDto();
+                    signUpDto.setFirstName(user.getFirstName());
+                    signUpDto.setLastName(user.getLastName());
+                    signUpDto.setCompany(user.getCompany());
+                    signUpDto.setEmail(user.getEmail());
+                    signUpDto.setPhoneNumber(user.getPhoneNumber());
+                    signUpDto.setActive(user.isActive());
+                    signUpDto.setCreationDate(user.getCreationDate());
+                    signUpDto.setSites(user.getSites());
+                    signUpDto.setServicesCompleted(user.getServicesCompleted());
+                    signUpDto.setRoles(user.getRoles());
+                    signUpDto.setId(user.getId());
+                    return signUpDto;
+                }).toList();
     }
 
     /**
@@ -102,6 +116,34 @@ public class UserService implements UserDetailsService {
         }
     }
 
+
+    /**
+     * Retrieves a user by ID, then convert it to a signupDto and return it.
+     *
+     * @param id The ID of the user.
+     * @return returns signupDto
+     */
+    public SignUpDto getUserByIdThenConvertToSignupDto(int id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()){
+            return null;
+        }
+
+        SignUpDto signUpDto = new SignUpDto();
+        signUpDto.setFirstName(user.get().getFirstName());
+        signUpDto.setLastName(user.get().getLastName());
+        signUpDto.setCompany(user.get().getCompany());
+        signUpDto.setEmail(user.get().getEmail());
+        signUpDto.setPhoneNumber(user.get().getPhoneNumber());
+        signUpDto.setActive(user.get().isActive());
+        signUpDto.setCreationDate(user.get().getCreationDate());
+        signUpDto.setSites(user.get().getSites());
+        signUpDto.setServicesCompleted(user.get().getServicesCompleted());
+        signUpDto.setRoles(user.get().getRoles());
+        signUpDto.setId(user.get().getId());
+        return signUpDto;
+    }
 
     /**
      * Retrieves a user by ID.

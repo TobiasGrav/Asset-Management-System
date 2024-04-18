@@ -126,27 +126,26 @@ const Main = (props) => {
 
   const handleSubmit = async (e) => {
       e.preventDefault();
-      const updatedAsset = {
+      const updatedUser = {
           id: userID,
-          name: name,
-          description: description,
-          commissionDate: commissionDate,
-          category: category,
-          site: site,
-          datasheet: datasheet
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          phoneNumber: phoneNumber,
+          role: role,
       };
-      console.log(updatedAsset);
+      console.log(updatedUser);
       try {
-          await axios.put(URL.BACKEND + `/api/admin/users/${userID}`, updatedAsset, {
+          await axios.put(`${URL.BACKEND}/api/admin/users/${userID}`, updatedUser, {
               headers: {
                   Authorization: `Bearer ${cookies.JWT}`,
                   'Content-Type': 'application/json',
               },
           });
-          alert("Asset updated successfully!");
+          alert("User updated successfully!");
       } catch (error) {
-          console.error("Error updating the asset:", error);
-          alert("Failed to update the asset.");
+          console.error("Error updating the user:", error);
+          alert("Failed to update the user.");
       }
       setIsEditing(false);
   };

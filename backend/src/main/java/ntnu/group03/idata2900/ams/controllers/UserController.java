@@ -44,7 +44,7 @@ public class UserController {
      * @return List of all users in database
      */
     @GetMapping("/admin/users")
-    public List<User> getAll() {
+    public List<SignUpDto> getAll() {
         return userService.getAll();
     }
 
@@ -92,13 +92,13 @@ public class UserController {
      */
     @GetMapping("/admin/users/{id}/sites")
     public ResponseEntity<Set<Site>> getAllSitesOfUser(@PathVariable int id){
-        Optional<User> user = this.userService.getUserById(id);
-        if (user.isEmpty()){
+        SignUpDto user = this.userService.getUserByIdThenConvertToSignupDto(id);
+        if (user == null){
             log.warn(USER_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             log.info("User found with ID: {}", id);
-            return new ResponseEntity<>(user.get().getSites(), HttpStatus.OK);
+            return new ResponseEntity<>(user.getSites(), HttpStatus.OK);
         }
     }
 

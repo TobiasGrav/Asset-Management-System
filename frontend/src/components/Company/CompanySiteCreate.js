@@ -14,8 +14,8 @@ const Main = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   // information variables
+  const { companyID } = useParams();
   const [name, setName] = useState();
-  const [description, setDescription] = useState();
   const [image, setImage] = useState();
 
   const nameReference = useRef(null);
@@ -33,13 +33,17 @@ const Main = (props) => {
     console.log(imageInput.current.value);
   }
 
-  const handleSubmit = async (e) => {
-    const data = { name: name };
-    HTTPRequest.post(`${URL.BACKEND}/api/admin/companies`, data, cookies.JWT)
+  const handleSubmit = () => {
+      const data = {
+          name: name,
+          company: {
+              id: companyID
+          }};
+    HTTPRequest.post(`${URL.BACKEND}/api/admin/sites`, data, cookies.JWT)
     .then(response => {
         console.log(response);
     })
-    .catch(error => {alert('Something went wrong!\nCompany not created')});
+    .catch(error => {alert('Something went wrong!\nSite not created')});
   };
 
   // lets the user input values
@@ -51,10 +55,10 @@ const Main = (props) => {
   return (
     <div>
         <form onSubmit={handleSubmit}>
-            <div style={{textAlign: 'center', width: '100%', marginBottom: '32px', fontSize:32}}><b>Create new Company</b></div>
+            <div style={{textAlign: 'center', width: '100%', marginBottom: '32px', fontSize:32}}><b>Create new Site</b></div>
             <div className='center'>
                 <div className='infoContainer'>
-                    <b>Company name</b>
+                    <b>Site name</b>
                     <input className='inputField' placeholder='Input name' onChange={handleNameInput}></input>
                 </div>
                 <div className='imageContainer'>

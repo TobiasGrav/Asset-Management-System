@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SiteDto;
 import ntnu.group03.idata2900.ams.model.Site;
 import ntnu.group03.idata2900.ams.model.User;
-import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
-import ntnu.group03.idata2900.ams.services.CompanyService;
 import ntnu.group03.idata2900.ams.services.SiteService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -107,7 +105,7 @@ public class SiteController {
      * @param site The site object to be created.
      * @return ResponseEntity containing the created site and HTTP status code 201 (CREATED).
      */
-    @PostMapping
+    @PostMapping("/admin/sites")
     public ResponseEntity<Site> createSite(@RequestBody SiteDto site) {
         try {
             Site createdSite = siteService.createSite(site);
@@ -152,7 +150,7 @@ public class SiteController {
      * @return ResponseEntity containing the updated site (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the site with the given ID doesn't exist.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/admin/sites/{id}")
     public ResponseEntity<Site> updateSite(@PathVariable int id, @RequestBody SiteDto updatedSite) {
         Optional<Site> existingSite = siteService.getSite(id);
         if (existingSite.isEmpty()) {
@@ -175,7 +173,7 @@ public class SiteController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the site with the given ID doesn't exist.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/sites/{id}")
     public ResponseEntity<Site> deleteSite(@PathVariable int id) {
         Optional<Site> existingSite = siteService.getSite(id);
         if (existingSite.isEmpty()) {

@@ -129,6 +129,10 @@ public class User {
         this.creationDate = LocalDateTime.now();
         this.company = userInfo.getCompany();
         this.active = true;
+        this.roles = userInfo.getRoles();
+        this.servicesCompleted = userInfo.getServicesCompleted();
+        this.sites = userInfo.getSites();
+        this.id = userInfo.getId();
     }
 
     public User() {
