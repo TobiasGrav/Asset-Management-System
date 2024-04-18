@@ -25,3 +25,7 @@
     height: 360px;
     width: 360px;
 }
+
+.inputField:invalid {
+    border-color: red;
+}

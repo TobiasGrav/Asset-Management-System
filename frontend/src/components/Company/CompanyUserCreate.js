@@ -33,6 +33,12 @@ const Main = (props) => {
 
   // Conditional variables
   const [isAdmin, setIsAdmin] = useState(false);
+  const [validFirstName, setValidFirstName] = useState();
+  const [validLastName, setValidLastName] = useState();
+  const [validEmail, setValidEmail] = useState();
+  const [validPhoneNumber, setValidPhoneNumber] = useState();
+
+  const emailInput = useRef();
 
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
@@ -53,15 +59,21 @@ const Main = (props) => {
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
+    setValidFirstName(isValidName(event.target.value));
   }
   const handleLastNameChange = (event) => {
     setLastName(event.target.value);
+    setValidLastName(isValidName(event.target.value));
   }
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
+    setValidEmail(isValidEmail(event.target.value));
   }
   const handlePhoneNumberChange = (event) => {
     setPhoneNumber(event.target.value);
+    //if(!validPhoneNumber) {
+    //    setValidPhoneNumber(isValidPhoneNumber(event.target.value));
+    //}
   }
   const handleRoleChange = (event) => {
     if(event.target.value == 'USER') {
@@ -71,22 +83,51 @@ const Main = (props) => {
         setImage(require('../../Pages/resources/superior.png'));
     }
   }
+  function isValidName(name) {
+    // Regular expression for email validation
+    const nameRegex = /^(?:[a-zA-ZæØøÅå-]+\s)*[a-zA-ZÆæØøÅå-]+$/;
+    return name != null && name.length < 128 && nameRegex.test(name);
+  }
+  function isValidEmail(email) {
+      // Regular expression for email validation
+      //const emailRegex = /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z])?$/;
+      const emailRegex = /^(?=.{1,64}@)(?!.*@-.*)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
 
-  const handleSubmit = async (event) => {
-    const userData = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: 'test',
-        phoneNumber: phoneNumber,
-        company: { id: companyID }
+      return emailRegex.test(email);
+  }
+
+  //function isValidPhoneNumber(phoneNumber) {
+  //    let isValid = false;
+  //    if (phoneNumber != null && phoneNumber.length == 8 && /^\d+$/.test(phoneNumber)) {
+  //        isValid = true;
+  //    }
+  //    return isValid;
+  //}
+
+  const handleSubmit = (event) => {
+    setValidFirstName(isValidName(firstName));
+    setValidLastName(isValidName(lastName));
+    setValidEmail(isValidEmail(email));
+    //setValidPhoneNumber(isValidPhoneNumber(phoneNumber));
+    if(validFirstName && validLastName && validEmail) {
+        const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: 'tester',
+            phoneNumber: phoneNumber,
+            company: { id: companyID }
+        }
+        console.log(userData);
+        HTTPRequest.post(`${URL.BACKEND}/api/admin/users`, userData, cookies.JWT)
+        .then(response => {
+            if(response == null) {
+                alert('Email already in use!');
+            }else if(response.status == 201) {
+                navigate(-1);
+            }
+        })
     }
-    console.log(userData);
-    HTTPRequest.post(`${URL.BACKEND}/api/admin/users`, userData, cookies.JWT)
-    .then(response => {
-        console.log(response);
-    })
-    .catch(error => (alert('Something went wrong!\nUser not created')))
   };
 
   return (
@@ -99,12 +140,16 @@ const Main = (props) => {
         <div className="containerLeft">
           <b>First Name</b>
           <input className='input' placeholder="Enter First Name" value={firstName} onChange={handleFirstNameChange} ></input>
+          {validFirstName != null && !validFirstName && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid first name</p>}
           <b>Last Name</b>
           <input className='input' placeholder="Enter Last Name" value={lastName} onChange={handleLastNameChange} ></input>
+          {validLastName != null && !validLastName && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid last name</p>}
           <b>Email:</b>
-          <input className='input' placeholder="Enter Email" value={email} onChange={handleEmailChange} ></input>
+          <input className='inputField' ref={emailInput} placeholder="Enter Email" value={email} onChange={handleEmailChange} ></input>
+          {validEmail != null && !validEmail && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Not a valid email format</p>}
           <b>Phone number:</b>
           <input className='input' placeholder="Enter Phone number" value={phoneNumber} onChange={handlePhoneNumberChange} ></input>
+          {/*{validPhoneNumber != null && !validPhoneNumber && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid Phone Number</p>}*/}
           
           <b>Pick role</b>
 
