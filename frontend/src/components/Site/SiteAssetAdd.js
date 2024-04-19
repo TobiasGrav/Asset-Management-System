@@ -13,47 +13,43 @@ import { useNavigate } from 'react-router-dom';
 import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import QRCode from 'qrcode.react';
+import QuantityIncrementer from '../Utility/QuantityIncrementer';
 
 const Main = (props) => {
 
   // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
-
+  
+  const [commissionDate, setCommissionDate] = useState();
   const [asset, setAsset] = useState();
   const [site, setSite] = useState();
+  const [amount, setAmount] = useState(1);
 
   // information variables
   const { assetID } = useParams();
   const { siteID } = useParams();
+  const { companyID } = useParams();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [attachmentLink, setAttachmentLink] = useState();
   const [attachmentName, setAttachmentName] = useState();
   const [category, setCategory] = useState();
-  const [commissionDate, setCommissionDate] = useState();
   const [datasheet, setDatasheet] = useState();
     
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
 
-  const back = () => {
-    navigate(-1);
+  const handleQuantityChange = (quantity) => {
+    setAmount(quantity);
   }
 
-  const add = () => {
-    HTTPRequest.post(URL.BACKEND + '/api/assetOnSites', {asset, site}, cookies.JWT);
-    navigate(`/site/${siteID}/assets`);
+  const back = () => {
+    //navigate(-1);
   }
 
   // Sends a get request to the backend and inputs the values of the asset.
   useEffect(() => {
-    HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}`, cookies.JWT)
-    .then(response => {
-      console.log(response);
-      setSite(response.data);
-    })
-    .catch(error => {console.log(error)});
-
+    setSite({ id: siteID });
     HTTPRequest.get(`${URL.BACKEND}/api/assets/${assetID}`, cookies.JWT)
     .then(response => {
       setAsset(response.data);
@@ -89,7 +85,10 @@ const Main = (props) => {
         </div>
         <div className="rightButtonContainer">
           <button type="button" className="button" onClick={back}>Back</button>
-          <button type="button" className="button" onClick={add}>Add Asset</button>
+          <div style={{gap:'0px'}}>
+            <p style={{width:'auto', marginLeft:'18px', marginBottom:'0px', marginTop:'0px', color:'#083F4C', fontSize:14}}>Quantity</p>
+            <QuantityIncrementer assetID={assetID} siteID={siteID} />
+          </div>
         </div>
       </div>
     </div>

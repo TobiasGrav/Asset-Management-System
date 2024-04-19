@@ -21,8 +21,6 @@ function Table() {
 
     const navigate = useNavigate();
 
-    const searchInput = useRef(null);
-
     useEffect(() => {
         fetchData();
     }, [siteID, companyID]);
@@ -42,12 +40,14 @@ function Table() {
         setHasRun(true);
     };
 
-    const search = () => {
+    const search = (event) => {
         setUpdateData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+            if(`${element.firstName} ${element.lastName}`.toLowerCase().includes(event.target.value.toLowerCase())) {
                 updateData.push(element);
-            } else if(element.id.toString().includes(searchInput.current.value)) {
+            } else if(element.email.toLowerCase().includes(event.target.value.toLowerCase())) {
+                updateData.push(element);
+            } else if(element.phoneNumber.toString().includes(event.target.value.toLowerCase())) {
                 updateData.push(element);
             }
             setTableData(updateData);
@@ -169,7 +169,7 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Add user</h1></div>
-            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
             <DataTable
                 columns={columns}
                 data={tableData}

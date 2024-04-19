@@ -15,26 +15,23 @@ function Table() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const searchInput = useRef(null);
+    const [updateData, setUpdateData] = useState([]);
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const search = () => {
-        setSearchData([]);
+    const search = (event) => {
+        setUpdateData([]);
         data.forEach(element => {
-            let fullName = element.firstName + " " + element.lastName
-            if(fullName.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.email.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.phoneNumber.toLowerCase().includes(searchInput.current.value)) {
-                searchData.push(element);
-            } else if(element.id.toString().includes(searchInput.current.value)) {
-                searchData.push(element);
+            if(`${element.firstName} ${element.lastName}`.toLowerCase().includes(event.target.value.toLowerCase())) {
+                updateData.push(element);
+            } else if(element.email.toLowerCase().includes(event.target.value.toLowerCase())) {
+                updateData.push(element);
+            } else if(element.phoneNumber.toString().includes(event.target.value.toLowerCase())) {
+                updateData.push(element);
             }
-            setTableData(searchData);
+            setTableData(updateData);
         });
     };
 
@@ -143,7 +140,7 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>User Overview</h1></div>
-            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
             <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
             <DataTable
                 columns={columns}

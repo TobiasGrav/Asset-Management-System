@@ -5,9 +5,12 @@ import { format } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import URL from '../../tools/URL';
+import QuantityIncrementer from '../Utility/QuantityIncrementer';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
+
+    const [amounts, setAmounts] = useState();
 
     const { siteID } = useParams();
     const { companyID } = useParams();
@@ -21,15 +24,14 @@ function Table() {
 
     useEffect(() => {
         fetchData();
-        console.log(siteID);
     }, []);
 
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(searchInput.current.value)) {
+            if(element.name.toLowerCase().includes(searchInput.current.value.toLowerCase())) {
                 searchData.push(element);
-            } else if(element.id.toString().includes(searchInput.current.value)) {
+            } else if(element.id.toString().includes(searchInput.current.value.toLowerCase())) {
                 searchData.push(element);
             }
             setTableData(searchData);
@@ -39,6 +41,10 @@ function Table() {
     const create = () => {
         navigate('/asset/create');
     };
+
+    const addAsset = (id, amount) => {
+
+    }
 
     const fetchData = async () => {
         setLoading(true);
@@ -51,6 +57,7 @@ function Table() {
                 }});
             setData(response.data);
             setTableData(response.data);
+            console.log(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -81,6 +88,11 @@ function Table() {
         {
             name: 'Active',
             selector: row => row.active ? 'Yes' : 'No',
+            sortable: true,
+        },
+        {
+            name: 'Quantity',
+            selector: row => <div style={{display:'flex', gap:'10px', alignItems:'center'}}><QuantityIncrementer assetID={row.id} siteID={siteID} /></div>,
             sortable: true,
         },
     ];

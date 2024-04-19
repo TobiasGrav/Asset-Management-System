@@ -16,16 +16,14 @@ function Table() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const searchInput = useRef(null);
-
     useEffect(() => {
         fetchData();
     }, []);
 
-    const search = () => {
+    const search = (event) => {
         setSearchData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(searchInput.current.value) || element.id.toString().includes(searchInput.current.value)) {
+            if(element.name.toLowerCase().includes(event.target.value.toLowerCase()) || element.id.toString().includes(event.target.value.toLowerCase())) {
                 searchData.push(element);
             }
             setTableData(searchData);
@@ -129,7 +127,7 @@ function Table() {
     return (
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Asset Overview</h1></div>
-            <input placeholder='Search for asset' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
             <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
             <DataTable
                 columns={columns}

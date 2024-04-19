@@ -29,7 +29,7 @@ function Table() {
     const search = () => {
         setSearchData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(searchInput.current.value) || element.id.toString().includes(searchInput.current.value)) {
+            if(element.name.toLowerCase().includes(searchInput.current.value.toLowerCase()) || element.id.toString().includes(searchInput.current.value.toLowerCase())) {
                 searchData.push(element);
             }
             setTableData(searchData);

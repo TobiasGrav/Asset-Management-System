@@ -1,0 +1,39 @@
+/* For WebKit-based browsers */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* For all browsers */
+input[type='number'] {
+  /* This can remove the spinners if the above doesn't work */
+  appearance: none;
+}
+
+.incrementer {
+    border: none;
+    background: none;
+}
+
+.incrementButton {
+    background-color: #C9D7DD;
+    border-radius: 10px;
+    border: none;
+}
+
+.incrementButton:hover {
+    background-color: #A5BDC7;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.incrementButton:active {
+    background-color: #C9D7DD;
+}
