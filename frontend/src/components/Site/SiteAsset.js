@@ -15,7 +15,7 @@ import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 import QRCode from 'qrcode.react'
 
-const Main = (props) => {
+const Main = ({ value, size }) => {
 
   // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -132,16 +132,76 @@ const Main = (props) => {
   //    setIsEditing(false);
   //};
 
-  // lets the user input values
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
 
-  // lets the user input values
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
 
   };
+
+  const printFrameRef = useRef();
+  const [contextMenu, setContextMenu] = useState(null);
+
+  const handlePrint = () => {
+    const qrCanvas = document.querySelector('canvas');
+    const imgData = qrCanvas.toDataURL('image/png');
+    const img = printFrameRef.current.contentDocument.createElement('img');
+    img.onload = () => {
+      printFrameRef.current.contentWindow.print();
+    };
+    img.src = imgData;
+    // Clear the iframe's content
+    printFrameRef.current.contentDocument.body.innerHTML = '';
+    printFrameRef.current.contentDocument.body.appendChild(img);
+  };
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+
+    // Remove any existing context menu
+    if (contextMenu) {
+      contextMenu.remove();
+    }
+
+    const menu = document.createElement('div');
+    menu.innerHTML = 'Print QR';
+    menu.style.position = 'fixed';
+    menu.style.left = `${event.clientX}px`;
+    menu.style.top = `${event.clientY}px`;
+    menu.style.backgroundColor = '#fff';
+    menu.style.border = '1px solid #ddd';
+    menu.style.padding = '5px';
+    menu.style.cursor = 'pointer';
+    menu.style.zIndex = '1000';
+    menu.onclick = handlePrint;
+    menu.onblur = () => {
+      menu.remove();
+      setContextMenu(null);
+    };
+
+    // Append to body and focus
+    document.body.appendChild(menu);
+    menu.focus();
+
+    // Update the state to the current menu
+    setContextMenu(menu);
+  };
+
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      if (contextMenu && !contextMenu.contains(e.target)) {
+        contextMenu.remove();
+        setContextMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleGlobalClick);
+    return () => {
+      document.removeEventListener('click', handleGlobalClick);
+    };
+  }, [contextMenu]);
 
   return (
     <div className="assetBody">
@@ -152,14 +212,18 @@ const Main = (props) => {
           <b>Asset Site ID</b>
           <input placeholder="Enter Asset ID" value={assetID} disabled={true}></input>
           <span><b>Description</b><br></br></span>
-          <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description} value={description} onChange={handleDescriptionChange} disabled={!isEditing}/>
+          <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description}
+                    value={description} onChange={handleDescriptionChange} disabled={!isEditing}/>
           <span><b>Asset Datasheet</b><br></br></span>
           <a href={attachmentLink} target="_blank" rel="noreferrer noopener">
             {attachmentName}.pdf
           </a>
           <br></br>
           <b>Asset QR Code</b>
-          <QRCode value={`${URL.BACKEND}/site/${siteID}/assets/${assetID}`} size={256} level={"H"} bgColor={"#ffffff"} fgColor={"#000000"} includeMargin={true}/>
+          <div onContextMenu={handleContextMenu}>
+            <QRCode value={value} size={size} level="H" bgColor="#ffffff" fgColor="#000000" includeMargin={true}/>
+            <iframe ref={printFrameRef} style={{display: 'none'}} title="Print Frame"/>
+          </div>
         </div>
         <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
