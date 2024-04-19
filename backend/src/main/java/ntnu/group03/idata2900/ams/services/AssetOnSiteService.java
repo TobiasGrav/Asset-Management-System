@@ -29,8 +29,15 @@ public class AssetOnSiteService {
     }
 
     public AssetOnSite createAssetOnSite(AssetOnSiteDto assetOnSiteDto){
-        AssetOnSite assetOnSite = new AssetOnSite(assetOnSiteDto);
-        return this.assetOnSiteRepository.save(assetOnSite);
+        if (assetOnSiteDto.getAmount() > 1000 || assetOnSiteDto.getAmount() < 0){
+            return null;
+        }
+        AssetOnSite assetOnSite = null;
+        for (int i = 0; i < assetOnSiteDto.getAmount(); i++){
+            assetOnSite = new AssetOnSite(assetOnSiteDto);
+            this.assetOnSiteRepository.save(assetOnSite);
+        }
+        return assetOnSite;
     }
 
     public void updateAssetOnSite(AssetOnSite assetOnSite) {

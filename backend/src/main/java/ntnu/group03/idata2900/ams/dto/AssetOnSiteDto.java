@@ -16,11 +16,13 @@ public class AssetOnSiteDto {
     private Site site;
 
     private Asset asset;
+    private int amount;
 
-    public AssetOnSiteDto(LocalDateTime commissionDate, Site site, Asset asset) {
+    public AssetOnSiteDto(LocalDateTime commissionDate, Site site, Asset asset, int amount) {
         this.commissionDate = commissionDate;
         this.site = site;
         this.asset = asset;
+        this.amount = amount;
     }
 
     public AssetOnSiteDto(){
