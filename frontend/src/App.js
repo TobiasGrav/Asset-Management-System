@@ -28,6 +28,10 @@ import SiteUserAddTable from './components/Site/SiteUserAddTable';
 import AccessDenied from './components/AccessDenied';
 import NotFound from './components/NotFound';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
+import ServiceTable from "./components/Asset/AssetServiceTable";
+import Service from "./components/Asset/AssetServiceCreate";
+import AssetServiceCreate from "./components/Asset/AssetServiceCreate";
+import AssetService from "./components/Asset/AssetService";
 
 
 function App() {
@@ -35,8 +39,11 @@ function App() {
       <Router>
         <Routes>
           <Route path="/asset" element={<Home><Table /></Home>} />
-          <Route path="/asset/:id" element={<Home><Asset /></Home>} />
           <Route path="/asset/create" element={<Home><AssetCreate /></Home>} />
+          <Route path="/asset/:id" element={<Home><Asset /></Home>} />
+          <Route path="/asset/:id/service" element={<Home><ServiceTable /></Home>} />
+          <Route path="/asset/:id/service/:serviceID" element={<Home><AssetService /></Home>} />
+          <Route path="/asset/:id/service/create" element={<Home><AssetServiceCreate /></Home>} />
 
           <Route path="/company" element={<Home><CompanyTable /></Home>} />
           <Route path="/company/:companyID" element={<Home><Company /></Home>} />

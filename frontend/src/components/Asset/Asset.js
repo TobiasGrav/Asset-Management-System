@@ -129,24 +129,32 @@ const Main = (props) => {
 
   };
 
+    const showServices = () => {
+        navigate(`/asset/${id}/service`);
+    }
+
   return (
     <div className="assetBody">
       <input type="text" placeholder="Name" name={name} value={name} onChange={handleNameChange} className="nameInput" disabled={!isEditing}/>
       <br></br>
       <div className="assetContainer">
-        <div className="assetInfoContainer">
-          <b>Asset ID</b>
-          <input placeholder="Enter Asset ID" value={id} disabled={true}></input>
-          <span><b>Description</b><br></br></span>
-          <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description} value={description} onChange={handleDescriptionChange} disabled={!isEditing}/>
-          <span><b>Asset Datasheet</b><br></br></span>
-          <a href={attachmentLink} target="_blank" rel="noreferrer noopener">
-            {attachmentName}.pdf
-          </a>
-        </div>
-        <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
+          <div className="assetInfoContainer">
+              <b>Asset ID</b>
+              <input placeholder="Enter Asset ID" value={id} disabled={true}></input>
+              <span><b>Description</b><br></br></span>
+              <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description}
+                        value={description} onChange={handleDescriptionChange} disabled={!isEditing}/>
+              <span><b>Asset Datasheet</b><br></br></span>
+              <a href={attachmentLink} target="_blank" rel="noreferrer noopener">
+                  {attachmentName}.pdf
+              </a>
+              <br></br>
+              <b>Options</b>
+              <button onClick={showServices}>Show Services</button>
+          </div>
+          <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
-      <div className="buttonContainer">
+        <div className="buttonContainer">
         <div className="leftButtonContainer">
           {isEditing && <button type="button" className="button">Delete</button>}
         </div>
