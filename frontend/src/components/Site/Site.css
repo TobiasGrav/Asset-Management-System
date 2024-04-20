@@ -64,3 +64,18 @@
     background-color: #83f2b5;
     cursor: pointer;
   }
+
+  .backArrow {
+    color: #003341;
+    font-size: 20px;
+    background: none;
+    border: none;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+  }
+
+  .backArrow:hover {
+    color: #184a38;
+    cursor: pointer;
+  }

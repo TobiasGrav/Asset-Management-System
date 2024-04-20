@@ -37,3 +37,47 @@ input[type='number'] {
 .incrementButton:active {
     background-color: #C9D7DD;
 }
+
+.notActive {
+    opacity: 0;
+}
+
+/* Define the class for animation */
+.fadeIn {
+    opacity: 0;
+    animation-name: fadeInOut;
+    animation-duration: 5s;
+}
+
+/* Define keyframes for the animation */
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.addAssetButton {
+    color: #083F4C;
+    padding: 0.5rem 1rem;
+    border-width: 1px;
+    border-radius: 4px;
+    opacity: 1;
+    transition: opacity 1s;
+}
+
+.addAssetButton:hover {
+    background-color: #82A2B0;
+  }
+
+.addAssetButton:disabled {
+  background: none;
+  color: grey;
+  opacity: 0.5;
+  transition: opacity 1s;
+}
+
+.addAssetButton:disabled:hover {
+    background: black;
+    opacity: 1;
+  }
+
