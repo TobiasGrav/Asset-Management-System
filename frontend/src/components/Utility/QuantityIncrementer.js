@@ -3,10 +3,16 @@ import './QualityIncrementer.css';
 import HTTPRequest from '../../tools/HTTPRequest';
 import { useCookies } from 'react-cookie';
 import URL from '../../tools/URL';
+import { is } from 'date-fns/locale/is';
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 const QuantityIncrementer = (props) => {
   const [quantity, setQuantity] = useState(1); // Starting with 1 as initial quantity
   const [cookies, setCookie, removeCookie] = useCookies();
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+  const [animate, setAnimate] = useState(false);
+  const [image, setImage] = useState(require('../../Pages/resources/checkmark.png'));
+  const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const incrementQuantity = () => {
     setQuantity(prevQuantity => (prevQuantity < 1000 ? prevQuantity + 1 : prevQuantity));
@@ -23,7 +29,24 @@ const QuantityIncrementer = (props) => {
     }
   };
 
+  const playSuccess = () => {
+    setImage(require('../../Pages/resources/checkmark.png'));
+    setAnimate(true);
+    setTimeout(() => setAnimate(false), 5000);
+    setTimeout(() => setHasBeenClicked(false), 5000);
+  }
+
+  const playFailed = () => {
+    setImage(require('../../Pages/resources/x.png'));
+    setAnimate(true);
+    setTimeout(() => setAnimate(false), 5000);
+    setTimeout(() => setHasBeenClicked(false), 5000);
+  }
+
   const addAsset = () => {
+    setHasBeenClicked(true);
+    setIsWaitingForResponse(true);
+
     console.log(props.assetID);
     console.log(props.siteID);
     const data = {
@@ -34,7 +57,17 @@ const QuantityIncrementer = (props) => {
     };
 
     console.log(data);
-    HTTPRequest.post(URL.BACKEND + '/api/admin/assetOnSites', data, cookies.JWT);
+    HTTPRequest.post(URL.BACKEND + '/api/admin/assetOnSites', data, cookies.JWT)
+    .then(response => {
+      if(response != null) {
+        setIsWaitingForResponse(false);
+        playSuccess();
+      } else {
+        setIsWaitingForResponse(false);
+        playFailed();
+      }
+      setIsWaitingForResponse(false);
+    });
   }
 
   const handleBlur = () => {
@@ -57,7 +90,9 @@ const QuantityIncrementer = (props) => {
           style={{ textAlign: 'center', width: '40px', margin: '0 0px' }}
         />
         <button className='incrementButton' style={{ width:'25px' }} onClick={incrementQuantity}>+</button>
-        <button type="button" className="button" onClick={addAsset} >Add asset</button>
+        <button type="addAssetButton" className="button" onClick={addAsset} disabled={hasBeenClicked} >Add asset</button>
+        <img src={require('../../Pages/resources/Loading.gif')} hidden={!isWaitingForResponse} style={{ width:'32px', height:'32px' }} ></img>
+        <img src={image} className={animate ? 'fadeIn' : 'notActive'} style={{ width:'25px', height:'25px' }} ></img>
       </div>
   );
 };

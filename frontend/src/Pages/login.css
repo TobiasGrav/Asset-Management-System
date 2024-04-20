@@ -75,10 +75,26 @@ body {
     padding: 0.5rem 1rem;
     border-width: 1px;
     border-radius: 4px;
+    opacity: 1;
+    transition: opacity 1s;
 }
 
 .button:hover {
     background-color: #82A2B0;
+  }
+
+.button:disabled {
+  background-color: none;
+  color: grey;
+  opacity: 0.5;
+  transition: opacity 1s;
+}
+
+.button:disabled:hover {
+    background-color: none;
+    color: grey;
+    opacity: 0.5;
+    transition: opacity 1s;
   }
 
 .image {

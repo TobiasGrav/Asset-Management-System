@@ -44,7 +44,7 @@ const Main = (props) => {
   }
 
   const back = () => {
-    //navigate(-1);
+    navigate(-1);
   }
 
   // Sends a get request to the backend and inputs the values of the asset.
