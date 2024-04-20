@@ -160,7 +160,7 @@ function Table() {
     return (
         <div style={{width:'100%', height:'100%'}}>
             <button className='backArrow' onClick={back}>← Go back</button>
-            <div style={{marginLeft:'auto', marginRight:'auto', width: '90%' }}>
+            <div style={{ marginLeft:'auto', marginRight:'auto', width: '90%' }}>
                 <div style={{ textAlign:"center" }}>
                     <h1 style={{fontSize:30, color:"#003341"}}>Add asset</h1>
                 </div>

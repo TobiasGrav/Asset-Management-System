@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import URL from '../../tools/URL';
 import HTTPRequest from '../../tools/HTTPRequest';
+import './Site.css';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -24,6 +25,10 @@ function Table() {
     useEffect(() => {
         fetchData();
     }, [siteID, companyID]);
+
+    const back = () => {
+        navigate(-1);
+    };
 
     const fetchData = () => {
         if(!hasRun) {
@@ -167,18 +172,21 @@ function Table() {
     };
 
     return (
-        <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Add user</h1></div>
-            <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <DataTable
-                columns={columns}
-                data={tableData}
-                progressPending={loading}
-                pagination
-                persistTableHead
-                onRowClicked={handleRowClicked}
-                customStyles={customStyles}
-            />
+        <div style={{width:'100%', height:'100%'}}>
+            <button className='backArrow' onClick={back}>← Go back</button>
+            <div style={{ marginLeft:'auto', marginRight:'auto', width: '90%' }}>
+                <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Add user</h1></div>
+                <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+                <DataTable
+                    columns={columns}
+                    data={tableData}
+                    progressPending={loading}
+                    pagination
+                    persistTableHead
+                    onRowClicked={handleRowClicked}
+                    customStyles={customStyles}
+                />
+            </div>
         </div>
     );
 }

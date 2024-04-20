@@ -41,6 +41,10 @@ function Table() {
         navigate('create');
     }
 
+    const back = () => {
+        navigate(-1);
+    }
+
     useEffect(() => {
         if(cookies.JWT != null) {
             setIsAdmin(false);
@@ -145,20 +149,23 @@ function Table() {
     };
 
     return (
-        <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
-            <input placeholder='Search for Name or ID' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new site</button>
-            <DataTable
-                columns={columns}
-                data={tableData}
-                progressPending={loading}
-                pagination
-                persistTableHead
-                onRowClicked={handleRowClicked}
-                customStyles={customStyles}
-                ref={datatable}
-            />
+        <div style={{width:'100%', height:'100%'}}>
+            <button className='backArrow' onClick={back}>← Go back</button>
+            <div style={{ marginLeft:'auto', marginRight:'auto', width: '90%' }}>
+                <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
+                <input placeholder='Search for Name or ID' ref={searchInput} onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+                <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new site</button>
+                <DataTable
+                    columns={columns}
+                    data={tableData}
+                    progressPending={loading}
+                    pagination
+                    persistTableHead
+                    onRowClicked={handleRowClicked}
+                    customStyles={customStyles}
+                    ref={datatable}
+                />
+            </div>
         </div>
     );
 }

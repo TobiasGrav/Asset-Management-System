@@ -35,6 +35,10 @@ function Table() {
             });
     }, []);
 
+    const back = () => {
+        navigate(-1);
+    }
+
     const search = (event) => {
         setUpdateData([]);
         data.forEach(element => {
@@ -166,19 +170,22 @@ function Table() {
     };
 
     return (
-        <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
-            <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={addUser} >Add User</button>
-            <DataTable
-                columns={columns}
-                data={tableData}
-                progressPending={loading}
-                pagination
-                persistTableHead
-                onRowClicked={handleRowClicked}
-                customStyles={customStyles}
-            />
+        <div style={{width:'100%', height:'100%'}}>
+            <button className='backArrow' onClick={back}>← Go back</button>
+            <div style={{ marginLeft:'auto', marginRight:'auto', width: '90%' }}>
+                <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{title}</h1></div>
+                <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+                <button className='button' style={{marginLeft:'16px'}} onClick={addUser} >Add User</button>
+                <DataTable
+                    columns={columns}
+                    data={tableData}
+                    progressPending={loading}
+                    pagination
+                    persistTableHead
+                    onRowClicked={handleRowClicked}
+                    customStyles={customStyles}
+                />
+            </div>
         </div>
     );
 }
