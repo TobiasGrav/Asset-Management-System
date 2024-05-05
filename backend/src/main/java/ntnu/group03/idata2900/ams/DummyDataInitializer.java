@@ -227,62 +227,74 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             Asset asset1 = new Asset(
                     "Pump",
                     "A random pump",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "12354.3245.2342");
 
             Asset asset2 = new Asset(
                     "Vent",
                     "A random vent",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234.567.8.87..54.43");
 
             Asset asset3 = new Asset(
                     "Filter",
                     "A random filter",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234.324.23.423.4.234.23");
 
             Asset asset4 = new Asset(
                     "Pump123",
                     "A random pump321",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234.423.4.234.32.4.234.23");
 
             Asset asset5 = new Asset(
                     "Vent3333",
                     "A random vent2222",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234.765..765.7.567.65.7.65");
 
             Asset asset6 = new Asset(
                     "Filter6565",
                     "A random filter5455",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234..765.756.7.65.765.7.65");
 
             Asset asset7 = new Asset(
                     "Pump656565",
                     "A random pump656565",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "12341.7.17.17.17.1.71.71");
 
             Asset asset8 = new Asset(
                     "Vent321321321",
                     "A random vent12312321",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "12344.61.4.3.63.6.34.63.6.43");
 
             Asset asset9 = new Asset(
                     "Filter321321321",
                     "A random filter321321321",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234..72.8..87.7.43.534");
 
             Asset asset10 = new Asset(
                     "Pump454545",
                     "A random pump321321321",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234..1435.43.5.235.234.52345423");
 
             Asset asset11 = new Asset(
                     "Vent54654654",
                     "A random vent654654654",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "1234..34.5.345.34534.5345.34.534.534");
 
             Asset asset12 = new Asset(
                     "Filter654654",
                     "A random filter5454665",
-                    LocalDateTime.now());
+                    LocalDateTime.now(),
+                    "12341145.34.5.1345.135435.315.314534");
 
             asset1.setCategory(category1);
             asset2.setCategory(category2);
@@ -365,15 +377,15 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
 
             // Setting up AssetOnSite
-            AssetOnSite assetOnSite1 = new AssetOnSite();
-            AssetOnSite assetOnSite2 = new AssetOnSite();
-            AssetOnSite assetOnSite3 = new AssetOnSite();
-            AssetOnSite assetOnSite4 = new AssetOnSite();
-            AssetOnSite assetOnSite5 = new AssetOnSite();
-            AssetOnSite assetOnSite6 = new AssetOnSite();
-            AssetOnSite assetOnSite7 = new AssetOnSite();
-            AssetOnSite assetOnSite8 = new AssetOnSite();
-            AssetOnSite assetOnSite9 = new AssetOnSite();
+            AssetOnSite assetOnSite1 = new AssetOnSite("111.222.333");
+            AssetOnSite assetOnSite2 = new AssetOnSite("222.333.444");
+            AssetOnSite assetOnSite3 = new AssetOnSite("333.444.555");
+            AssetOnSite assetOnSite4 = new AssetOnSite("444.555.666");
+            AssetOnSite assetOnSite5 = new AssetOnSite("555.666.777");
+            AssetOnSite assetOnSite6 = new AssetOnSite("666.777.888");
+            AssetOnSite assetOnSite7 = new AssetOnSite("777.888.999");
+            AssetOnSite assetOnSite8 = new AssetOnSite("888.999.111");
+            AssetOnSite assetOnSite9 = new AssetOnSite("999.111.222");
 
             assetOnSite1.setAsset(asset1);
             assetOnSite2.setAsset(asset2);
@@ -407,18 +419,18 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
 
             // Setting up services
-            Service service1 = new Service("Change Oil", "12 months");
-            Service service2 = new Service("Change fuel", "5 weeks");
-            Service service3 = new Service("Change pump", "12 weeks");
-            Service service4 = new Service("Change vent", "5 months");
-            Service service5 = new Service("Change motor", "1 months");
-            Service service6 = new Service("Change water", "2 months");
-            Service service7 = new Service("Change bolt", "3 months");
-            Service service8 = new Service("Change light", "4 months");
-            Service service9 = new Service("Change tank", "5 months");
-            Service service10 = new Service("Change wheel", "6 months");
-            Service service11 = new Service("Change everything", "7 months");
-            Service service12 = new Service("Change bed", "9 months");
+            Service service1 = new Service("Change Oil", "12 months", "change-oil.pdf");
+            Service service2 = new Service("Change fuel", "5 weeks", "change-fuel.pdf");
+            Service service3 = new Service("Change pump", "12 weeks", "change-pump.pdf");
+            Service service4 = new Service("Change vent", "5 months", "change-vent.pdf");
+            Service service5 = new Service("Change motor", "1 months", "change-motor.pdf");
+            Service service6 = new Service("Change water", "2 months", "change-water.pdf");
+            Service service7 = new Service("Change bolt", "3 months", "change-bolt.pdf");
+            Service service8 = new Service("Change light", "4 months", "change-light.pdf");
+            Service service9 = new Service("Change tank", "5 months", "change-tank.pdf");
+            Service service10 = new Service("Change wheel", "6 months", "change-wheel.pdf");
+            Service service11 = new Service("Change everything", "7 months", "change-everything.pdf");
+            Service service12 = new Service("Change bed", "9 months", "change-bed.pdf");
 
             service1.setAsset(asset1);
             service2.setAsset(asset2);

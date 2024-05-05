@@ -33,6 +33,10 @@ public class Service {
     @Schema(description = "interval of the service")
     private String intervalName;
 
+    @Column(name = "service_url", nullable = false, unique = false)
+    @Schema(description = "URL of the service")
+    private String serviceUrl;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "service")
@@ -53,14 +57,16 @@ public class Service {
 
     }
 
-    public Service(String description, String intervalName) {
+    public Service(String description, String intervalName, String serviceUrl) {
         this.description = description;
         this.intervalName = intervalName;
+        this.serviceUrl = serviceUrl;
     }
 
     public Service(ServiceDto serviceDto) {
         this.description = serviceDto.getDescription();
         this.intervalName = serviceDto.getIntervalName();
         this.asset = serviceDto.getAsset();
+        this.serviceUrl = serviceDto.getServiceUrl();
     }
 }

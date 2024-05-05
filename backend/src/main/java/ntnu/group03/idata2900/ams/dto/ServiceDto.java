@@ -14,10 +14,13 @@ public class ServiceDto {
 
     private Asset asset;
 
-    public ServiceDto(String intervalName, String description, Asset asset) {
+    private String serviceUrl;
+
+    public ServiceDto(String intervalName, String description, Asset asset, String serviceUrl) {
         this.intervalName = intervalName;
         this.description = description;
         this.asset = asset;
+        this.serviceUrl = serviceUrl;
     }
 
     public ServiceDto(){

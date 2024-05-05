@@ -100,6 +100,7 @@ public class ServiceController {
             serviceToUpdate.setDescription(updatedService.getDescription());
             serviceToUpdate.setIntervalName(updatedService.getIntervalName());
             serviceToUpdate.setAsset(updatedService.getAsset());
+            serviceToUpdate.setServiceUrl(updatedService.getServiceUrl());
             serviceService.updateService(serviceToUpdate);
             log.info("Service updated with ID: {}", id);
             return new ResponseEntity<>(serviceToUpdate, HttpStatus.OK);

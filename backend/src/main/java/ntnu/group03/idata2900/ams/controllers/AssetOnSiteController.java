@@ -181,6 +181,7 @@ public class AssetOnSiteController {
         } else {
             AssetOnSite assetOnSiteToUpdate = existingAssetOnSite.get();
             assetOnSiteToUpdate.setCommissionDate(updatedAssetOnSite.getCommissionDate());
+            assetOnSiteToUpdate.setAssetOnSiteTag(updatedAssetOnSite.getAssetOnSiteTag());
             assetOnSiteService.updateAssetOnSite(assetOnSiteToUpdate);
             log.info("AssetOnSite updated with ID: {}", id);
             return new ResponseEntity<>(assetOnSiteToUpdate, HttpStatus.OK);

@@ -30,6 +30,11 @@ public class AssetOnSite {
     private LocalDateTime commissionDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "assetOnSiteTag", nullable = false, unique = true)
+    @Schema(description = "assetOnSiteTag of the assetOnSite")
+    private String assetOnSiteTag;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonBackReference
     @OneToMany(mappedBy = "assetOnSite")
     @Schema(description = "services completed on assetOnSite")
@@ -57,8 +62,8 @@ public class AssetOnSite {
 
     }
 
-    public AssetOnSite(LocalDateTime commissionDate) {
-        this.commissionDate = commissionDate;
+    public AssetOnSite(String assetOnSiteTag) {
+        this.assetOnSiteTag = assetOnSiteTag;
     }
 
     public AssetOnSite(AssetOnSiteDto assetOnSiteDto){

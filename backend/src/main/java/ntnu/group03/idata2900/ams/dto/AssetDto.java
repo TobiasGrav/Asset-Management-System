@@ -17,17 +17,20 @@ public class AssetDto {
 
     private LocalDateTime creationDate;
 
+    private String partNumber;
+
     private boolean active;
     private Category category;
     private Datasheet datasheet;
 
-    public AssetDto(String name, String description, LocalDateTime creationDate, boolean active, Category category, Datasheet datasheet) {
+    public AssetDto(String name, String description, LocalDateTime creationDate, boolean active, Category category, Datasheet datasheet, String partNumber) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.active = active;
         this.category = category;
         this.datasheet = datasheet;
+        this.partNumber = partNumber;
     }
 
     public AssetDto(){

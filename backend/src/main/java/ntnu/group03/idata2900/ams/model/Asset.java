@@ -46,6 +46,11 @@ public class Asset {
     private boolean active;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "partNumber", nullable = false, unique = true, updatable = true)
+    @Schema(description = "Part number of asset")
+    private String partNumber;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
     @ManyToOne()
     @JoinColumns(
@@ -83,10 +88,11 @@ public class Asset {
      * @param description       Asset description.
      * @param creationDate      Creation date of asset.
      */
-    public Asset(String name, String description, LocalDateTime creationDate) {
+    public Asset(String name, String description, LocalDateTime creationDate, String partNumber) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
+        this.partNumber = partNumber;
         this.active = true;
     }
 
@@ -96,6 +102,7 @@ public class Asset {
         this.creationDate = LocalDateTime.now();
         this.datasheet = assetDto.getDatasheet();
         this.category = assetDto.getCategory();
+        this.partNumber = assetDto.getPartNumber();
         this.active = true;
     }
 

@@ -97,6 +97,9 @@ public class AssetController {
             assetToUpdate.setName(updatedAsset.getName());
             assetToUpdate.setDescription(updatedAsset.getDescription());
             assetToUpdate.setActive(updatedAsset.isActive());
+            assetToUpdate.setPartNumber(updatedAsset.getPartNumber());
+            assetToUpdate.setDatasheet(updatedAsset.getDatasheet());
+            assetToUpdate.setCategory(updatedAsset.getCategory());
             assetService.updateAsset(assetToUpdate);
             log.info("Asset updated with ID: {}", id);
             return new ResponseEntity<>(assetToUpdate, HttpStatus.OK);
