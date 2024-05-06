@@ -160,10 +160,10 @@ jobs:
       "C:\Terraform\terraform" init
     displayName: 'Initialize Terraform'
     env:
-      ARM_CLIENT_ID: '$(ARM_CLIENT_ID)'
-      ARM_CLIENT_SECRET: '$(ARM_CLIENT_SECRET)'
-      ARM_SUBSCRIPTION_ID: '$(ARM_SUBSCRIPTION_ID)'
-      ARM_TENANT_ID: '$(ARM_TENANT_ID)'
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
 
   - script: |
       "C:\Terraform\terraform" destroy -target=azurerm_linux_virtual_machine.deploy-vm -auto-approve
