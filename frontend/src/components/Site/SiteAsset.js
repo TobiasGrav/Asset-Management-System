@@ -15,7 +15,7 @@ import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 import QRCode from 'qrcode.react'
 
-const Main = ({ value, size }) => {
+const Main = ({  size }) => {
 
   // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -32,6 +32,7 @@ const Main = ({ value, size }) => {
   const [commissionDate, setCommissionDate] = useState();
   const [site, setSite] = useState();
   const [datasheet, setDatasheet] = useState();
+  const [value, setValue] = useState(window.location.href);
 
   // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
@@ -203,6 +204,10 @@ const Main = ({ value, size }) => {
     };
   }, [contextMenu]);
 
+  const requestService = () => {
+    navigate(`service`);
+  }
+
   return (
     <div className="assetBody">
       <input type="text" placeholder="Name" name={name} value={name} onChange={handleNameChange} className="nameInput" disabled={!isEditing}/>
@@ -224,6 +229,8 @@ const Main = ({ value, size }) => {
             <QRCode value={value} size={size} level="H" bgColor="#ffffff" fgColor="#000000" includeMargin={true}/>
             <iframe ref={printFrameRef} style={{display: 'none'}} title="Print Frame"/>
           </div>
+          <b>Options</b>
+          <button onClick={requestService}>Request Service</button>
         </div>
         <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>

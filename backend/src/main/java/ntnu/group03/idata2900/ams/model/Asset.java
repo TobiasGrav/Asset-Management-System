@@ -80,6 +80,12 @@ public class Asset {
     @Schema(description = "services on a given asset")
     private Set<Service> services = new LinkedHashSet<>();
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonBackReference
+    @OneToMany(mappedBy = "asset")
+    @Schema(description = "Assets on a given site")
+    private Set<AssetOnSite> assetOnSites = new LinkedHashSet<>();
+
 
     /**
      * Constructor with parameters
