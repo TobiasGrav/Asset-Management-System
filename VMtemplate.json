@@ -36,7 +36,7 @@
             "identity": {
                     "type": "UserAssigned",
                     "userAssignedIdentities": {
-                        "/subscriptions/77b69bf5-7cdb-462f-a4b2-b88204db74db/resourcegroups/spring-boot/providers/Microsoft.ManagedIdentity/userAssignedIdentities/spring-boot-app-identity": {}
+                        "/subscriptions/77b69bf5-7cdb-462f-a4b2-b88204db74db/resourcegroups/ams/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ams-identity": {}
                     }
             },
             "properties": {
