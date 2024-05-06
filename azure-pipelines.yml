@@ -9,9 +9,6 @@ pool:
 
 variables:
   tag: $(Build.SourceVersion) # The commit hash of the current project head.
-  DATABASE_URL: localhost
-  DATABASE_USERNAME: root
-  DATABASE_PASSWORD: root
 
 jobs:
 
@@ -25,10 +22,10 @@ jobs:
   steps:
 
   - script: |
-      $env:DATABASE_URL = "localhost"
-      $env:DATABASE_USERNAME = "root"
-      $env:DATABASE_PASSWORD = "root"
-    displayName: Run Docker container
+      set $env:DATABASE_URL = "localhost"
+      set $env:DATABASE_USERNAME = "root"
+      set $env:DATABASE_PASSWORD = "root"
+    displayName: set environment variables
 
   # Tests and then builds the maven project.
   - task: Maven@3
