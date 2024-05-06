@@ -178,7 +178,7 @@ jobs:
       ARM_TENANT_ID: '$(ARM_TENANT_ID)'
 
   - script: |
-      echo ${ARM_TENANT_ID}
+      az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
       "C:\Terraform\terraform" plan -out=tfplan
     displayName: 'Plan Terraform Deployment'
     env:
