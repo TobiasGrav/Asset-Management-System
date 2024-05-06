@@ -14,57 +14,57 @@ variables:
 jobs:
 
 ###### BuildAndTest ###################################################################################################################################
-
-- job: BuildAndTest
-  displayName: Build and Test Spring Boot App
-  
-  
-  
-  steps:
-
-  # Tests and then builds the maven project.
-  - task: Maven@3
-    inputs:
-      mavenPomFile: backend/pom.xml
-      goals: clean package
-      javaHomeOption: JDKVersion
-      mavenVersionOption: Default
-      mavenAuthenticateFeed: false
-      effectivePomSkip: false
-      sonarQubeRunAnalysis: false
-    env:
-      DATABASE_URL: "localhost"
-      DATABASE_USERNAME: "root"
-      DATABASE_PASSWORD: "root"
-
-  # Code coverage is done via JaCoCo, which creates a report over what code is covered with tests or not.
-  - task: PublishCodeCoverageResults@2
-    displayName: Publishes the code coverage results
-    inputs:
-      summaryFileLocation: $(Build.SourcesDirectory)/backend/target/site/jacoco/jacoco.xml
-
-###### Dockerize ######################################################################################################################################
-
-- job: Dockerize
-  displayName: Dockerize the spring boot application jar file
-  dependsOn: BuildAndTest
-  
-  steps:
-  - checkout: none
-
-  # Creates a docker image and then runs a container.
-  - task: Docker@2
-    inputs:
-      repository: ams-backend
-      command: build
-      Dockerfile: backend/Dockerfile
-      tags: $(Build.SourceVersion)
-
-  # Runs a docker container with the image created above.
-  - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
-    displayName: Run Docker container
-
+#
+#- job: BuildAndTest
+#  displayName: Build and Test Spring Boot App
+#  
+#  
+#  
+#  steps:
+#
+#  # Tests and then builds the maven project.
+#  - task: Maven@3
+#    inputs:
+#      mavenPomFile: backend/pom.xml
+#      goals: clean package
+#      javaHomeOption: JDKVersion
+#      mavenVersionOption: Default
+#      mavenAuthenticateFeed: false
+#      effectivePomSkip: false
+#      sonarQubeRunAnalysis: false
+#    env:
+#      DATABASE_URL: "localhost"
+#      DATABASE_USERNAME: "root"
+#      DATABASE_PASSWORD: "root"
+#
+#  # Code coverage is done via JaCoCo, which creates a report over what code is covered with tests or not.
+#  - task: PublishCodeCoverageResults@2
+#    displayName: Publishes the code coverage results
+#    inputs:
+#      summaryFileLocation: $(Build.SourcesDirectory)/backend/target/site/jacoco/jacoco.xml
+#
+####### Dockerize ######################################################################################################################################
+#
+#- job: Dockerize
+#  displayName: Dockerize the spring boot application jar file
+#  dependsOn: BuildAndTest
+#  
+#  steps:
+#  - checkout: none
+#
+#  # Creates a docker image and then runs a container.
+#  - task: Docker@2
+#    inputs:
+#      repository: ams-backend
+#      command: build
+#      Dockerfile: backend/Dockerfile
+#      tags: $(Build.SourceVersion)
+#
+#  # Runs a docker container with the image created above.
+#  - script: |
+#      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
+#    displayName: Run Docker container
+#
 ####### TestingAPI #####################################################################################################################################
 #
 #- job: TestingAPI
@@ -148,12 +148,12 @@ jobs:
 #
 ####### Deploy ##########################################################################################################################################
 
-- job: Staging
+- job: Deploy
   displayName: Deploys the docker to a cloud hosted staging server
-  dependsOn: BuildAndTest
+  #dependsOn: BuildAndTest
 
   steps:
-  - checkout: none
+  #- checkout: none
 
   # Logs into Azure via a service connection, and tears down the staging server if it exists.
   - task: AzureCLI@2
@@ -186,8 +186,9 @@ jobs:
 - job: Clean
   displayName: Clean docker
   dependsOn: 
-    - BuildAndTest
-    - Dockerize
+    #- BuildAndTest
+    #- Dockerize
+    - Deploy
   condition: always()
 
   steps:
