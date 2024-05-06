@@ -23,7 +23,7 @@
             "type": "String"
         },
         "ams_acr_name": {
-            "defaultValue": "ams-registry",
+            "defaultValue": "ams_project_acr",
             "type": "String"
         },
         "ams_network_interface": {
