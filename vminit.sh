@@ -26,7 +26,7 @@ sudo docker network create ams-network
 sudo docker run -it --rm \
    -p 80:80 \
    -v "/etc/letsencrypt:/etc/letsencrypt" \
-   certbot/certbot certonly --standalone asset-management-system-5.norwayeast.cloudapp.azure.com --non-interactive --agree-tos --email tobiagra@stud.ntnu.no; 
+   certbot/certbot certonly --standalone -d asset-management-system-5.norwayeast.cloudapp.azure.com --non-interactive --agree-tos --email tobiagra@stud.ntnu.no; 
 
 sudo docker run -d --name ams-nginx \
    -p 80:80 \
