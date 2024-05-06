@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define log file path
-LOG_FILE="script_log.txt"
+LOG_FILE="/var/log/vminit.log"
 
 # Redirect stdout and stderr to the log file
 exec > >(tee -a "$LOG_FILE") 2>&1
