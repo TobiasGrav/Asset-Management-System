@@ -23,8 +23,6 @@ jobs:
     inputs:
       mavenPomFile: backend/pom.xml
       goals: clean package
-      publishJUnitResults: true
-      testResultsFiles: $(Build.SourcesDirectory)/backend/target/surefire-reports/TEST-*.xml
       javaHomeOption: JDKVersion
       mavenVersionOption: Default
       mavenAuthenticateFeed: false
