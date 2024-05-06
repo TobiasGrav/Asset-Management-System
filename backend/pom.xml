@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ntnu.group03</groupId>
-	<artifactId>Bachelor_IDATA2900_AMS</artifactId>
+	<artifactId>bachelor_idata_2900ams</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>AssetManagementSystem</name>
 	<description>Bachelor project of an asset management system</description>
@@ -123,6 +123,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
