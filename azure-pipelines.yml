@@ -21,12 +21,6 @@ jobs:
   
   steps:
 
-  - script: |
-      set $env:DATABASE_URL = "localhost"
-      set $env:DATABASE_USERNAME = "root"
-      set $env:DATABASE_PASSWORD = "root"
-    displayName: set environment variables
-
   # Tests and then builds the maven project.
   - task: Maven@3
     inputs:
@@ -37,6 +31,10 @@ jobs:
       mavenAuthenticateFeed: false
       effectivePomSkip: false
       sonarQubeRunAnalysis: false
+    env:
+      DATABASE_URL: "localhost"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
 
   # Code coverage is done via JaCoCo, which creates a report over what code is covered with tests or not.
   - task: PublishCodeCoverageResults@2
