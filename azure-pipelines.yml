@@ -146,26 +146,23 @@ jobs:
 #    displayName: 'Upload JMeter performance test report'
 #
 ####### Clean ##########################################################################################################################################
-#
-## Clean always runs wether the pipeline fails or not.
-## Deletes the docker images built, and running docker containers.
-#- job: Clean
-#  displayName: Clean docker
-#  dependsOn: 
-#    - BuildAndTest
-#    - Dockerize
-#    - TestingAPI
-#    - TestingPerformance
-#  condition: always()
-#
-#  steps:
-#  # Deletes the docker image.
-#  - script: |
-#        docker rmi spring-boot-app:$(tag)
-#    displayName: Remove docker image on agent  
-#
-#  # Deletes the docker container.
-#  - script: |
-#      docker rm --force spring-boot-app
-#      docker image prune -f
-#    displayName: Deletes the running container
+
+# Clean always runs wether the pipeline fails or not.
+# Deletes the docker images built, and running docker containers.
+- job: Clean
+  displayName: Clean docker
+  dependsOn: 
+    - BuildAndTest
+    - Dockerize
+  condition: always()
+
+  steps:
+  # Deletes the docker image.
+  - script: |
+        docker rm --force asset_management_system
+    displayName: Deletes the running container
+
+  # Deletes the docker container.
+  - script: |
+      docker rmi ams-backend:$(tag)
+    displayName: Remove docker image on agent
