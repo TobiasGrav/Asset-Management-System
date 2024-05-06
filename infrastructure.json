@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ams_key_vault_name": {
-            "defaultValue": "ams-key-vault",
+            "defaultValue": "ams-secret-key-vault",
             "type": "String"
         },
         "ams_ssh_key_name": {
@@ -23,7 +23,7 @@
             "type": "String"
         },
         "ams_acr_name": {
-            "defaultValue": "amscontainerregistry",
+            "defaultValue": "ams-registry",
             "type": "String"
         },
         "ams_network_interface": {
