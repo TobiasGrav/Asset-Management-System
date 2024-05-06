@@ -178,6 +178,7 @@ jobs:
       ARM_TENANT_ID: '$(ARM_TENANT_ID)'
 
   - script: |
+      echo $(ARM_TENANT_ID)
       "C:\Terraform\terraform" plan -out=tfplan
     displayName: 'Plan Terraform Deployment'
     env:
