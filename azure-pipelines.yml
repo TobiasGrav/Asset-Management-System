@@ -61,7 +61,7 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name spring-boot-app -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(tag)
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(tag)
     displayName: Run Docker container
 
 ####### TestingAPI #####################################################################################################################################
@@ -145,6 +145,12 @@ jobs:
 #      publishLocation: Container
 #    displayName: 'Upload JMeter performance test report'
 #
+####### Deploy ##########################################################################################################################################
+
+
+
+
+
 ####### Clean ##########################################################################################################################################
 
 # Clean always runs wether the pipeline fails or not.
@@ -159,7 +165,7 @@ jobs:
   steps:
   # Deletes the docker image.
   - script: |
-        docker rm --force asset_management_system
+        docker rm --force ams-backend
     displayName: Deletes the running container
 
   # Deletes the docker container.
