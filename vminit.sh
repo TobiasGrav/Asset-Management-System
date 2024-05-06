@@ -16,6 +16,7 @@ MYSQL_PASSWORD=$(sudo az keyvault secret show --name mysqlpassword --vault-name 
 
 sudo docker login -u amsprojectacr -p "${ACR_PASSWORD}" amsprojectacr.azurecr.io
 
+sudo docker pull certbot/certbot:latest
 sudo docker pull mysql/mysql-server:latest
 sudo docker pull amsprojectacr.azurecr.io/ams-nginx:latest
 sudo docker pull amsprojectacr.azurecr.io/ams-backend:latest
