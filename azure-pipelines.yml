@@ -177,10 +177,11 @@ jobs:
       "C:\Terraform\terraform" plan -out=tfplan
     displayName: 'Plan Terraform Deployment'
     env:
-      ARM_CLIENT_ID: '$(ARM_CLIENT_ID)'
-      ARM_CLIENT_SECRET: '$(ARM_CLIENT_SECRET)'
-      ARM_SUBSCRIPTION_ID: '$(ARM_SUBSCRIPTION_ID)'
-      ARM_TENANT_ID: '$(ARM_TENANT_ID)'
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
+
 
   - script: |
       "C:\Terraform\terraform" apply -auto-approve -var="jwt_secret_key=$(JWT_SECRET_KEY)" -var="ACRPASSWORD=$(ACRPASSWORD)"
