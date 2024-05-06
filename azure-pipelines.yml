@@ -9,6 +9,9 @@ pool:
 
 variables:
   tag: $(Build.SourceVersion) # The commit hash of the current project head.
+  DATABASE_URL: localhost
+  DATABASE_USERNAME: root
+  DATABASE_PASSWORD: root
 
 jobs:
 
