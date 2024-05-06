@@ -156,6 +156,7 @@ jobs:
   - checkout: self  # Checks out the source code into the agent
 
   - script: |
+      echo $(StorageAccountAccessKey)
       "C:\Terraform\terraform" init -backend-config="storage_account_name=amsterraformstatestorage" ^
       -backend-config="container_name=terraformcontainer" ^
       -backend-config="key=terraform.tfstate" ^
