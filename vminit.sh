@@ -10,7 +10,34 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 sudo az login --identity --allow-no-subscription
-export AcrPassword=$(sudo az keyvault secret show --name ContainerRepositoryPassword --vault-name spring-boot-key-vault --query value -o tsv)
-#echo $AcrPassword | docker login -u privatespringbootappregistry --password-stdin privatespringbootappregistry.azurecr.io
-#sudo docker pull privatespringbootappregistry.azurecr.io/spring-boot-app:', parameters('versionTag')
-#sudo docker run -d -p 80:8080 privatespringbootappregistry.azurecr.io/spring-boot-app:', parameters('versionTag')
+
+ACR_PASSWORD=$(sudo az keyvault secret show --name amsprojectacrpassword --vault-name ams-secret-key-vault --query value -o tsv)
+MYSQL_PASSWORD=$(sudo az keyvault secret show --name mysqlpassword --vault-name ams-secret-key-vault --query value -o tsv)
+
+sudo docker login -u amsprojectacr -p "${ACR_PASSWORD}" amsprojectacr.azurecr.io
+
+sudo docker pull mysql/mysql-server:latest
+sudo docker pull amsprojectacr.azurecr.io/ams-nginx:latest
+sudo docker pull amsprojectacr.azurecr.io/ams-backend:latest
+
+sudo docker network create ams-network
+
+sudo docker run -it --rm 
+   -p 80:80 
+   -v "/etc/letsencrypt:/etc/letsencrypt" 
+   certbot/certbot certonly --standalone -d asset-management-system-5.norwayeast.cloudapp.azure.com --agree-tos --email tobiagra@stud.ntnu.no; 
+
+sudo docker run -d --name nginx \
+   -p 80:80 \
+   -p 443:443 \
+   -v "/etc/letsencrypt:/etc/letsencrypt" \
+   --network ams-network \
+   amsprojectacr.azurecr.io/ams-nginx:latest
+
+sudo docker run -d --name nginx \
+   -p 8080:8080 \
+   -e DATABASE_URL=ams-db \
+   -e DATABASE_USERNAME=root \
+   -e DATABASE_PASSWORD="${MYSQL_PASSWORD}" \
+   --network ams-network \
+   amsprojectacr.azurecr.io/ams-backend:latest
