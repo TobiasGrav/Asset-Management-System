@@ -22,19 +22,19 @@ sudo docker pull amsprojectacr.azurecr.io/ams-backend:latest
 
 sudo docker network create ams-network
 
-sudo docker run -it --rm 
-   -p 80:80 
-   -v "/etc/letsencrypt:/etc/letsencrypt" 
+sudo docker run -it --rm \
+   -p 80:80 \
+   -v "/etc/letsencrypt:/etc/letsencrypt" \
    certbot/certbot certonly --standalone -d asset-management-system-5.norwayeast.cloudapp.azure.com --agree-tos --email tobiagra@stud.ntnu.no; 
 
-sudo docker run -d --name nginx \
+sudo docker run -d --name ams-nginx \
    -p 80:80 \
    -p 443:443 \
    -v "/etc/letsencrypt:/etc/letsencrypt" \
    --network ams-network \
    amsprojectacr.azurecr.io/ams-nginx:latest
 
-sudo docker run -d --name nginx \
+sudo docker run -d --name ams-backend \
    -p 8080:8080 \
    -e DATABASE_URL=ams-db \
    -e DATABASE_USERNAME=root \
