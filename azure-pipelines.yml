@@ -174,7 +174,7 @@ jobs:
       ARM_TENANT_ID: $(ARM_TENANT_ID)
 
   - script: |
-      "C:\Terraform\terraform" plan
+      "C:\Terraform\terraform" plan -out=tfplan
     displayName: 'Plan Terraform Deployment'
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
