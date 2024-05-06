@@ -8,7 +8,7 @@ pool:
     - docker
 
 variables:
-  - group: AUTHENTICATION
+  - group: test
 
 
 jobs:
