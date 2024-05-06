@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Define log file path
+LOG_FILE="script_log.txt"
+
+# Redirect stdout and stderr to the log file
+exec > >(tee -a "$LOG_FILE") 2>&1
+
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl 
 sudo install -m 0755 -d /etc/apt/keyrings
