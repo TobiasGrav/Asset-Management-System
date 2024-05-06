@@ -2,24 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "extensions_installDocker_fileUris": {
-            "type": "Array"
-        },
-        "extensions_installDocker_storageAccountName": {
-            "type": "SecureString"
-        },
-        "extensions_installDocker_storageAccountKey": {
-            "type": "SecureString"
-        },
-        "extensions_installDocker_commandToExecute": {
-            "type": "SecureString"
-        },
         "ams_key_vault_name": {
             "defaultValue": "ams-key-vault",
-            "type": "String"
-        },
-        "ams_vm_name": {
-            "defaultValue": "ams-vm",
             "type": "String"
         },
         "ams_ssh_key_name": {
@@ -217,29 +201,6 @@
                 "ipTags": [],
                 "ddosSettings": {
                     "protectionMode": "VirtualNetworkInherited"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2023-03-01",
-            "name": "[concat(parameters('ams_vm_name'), '/installDocker')]",
-            "location": "norwayeast",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('ams_vm_name'))]"
-            ],
-            "properties": {
-                "autoUpgradeMinorVersion": true,
-                "publisher": "Microsoft.Azure.Extensions",
-                "type": "CustomScript",
-                "typeHandlerVersion": "2.1",
-                "settings": {
-                    "fileUris": "[parameters('extensions_installDocker_fileUris')]"
-                },
-                "protectedSettings": {
-                    "storageAccountName": "[parameters('extensions_installDocker_storageAccountName')]",
-                    "storageAccountKey": "[parameters('extensions_installDocker_storageAccountKey')]",
-                    "commandToExecute": "[parameters('extensions_installDocker_commandToExecute')]"
                 }
             }
         },
