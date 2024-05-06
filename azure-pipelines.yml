@@ -8,8 +8,8 @@ pool:
     - docker
 
 variables:
-  tag: $(Build.SourceVersion) # The commit hash of the current project head.
-  group: AUTHENTICATION
+  - group: AUTHENTICATION
+
 
 jobs:
 
@@ -58,11 +58,11 @@ jobs:
       repository: ams-backend
       command: build
       Dockerfile: backend/Dockerfile
-      tags: $(tag)
+      tags: $(Build.SourceVersion)
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(tag)
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
     displayName: Run Docker container
 
 ####### TestingAPI #####################################################################################################################################
@@ -156,7 +156,6 @@ jobs:
   - checkout: self  # Checks out the source code into the agent
 
   - script: |
-      echo ${StorageAccountAccessKey}
       "C:\Terraform\terraform" init -backend-config="storage_account_name=amsterraformstatestorage" ^
       -backend-config="container_name=terraformcontainer" ^
       -backend-config="key=terraform.tfstate" ^
@@ -216,5 +215,5 @@ jobs:
 
   # Deletes the docker container.
   - script: |
-      docker rmi ams-backend:$(tag)
+      docker rmi ams-backend:$(Build.SourceVersion)
     displayName: Remove docker image on agent
