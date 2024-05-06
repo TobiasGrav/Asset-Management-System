@@ -6,6 +6,8 @@ import Table from '../components/Asset/AssetTable'
 import Asset from '../components/Asset/Asset'
 import { jwtDecode } from 'jwt-decode'
 
+import URL from '../tools/URL';
+
 import { useState, useEffect } from 'react';
 
 import './Home.css'

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
+import URL from '../tools/URL';
 
 
 import './login.css';
@@ -16,7 +17,7 @@ const Login = (props) => {
   const login = () => {
     console.log(email);
     console.log(password);
-    axios.post('http://localhost:8080/api/authenticate', {
+    axios.post(`${URL.BACKEND}/api/authenticate`, {
       email: email,
       password: password
     })
@@ -36,7 +37,7 @@ const Login = (props) => {
   };
 
   const loginUser = () => {
-    axios.post('http://localhost:8080/api/authenticate', {
+    axios.post(`${URL.BACKEND}/api/authenticate`, {
       email: "Jend@ntnu.no",
       password: "12RulesForLife"
     })

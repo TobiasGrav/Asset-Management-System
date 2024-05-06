@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
+import URL from '../../tools/URL';
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -41,7 +42,7 @@ function Table() {
 
     const fetchData = () => {
         setLoading(true);
-        HTTPRequest.get('http://localhost:8080/api/admin/users', cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/admin/users`, cookies.JWT)
         .then(response => {
             console.log(response);
             setData(response.data);

@@ -47,7 +47,7 @@ const Main = (props) => {
 
         try{
             const datasheetResponse = await axios.post(
-                'http://localhost:8080/api/datasheets',
+                `${URL.BACKEND}/api/datasheets`,
                 {
                     name: datasheetName,
                     referenceNumber: referenceNumber,
@@ -63,7 +63,7 @@ const Main = (props) => {
             const datasheet = datasheetResponse.data;
 
             await axios.post(
-                `http://localhost:8080/api/assets`,
+                `${URL.BACKEND}/api/assets`,
                 {
                     name: name,
                     description: description,

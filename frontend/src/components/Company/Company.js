@@ -71,7 +71,7 @@ const Company = (props) => {
     };
 
     useEffect(() => {
-        HTTPRequest.get(`http://localhost:8080/api/admin/companies/${companyID}`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/admin/companies/${companyID}`, cookies.JWT)
         .then(response => {
           setCompanyName(response.data.name);
           setCompanyID(response.data.id);
