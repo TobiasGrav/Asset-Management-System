@@ -148,54 +148,36 @@ jobs:
 #
 ####### Deploy ##########################################################################################################################################
 
-- job: DeployAzureResourcesWithTerraform
-  dependsOn: 
-  - BuildAndTest
-  displayName: 'Deploy Azure Resources With Terraform'
+- job: Staging
+  displayName: Deploys the docker to a cloud hosted staging server
+  dependsOn: BuildAndTest
+
   steps:
-  - checkout: self  # Checks out the source code into the agent
+  - checkout: none
 
-  - script: |
-      "C:\Terraform\terraform" init -backend-config="storage_account_name=amsterraformstatestorage" ^
-      -backend-config="container_name=terraformcontainer" ^
-      -backend-config="key=terraform.tfstate" ^
-      -backend-config="access_key=$(StorageAccountAccessKey)" ^
-      -input=false
-    displayName: 'Initialize Terraform'
-    env:
-      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-      ARM_TENANT_ID: $(ARM_TENANT_ID)
+  # Logs into Azure via a service connection, and tears down the staging server if it exists.
+  - task: AzureCLI@2
+    displayName: Tear down current VM
+    inputs:
+      azureSubscription: ams-rm
+      scriptType: ps
+      scriptLocation: inlineScript
+      inlineScript: |
+        az vm delete --name ams-vm --resource-group ams --yes
+        az disk delete --name ams-vm --resource-group ams --yes
 
-  - script: |
-      "C:\Terraform\terraform" destroy -target=azurerm_linux_virtual_machine.deploy-vm -auto-approve
-    displayName: 'Tear down only Linux VM'   
-    env:
-      ARM_CLIENT_ID: '$(ARM_CLIENT_ID)'
-      ARM_CLIENT_SECRET: '$(ARM_CLIENT_SECRET)'
-      ARM_SUBSCRIPTION_ID: '$(ARM_SUBSCRIPTION_ID)'
-      ARM_TENANT_ID: '$(ARM_TENANT_ID)'
-
-  - script: |
-      az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
-      "C:\Terraform\terraform" plan -out=tfplan
-    displayName: 'Plan Terraform Deployment'
-    env:
-      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-      ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-
-  - script: |
-      "C:\Terraform\terraform" apply -auto-approve -var="jwt_secret_key=$(JWT_SECRET_KEY)" -var="ACRPASSWORD=$(ACRPASSWORD)"
-    displayName: 'Apply Terraform Deployment'
-    env:
-      ARM_CLIENT_ID: '$(ARM_CLIENT_ID)'
-      ARM_CLIENT_SECRET: '$(ARM_CLIENT_SECRET)'
-      ARM_SUBSCRIPTION_ID: '$(ARM_SUBSCRIPTION_ID)'
-      ARM_TENANT_ID: '$(ARM_TENANT_ID)'
+  # Deploys a new VM via the VMtemplate.json, it then sets itself up by downloading 
+  # docker and azure cli for pulling and running the latest image via a custom script.
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: Create new VM
+    inputs:
+      azureResourceManagerConnection: ams-rm
+      subscriptionId: 77b69bf5-7cdb-462f-a4b2-b88204db74db
+      resourceGroupName: ams
+      location: Norway East
+      csmFile: $(Build.SourcesDirectory)/infrastructure.json
+      deploymentMode: Incremental
+      deploymentName: ams
 
 ####### Clean ##########################################################################################################################################
 
