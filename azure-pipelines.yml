@@ -156,8 +156,11 @@ jobs:
   - checkout: self  # Checks out the source code into the agent
 
   - script: |
-      az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
-      "C:\Terraform\terraform" init
+      "C:\Terraform\terraform" init -backend-config="storage_account_name=amsterraformstatestorage" ^
+      -backend-config="container_name=terraformcontainer" ^
+      -backend-config="key=terraform.tfstate" ^
+      -backend-config="access_key=$(StorageAccountAccessKey)" ^
+      -input=false
     displayName: 'Initialize Terraform'
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
