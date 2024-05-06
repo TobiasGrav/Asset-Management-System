@@ -156,6 +156,7 @@ jobs:
   - checkout: self  # Checks out the source code into the agent
 
   - script: |
+      az login --service-principal -u $(ARM_CLIENT_ID) -p $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
       "C:\Terraform\terraform" init
     displayName: 'Initialize Terraform'
     env:
@@ -168,10 +169,10 @@ jobs:
       "C:\Terraform\terraform" destroy -target=azurerm_linux_virtual_machine.deploy-vm -auto-approve
     displayName: 'Tear down only Linux VM'   
     env:
-      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-      ARM_TENANT_ID: $(ARM_TENANT_ID)
+      ARM_CLIENT_ID: '$(ARM_CLIENT_ID)'
+      ARM_CLIENT_SECRET: '$(ARM_CLIENT_SECRET)'
+      ARM_SUBSCRIPTION_ID: '$(ARM_SUBSCRIPTION_ID)'
+      ARM_TENANT_ID: '$(ARM_TENANT_ID)'
 
   - script: |
       "C:\Terraform\terraform" plan -out=tfplan
@@ -182,14 +183,15 @@ jobs:
       ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
       ARM_TENANT_ID: $(ARM_TENANT_ID)
 
+
   - script: |
       "C:\Terraform\terraform" apply -auto-approve -var="jwt_secret_key=$(JWT_SECRET_KEY)" -var="ACRPASSWORD=$(ACRPASSWORD)"
     displayName: 'Apply Terraform Deployment'
     env:
-      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-      ARM_TENANT_ID: $(ARM_TENANT_ID)
+      ARM_CLIENT_ID: '$(ARM_CLIENT_ID)'
+      ARM_CLIENT_SECRET: '$(ARM_CLIENT_SECRET)'
+      ARM_SUBSCRIPTION_ID: '$(ARM_SUBSCRIPTION_ID)'
+      ARM_TENANT_ID: '$(ARM_TENANT_ID)'
 
 ####### Clean ##########################################################################################################################################
 
