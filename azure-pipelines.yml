@@ -20,7 +20,16 @@ jobs:
 - job: BuildAndTest
   displayName: Build and Test Spring Boot App
   
+  
+  
   steps:
+
+  - script: |
+      $env:DATABASE_URL = "localhost"
+      $env:DATABASE_USERNAME = "root"
+      $env:DATABASE_PASSWORD = "root"
+    displayName: Run Docker container
+
   # Tests and then builds the maven project.
   - task: Maven@3
     inputs:
