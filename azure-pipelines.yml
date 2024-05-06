@@ -9,6 +9,7 @@ pool:
 
 variables:
   tag: $(Build.SourceVersion) # The commit hash of the current project head.
+  group: AUTHENTICATION
 
 jobs:
 
@@ -147,9 +148,48 @@ jobs:
 #
 ####### Deploy ##########################################################################################################################################
 
+- job: DeployAzureResourcesWithTerraform
+  dependsOn: 
+  - BuildAndTest
+  displayName: 'Deploy Azure Resources With Terraform'
+  steps:
+  - checkout: self  # Checks out the source code into the agent
 
+  - script: |
+      "C:\Terraform\terraform" init
+    displayName: 'Initialize Terraform'
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
 
+  - script: |
+      "C:\Terraform\terraform" destroy -target=azurerm_linux_virtual_machine.deploy-vm -auto-approve
+    displayName: 'Tear down only Linux VM'   
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
 
+  - script: |
+      "C:\Terraform\terraform" plan -out=tfplan
+    displayName: 'Plan Terraform Deployment'
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+  - script: |
+      "C:\Terraform\terraform" apply -auto-approve -var="jwt_secret_key=$(JWT_SECRET_KEY)" -var="ACRPASSWORD=$(ACRPASSWORD)"
+    displayName: 'Apply Terraform Deployment'
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
 
 ####### Clean ##########################################################################################################################################
 
