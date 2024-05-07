@@ -53,7 +53,7 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
     displayName: Run Docker container
 
 ####### TestingAPI #####################################################################################################################################
