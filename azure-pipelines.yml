@@ -60,7 +60,7 @@ jobs:
 ###### BuildReactApp #####################################################################################################################################
 
 - job: BuildReactApp
-  displayName: builds and creates a docker image
+  displayName: builds and creates a docker image of the react application
   dependsOn: Dockerize
 
   steps:
