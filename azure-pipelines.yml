@@ -50,11 +50,10 @@ jobs:
       repository: ams-backend
       command: build
       Dockerfile: backend/Dockerfile
-      tags: $(Build.SourceVersion)
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend
     displayName: Run Docker container
 
 ####### TestingAPI #####################################################################################################################################
@@ -127,8 +126,8 @@ jobs:
   # Tags the images for pushing them to the private repository in the cloud.
   # Latest tag overwrites the last latest image, so that the staging server can pull this.
   - script: |
-      docker tag ams-backend:latest amsprojectacr.azurecr.io/ams-backend:latest
-      docker tag ams-nginx:latest amsprojectacr.azurecr.io/ams-nginx:latest
+      docker tag ams-backend amsprojectacr.azurecr.io/ams-backend:latest
+      docker tag ams-nginx amsprojectacr.azurecr.io/ams-nginx:latest
     displayName: Tag Docker Image
 
   # Pushes the images to the registry.
