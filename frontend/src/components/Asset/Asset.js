@@ -28,6 +28,7 @@ const Main = (props) => {
   const [commissionDate, setCommissionDate] = useState();
   const [site, setSite] = useState();
   const [datasheet, setDatasheet] = useState();
+  const [partNumber, setPartNumber] = useState();
 
   // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
@@ -40,6 +41,7 @@ const Main = (props) => {
   const editButtonReference = useRef(null);
   const deleteButtonReference = useRef(null);
   const cancelButtonReference = useRef(null);
+  const partNumberReference = useRef(null);
 
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
@@ -57,6 +59,7 @@ const Main = (props) => {
       nameReference.current.disabled = isEditing;
       idReference.current.disabled = isEditing;
       descriptionReference.current.disabled = isEditing;
+      partNumberReference.current.disabled = isEditing;
     }}, [isEditing]);
     
   // back button functionality, goes back to the last page /asset.
@@ -87,6 +90,7 @@ const Main = (props) => {
       let asset = response.data;
       setName(asset.name);
       setDescription(asset.description);
+      setPartNumber(asset.partNumber)
       setCommissionDate(asset.commissionDate);
       setCategory(asset.category);
       setSite(asset.site);
@@ -102,6 +106,7 @@ const Main = (props) => {
           id: id,
           name: name,
           description: description,
+          partNumber: partNumber,
           commissionDate: commissionDate,
           category: category,
           site: site,
@@ -129,6 +134,10 @@ const Main = (props) => {
 
   };
 
+    const handlePartNumberChange = (event) => {
+        setPartNumber(event.target.value);
+    };
+
     const showServices = () => {
         navigate(`/asset/${id}/service`);
     }
@@ -140,7 +149,7 @@ const Main = (props) => {
       <div className="assetContainer">
           <div className="assetInfoContainer">
               <b>Asset ID</b>
-              <input placeholder="Enter Asset ID" value={id} disabled={true}></input>
+              <input placeholder="Enter Part Number" value={partNumber} onChange={handlePartNumberChange}></input>
               <span><b>Description</b><br></br></span>
               <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description}
                         value={description} onChange={handleDescriptionChange} disabled={!isEditing}/>

@@ -32,6 +32,8 @@ import ServiceTable from "./components/Asset/AssetServiceTable";
 import Service from "./components/Asset/AssetServiceCreate";
 import AssetServiceCreate from "./components/Asset/AssetServiceCreate";
 import AssetService from "./components/Asset/AssetService";
+import ServiceCompletedTable from "./components/CustomerSupport/ServiceCompletedTable";
+import ServiceCompleted from "./components/CustomerSupport/ServiceCompleted";
 
 
 function App() {
@@ -70,6 +72,10 @@ function App() {
           <Route path="/user/:userID/sites" element={<Home><UserSiteTable /></Home>} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home><Welcome /></Home>} />
+
+          <Route path="/support" element={<Home><ServiceCompletedTable /></Home>} />
+          <Route path="/support/:serviceCompletedID" element={<Home><ServiceCompleted /></Home>} />
+
           <Route path="/403" element={<Home><AccessDenied /></Home>} />
           <Route path="/404" element={<Home><NotFound /></Home>} />
         </Routes>

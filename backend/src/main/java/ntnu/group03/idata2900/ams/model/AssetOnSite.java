@@ -30,7 +30,7 @@ public class AssetOnSite {
     private LocalDateTime commissionDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "assetOnSiteTag", nullable = false, unique = true)
+    @Column(name = "assetOnSiteTag", nullable = true, unique = true)
     @Schema(description = "assetOnSiteTag of the assetOnSite")
     private String assetOnSiteTag;
 

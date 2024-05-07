@@ -45,6 +45,8 @@ const Main = ({  size }) => {
   const editButtonReference = useRef(null);
   const deleteButtonReference = useRef(null);
   const cancelButtonReference = useRef(null);
+  const touchTimerRef = useRef(null);
+
 
   // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
   useEffect(() => {
@@ -142,6 +144,18 @@ const Main = ({  size }) => {
 
   };
 
+  // Handle touch start
+  const handleTouchStart = () => {
+    touchTimerRef.current = setTimeout(() => {
+      handlePrint();
+    }, 1000);
+  };
+
+  // Handle touch end
+  const handleTouchEnd = () => {
+    clearTimeout(touchTimerRef.current);
+  };
+
   const printFrameRef = useRef();
   const [contextMenu, setContextMenu] = useState(null);
 
@@ -225,7 +239,7 @@ const Main = ({  size }) => {
           </a>
           <br></br>
           <b>Asset QR Code</b>
-          <div onContextMenu={handleContextMenu}>
+          <div onContextMenu={handleContextMenu} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <QRCode value={value} size={size} level="H" bgColor="#ffffff" fgColor="#000000" includeMargin={true}/>
             <iframe ref={printFrameRef} style={{display: 'none'}} title="Print Frame"/>
           </div>
