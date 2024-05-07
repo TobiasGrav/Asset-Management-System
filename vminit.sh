@@ -23,11 +23,13 @@ sudo apt-get install -y certbot
 ACR_PASSWORD=$(sudo az keyvault secret show --name amsprojectacrpassword --vault-name ams-secret-key-vault --query value -o tsv)
 MYSQL_PASSWORD=$(sudo az keyvault secret show --name mysqlpassword --vault-name ams-secret-key-vault --query value -o tsv)
 
+
+
 sudo docker login -u amsprojectacr -p "${ACR_PASSWORD}" amsprojectacr.azurecr.io
 
 sudo docker network create ams-network
 
-sudo certbot certonly --standalone -d asset-management-system.norwayeast.cloudapp.azure.com --non-interactive --agree-tos --email tobiagra@stud.ntnu.no
+sudo certbot certonly --standalone -d ams.norwayeast.cloudapp.azure.com --non-interactive --agree-tos --email tobiagra@stud.ntnu.no
 
 #sudo docker pull certbot/certbot:latest
 #sudo docker run -it -p 80:80 -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" -v "/var/log/letsencrypt:/var/log/letsencrypt" -v "/etc/nginx:/etc/nginx" -v "/var/www/certbot:/var/www/certbot" certbot/certbot certonly --standalone -d asset-management-system-5.norwayeast.cloudapp.azure.com --non-interactive --agree-tos --email tobiagra@stud.ntnu.no
