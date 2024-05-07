@@ -14,57 +14,49 @@ variables:
 jobs:
 
 ###### BuildAndTest ###################################################################################################################################
-#
-#- job: BuildAndTest
-#  displayName: Build and Test Spring Boot App
-#  
-#  
-#  
-#  steps:
-#
-#  # Tests and then builds the maven project.
-#  - task: Maven@3
-#    inputs:
-#      mavenPomFile: backend/pom.xml
-#      goals: clean package
-#      javaHomeOption: JDKVersion
-#      mavenVersionOption: Default
-#      mavenAuthenticateFeed: false
-#      effectivePomSkip: false
-#      sonarQubeRunAnalysis: false
-#    env:
-#      DATABASE_URL: "localhost"
-#      DATABASE_USERNAME: "root"
-#      DATABASE_PASSWORD: "root"
-#
-#  # Code coverage is done via JaCoCo, which creates a report over what code is covered with tests or not.
-#  - task: PublishCodeCoverageResults@2
-#    displayName: Publishes the code coverage results
-#    inputs:
-#      summaryFileLocation: $(Build.SourcesDirectory)/backend/target/site/jacoco/jacoco.xml
-#
-####### Dockerize ######################################################################################################################################
-#
-#- job: Dockerize
-#  displayName: Dockerize the spring boot application jar file
-#  dependsOn: BuildAndTest
-#  
-#  steps:
-#  - checkout: none
-#
-#  # Creates a docker image and then runs a container.
-#  - task: Docker@2
-#    inputs:
-#      repository: ams-backend
-#      command: build
-#      Dockerfile: backend/Dockerfile
-#      tags: $(Build.SourceVersion)
-#
-#  # Runs a docker container with the image created above.
-#  - script: |
-#      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
-#    displayName: Run Docker container
-#
+
+- job: BuildAndTest
+  displayName: Build and Test Spring Boot App
+  
+  steps:
+
+  # Tests and then builds the maven project.
+  - task: Maven@3
+    inputs:
+      mavenPomFile: backend/pom.xml
+      goals: clean package
+      javaHomeOption: JDKVersion
+      mavenVersionOption: Default
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+    env:
+      DATABASE_URL: "localhost"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
+
+###### Dockerize ######################################################################################################################################
+
+- job: Dockerize
+  displayName: Dockerize the spring boot application jar file
+  dependsOn: BuildAndTest
+  
+  steps:
+  - checkout: none
+
+  # Creates a docker image and then runs a container.
+  - task: Docker@2
+    inputs:
+      repository: ams-backend
+      command: build
+      Dockerfile: backend/Dockerfile
+      tags: $(Build.SourceVersion)
+
+  # Runs a docker container with the image created above.
+  - script: |
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
+    displayName: Run Docker container
+
 ####### TestingAPI #####################################################################################################################################
 #
 #- job: TestingAPI
@@ -109,43 +101,42 @@ jobs:
 #      publishLocation: Container
 #    displayName: 'Upload JMeter Api test report'
 #
-####### TestingPerformance #############################################################################################################################
-#
-#- job: TestingPerformance
-#  displayName: Tests the performance of the server apis
-#  dependsOn: TestingAPI
-#  
-#  steps:
-#  - checkout: none
-#  
-#  # initializes the directory for testresults and runs the JMeter test script.
-#  - script: |
-#      mkdir $(Build.SourcesDirectory)\JMeterTestReport\performance\performanceTestReport
-#      jmeter -n -t $(Build.SourcesDirectory)/spring-boot-application-performance-test.jmx -l $(Build.SourcesDirectory)/JMeterTestReport/performance/PerformanceTest.xml -e -o $(Build.SourcesDirectory)/JMeterTestReport/performance/performanceTestReport/
-#    displayName: Run TestApi JMeter script
-#
-#  # converts the JMeter .jtl output from the test to a .xml file in JUnit standard via
-#  # the python script downloaded earlier for displaying it in the azure tests tab.
-#  - script: |
-#      py jtl_junit_converter.py $(Build.SourcesDirectory)/JMeterTestReport/performance/PerformanceTest.xml PerformanceTest.xml
-#    displayName: Convert PerformanceTest.xml format
-#  
-#  # Publishes the results from the performance tests, in the tests tab.
-#  - task: PublishTestResults@2
-#    inputs:
-#      testResultsFormat: JUnit
-#      testResultsFiles: $(Build.SourcesDirectory)/PerformanceTest.xml
-#      testRunTitle: Performance Test Results
-#    displayName: Publishes performance test results
-#  
-#  # Publishes the JMeter test report as an artifact so it can be downloaded and viewed.
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      PathtoPublish: $(Build.SourcesDirectory)/JMeterTestReport/performance/performanceTestReport/
-#      ArtifactName: JMeter performance test results
-#      publishLocation: Container
-#    displayName: 'Upload JMeter performance test report'
-#
+###### PushDockerImages #############################################################################################################################
+
+- job: PushDockerImages
+  displayName: Pushes images to private container registry
+  dependsOn: Dockerize
+  
+  steps:
+  - checkout: none
+
+  # Logs into the private container registry via a source connection
+  - task: Docker@2
+    displayName: Login to Azure Container Registry
+    inputs:
+      command: login
+      containerRegistry: ams-acr
+  
+  - script: |
+      cd frontend
+      npm install
+      npm run build
+      docker build -t ams-nginx .
+    displayName: build and dockerize react/nginx
+
+  # Tags the images for pushing them to the private repository in the cloud.
+  # Latest tag overwrites the last latest image, so that the staging server can pull this.
+  - script: |
+      docker tag ams-backend:latest amsprojectacr.azurecr.io/ams-backend:latest
+      docker tag ams-nginx:latest amsprojectacr.azurecr.io/ams-nginx:latest
+    displayName: Tag Docker Image
+
+  # Pushes the images to the registry.
+  - script: |
+        docker push amsprojectacr.azurecr.io/ams-backend:latest
+        docker push amsprojectacr.azurecr.io/ams-nginx:latest
+    displayName: Push Docker Image
+
 ####### Deploy ##########################################################################################################################################
 
 - job: Deploy
