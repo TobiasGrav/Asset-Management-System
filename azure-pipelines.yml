@@ -123,6 +123,7 @@ jobs:
     displayName: build and dockerize react/nginx
 
   - script: |
+      cd frontend
       npm run build
       docker build -t ams-nginx .
     displayName: build and dockerize react/nginx
