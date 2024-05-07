@@ -141,7 +141,7 @@ jobs:
 
 - job: Deploy
   displayName: Deploys the docker to a cloud hosted staging server
-  #dependsOn: BuildAndTest
+  dependsOn: PushDockerImages
 
   steps:
   #- checkout: none
