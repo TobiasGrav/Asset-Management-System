@@ -50,6 +50,7 @@ jobs:
       repository: ams-backend
       command: build
       Dockerfile: backend/Dockerfile
+      tags: latest
 
   # Runs a docker container with the image created above.
   - script: |
