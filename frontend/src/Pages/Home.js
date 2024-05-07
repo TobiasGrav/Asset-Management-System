@@ -51,6 +51,10 @@ const Main = ({children}) => {
     navigate("/user/");
   };
 
+  const customerSupport = () => {
+    navigate("/support/")
+  };
+
   const profile = () => {
     navigate('/profile');
   };
@@ -93,7 +97,7 @@ const Main = ({children}) => {
           <button type="button" className="navButton" onClick={company}>Company</button>
           <button type="button" className="navButton" onClick={site}>Site</button>
           <button type="button" className="navButton" onClick={customer}>User</button>
-          <button type="button" className="navButton">Customer support</button>
+          <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>
         </div>
         <div className="rightContainer">
           {children}

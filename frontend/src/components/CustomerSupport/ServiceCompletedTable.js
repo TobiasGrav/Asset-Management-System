@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
+import {useParams} from "react-router";
 
-function Table() {
+function ServiceCompletedTable({ displayAllServices }) {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const [data, setData] = useState([]);
@@ -15,6 +16,7 @@ function Table() {
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { id } = useParams();
 
     useEffect(() => {
         fetchData();
@@ -23,7 +25,7 @@ function Table() {
     const search = (event) => {
         setSearchData([]);
         data.forEach(element => {
-            if(element.name.toLowerCase().includes(event.target.value.toLowerCase()) || element.id.toString().includes(event.target.value.toLowerCase()) || element.partNumber.toLowerCase().includes(event.target.value.toLowerCase())) {
+            if(element.service.intervalName.toLowerCase().includes(event.target.value.toLowerCase()) || element.assetOnSite.assetOnSiteTag.toString().includes(event.target.value.toLowerCase()) || element.service.description.toLowerCase().includes(event.target.value.toLowerCase())) {
                 searchData.push(element);
             }
             setTableData(searchData);
@@ -31,53 +33,55 @@ function Table() {
     };
 
     const create = () => {
-        navigate('/asset/create');
+        navigate(`create`);
     };
 
     const fetchData = async () => {
         setLoading(true);
-        HTTPRequest.get(`${URL.BACKEND}/api/assets`, cookies.JWT).then(response => {
+        HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted`, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
             setLoading(false);
         }).catch(error => {setLoading(false)});
     };
 
-    const formatLocalDateTime = (localDateTime) => {
-        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
-    };
 
     const columns = [
         {
-            name: 'Part Number',
-            selector: row => row.partNumber,
+            name: 'Service Description',
+            selector: row => row.service?.description,
             sortable: true,
         },
         {
-            name: 'Name',
-            selector: row => row.name,
+            name: 'Service Interval',
+            selector: row => row.service?.intervalName,
             sortable: true,
         },
         {
-            name: 'Description',
-            selector: row => row.description,
+            name: 'Site Name',
+            selector: row => row.assetOnSite?.site.name,
             sortable: true,
         },
         {
-            name: 'Creation Date',
-            selector: row => formatLocalDateTime(row.creationDate),
+            name: 'Asset Name',
+            selector: row => row.assetOnSite?.asset.name,
             sortable: true,
         },
         {
-            name: 'Active',
-            selector: row => row.active ? 'Yes' : 'No',
+            name: 'Asset On Site Tag',
+            selector: row => row.assetOnSite?.assetOnSiteTag,
+            sortable: true,
+        },
+        {
+            name: 'Service Completion Time',
+            selector: row => row.timeCompleted !== null ? row.timeCompleted : 'Service Not Completed',
             sortable: true,
         },
     ];
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`/asset/${row.id}`); // Use navigate to change the route
+        navigate(`${row.id}`); // Use navigate to change the route
     };
 
     const customStyles = {
@@ -131,9 +135,9 @@ function Table() {
 
     return (
         <div style={{ margin: '20px', width: '90%' }}>
-            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Asset Overview</h1></div>
-            <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Requested Services Overview</h1></div>
+            <input placeholder='Search for ongoing services' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Service</button>
             <DataTable
                 columns={columns}
                 data={tableData}
@@ -147,4 +151,4 @@ function Table() {
     );
 }
 
-export default Table;
+export default ServiceCompletedTable;

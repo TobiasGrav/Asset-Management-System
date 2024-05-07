@@ -61,7 +61,7 @@ function Table() {
         data.forEach(element => {
             if(element.asset.name.toLowerCase().includes(searchInput.current.value.toLowerCase())) {
                 searchData.push(element);
-            } else if(element.id.toString().includes(searchInput.current.value.toLowerCase())) {
+            } else if(element.assetOnSiteTag.toString().includes(searchInput.current.value.toLowerCase())) {
                 searchData.push(element);
             }
             setTableData(searchData);
@@ -84,6 +84,11 @@ function Table() {
 
     const columns = [
         {
+            name: 'Asset On Site Tag',
+            selector: row => row.assetOnSiteTag,
+            sortable: true,
+        },
+        {
             name: 'Name',
             selector: row => row.asset.name,
             sortable: true,
@@ -91,16 +96,6 @@ function Table() {
         {
             name: 'Commision date',
             selector: row => formatLocalDateTime(row.commissionDate),
-            sortable: true,
-        },
-        //{
-        //    name: 'Creation Date',
-        //    selector: row => formatLocalDateTime(row.creationDate),
-        //    sortable: true,
-        //},
-        {
-            name: 'ID',
-            selector: row => row.id,
             sortable: true,
         },
     ];

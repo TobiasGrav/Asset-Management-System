@@ -1,0 +1,80 @@
+.inputSiteName {
+    width: 941px;
+    height: 102px;
+    font-size: 32px;
+    text-align: center;
+}
+
+.inputSiteName:disabled {
+    background: none;
+    border: none;
+    color: black;
+}
+
+.companyBody {
+    width: auto;
+}
+
+.companyContainer {
+    display: flex;
+}
+
+.valueContainer {
+    width: auto;
+    padding-right: 20px;
+}
+
+.imageContainer {
+    width: auto;
+}
+
+.companyImage {
+    height: 360px;
+    width: 360px;
+}
+
+.inputField:disabled {
+    background: none;
+    border: none;
+    color: black;
+}
+
+.removeButton {
+    color:#D70134;
+    background-color: #FFC7D4;
+    border: none;
+    border-radius: 20px;
+}
+
+.removeButton:hover {
+    color:#450000;
+    background-color: #fc83a1;
+    cursor: pointer;
+}
+
+.addButton {
+    color:#297A5D;
+    background-color: #ADF1CC;
+    border: none;
+    border-radius: 20px;
+}
+
+.addButton:hover {
+    color:#184a38;
+    background-color: #83f2b5;
+    cursor: pointer;
+}
+
+.backArrow {
+    color: #003341;
+    font-size: 20px;
+    background: none;
+    border: none;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+.backArrow:hover {
+    cursor: pointer;
+}
