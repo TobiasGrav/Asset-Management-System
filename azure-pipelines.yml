@@ -57,55 +57,35 @@ jobs:
       docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
     displayName: Run Docker container
 
-####### TestingAPI #####################################################################################################################################
-#
-#- job: TestingAPI
-#  displayName: Tests if the APIs function as expected on the docker container
-#  dependsOn: Dockerize
-#  
-#  steps:
-#  - checkout: none
-#
-#  # initializes the directory for testresults and runs the JMeter test script.
-#  - script: |
-#      mkdir $(Build.SourcesDirectory)\JMeterTestReport\api\apiTestReport
-#      jmeter -n -t $(Build.SourcesDirectory)/spring-boot-application-api-test.jmx -l $(Build.SourcesDirectory)/JMeterTestReport/api/ApiTest.xml -e -o $(Build.SourcesDirectory)/JMeterTestReport/api/apiTestReport/
-#    displayName: Run TestApi JMeter script
-#
-#  # Python script which converts JMeter .xml format to JUnit .xml format, downloaded from git repository:
-#  # https://github.com/Azure-Samples/jmeter-aci-terraform/blob/main/scripts/jtl_junit_converter.py
-#  # IT IS A TOOL I DID NOT CREATE, author of this tool is git user: @davidmiguelalves
-#  - script: |
-#      curl https://raw.githubusercontent.com/Azure-Samples/jmeter-aci-terraform/main/scripts/jtl_junit_converter.py -o $(Build.SourcesDirectory)\jtl_junit_converter.py
-#    displayName: Download xml formater, JMeter.xml to JUnit.xml format
-#  
-#  # converts the JMeter .jtl output from the test to a .xml file in JUnit standard via
-#  # the python script downloaded earlier for displaying it in the azure tests tab.
-#  - script: |
-#      py jtl_junit_converter.py $(Build.SourcesDirectory)/JMeterTestReport/api/ApiTest.xml ApiTest.xml
-#    displayName: Convert ApiTest.xml format
-#  
-#  # Publishes the results from the api, in the tests tab.
-#  - task: PublishTestResults@2
-#    inputs:
-#      testResultsFormat: JUnit
-#      testResultsFiles: $(Build.SourcesDirectory)/ApiTest.xml
-#      testRunTitle: Api Test Results
-#    displayName: Publishes API test results
-#  
-#  # Publishes the JMeter test report as an artifact so it can be downloaded and viewed.
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      PathtoPublish: $(Build.SourcesDirectory)/JMeterTestReport/api/apiTestReport/
-#      ArtifactName: JMeter Api test results
-#      publishLocation: Container
-#    displayName: 'Upload JMeter Api test report'
-#
+###### BuildReactApp #####################################################################################################################################
+
+- job: BuildReactApp
+  displayName: builds and creates a docker image
+  dependsOn: Dockerize
+
+  steps:
+  - checkout: none
+
+  - script: |
+      cd frontend
+      npm install
+    displayName: Install node.js dependencies
+
+  - script: |
+      cd frontend
+      npm run build
+    displayName: Builds the react application
+
+  - script: |
+      cd frontend
+      docker build -t ams-nginx .
+    displayName: Dockerize react/nginx
+
 ###### PushDockerImages #############################################################################################################################
 
 - job: PushDockerImages
   displayName: Pushes images to private container registry
-  dependsOn: Dockerize
+  dependsOn: BuildReactApp
   
   steps:
   - checkout: none
@@ -116,17 +96,6 @@ jobs:
     inputs:
       command: login
       containerRegistry: ams-acr
-
-  - script: |
-      cd frontend
-      npm install
-    displayName: build and dockerize react/nginx
-
-  - script: |
-      cd frontend
-      npm run build
-      docker build -t ams-nginx .
-    displayName: build and dockerize react/nginx
 
   # Tags the images for pushing them to the private repository in the cloud.
   # Latest tag overwrites the last latest image, so that the staging server can pull this.
