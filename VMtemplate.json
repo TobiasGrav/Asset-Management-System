@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_spring_boot_app_name": {
+            "defaultValue": "ams-vm",
+            "type": "String"
+        },
+        "networkInterfaces_spring_boot_app": {
+            "defaultValue": "[resourceID('Microsoft.Network/networkInterfaces', 'ams-network-interface')]",
+            "type": "String"
+        },
+        "infrastructureLocation": {
+            "defaultValue": "norwayeast",
+            "type": "String"
+        },
+        "spring_boot_app_key": {
+            "defaultValue": "ams-key",
+            "type": "string"
+        },
+        "versionTag": {
+            "defaultValue": "latest",
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2023-03-01",
+            "name": "[parameters('virtualMachines_spring_boot_app_name')]",
+            "location": "[parameters('infrastructureLocation')]",
+            "zones": [
+                "1"
+            ],
+            "identity": {
+                    "type": "UserAssigned",
+                    "userAssignedIdentities": {
+                        "/subscriptions/77b69bf5-7cdb-462f-a4b2-b88204db74db/resourcegroups/ams/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ams-identity": {}
+                    }
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B1s"
+                },
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "canonical",
+                        "offer": "0001-com-ubuntu-server-focal",
+                        "sku": "20_04-lts-gen2",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_spring_boot_app_name'), '-OsDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "deleteOption": "Delete",
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": [],
+                    "diskControllerType": "SCSI"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_spring_boot_app_name')]",
+                    "adminUsername": "azureuser",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [{
+                                    "path": "/home/azureuser/.ssh/authorized_keys",
+                                    "keyData": "[reference(resourceId('Microsoft.Compute/sshPublicKeys', parameters('spring_boot_app_key')), '2023-03-01').publicKey]"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByPlatform",
+                            "automaticByPlatformSettings": {
+                                "rebootSetting": "IfRequired",
+                                "bypassPlatformSafetyChecksOnUserSchedule": false
+                            },
+                            "assessmentMode": "ImageDefault"
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true
+                },
+                "securityProfile": {
+                    "uefiSettings": {
+                        "secureBootEnabled": true,
+                        "vTpmEnabled": true
+                    },
+                    "securityType": "TrustedLaunch"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_spring_boot_app')]",
+                            "properties": {
+                                "primary": true,
+                                "deleteOption": "Detach"
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('virtualMachines_spring_boot_app_name'), '/installDocker')]",
+            "apiVersion": "2022-03-01",
+            "location": "[parameters('infrastructureLocation')]",
+            "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_spring_boot_app_name'))]"],
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.1",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": ["https://raw.githubusercontent.com/TobiasGrav/Asset-Management-System/main/vminit.sh"],
+                    "commandToExecute": "chmod +x vminit.sh; bash vminit.sh;"
+                    //"commandToExecute": "[concat('sudo apt-get update; ', 'sudo apt-get install -y ca-certificates curl; ', 'sudo install -m 0755 -d /etc/apt/keyrings; ', 'sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc; ', 'sudo chmod a+r /etc/apt/keyrings/docker.asc; ', 'echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable\" | sudo tee /etc/apt/sources.list.d/docker.list; ', 'sudo apt-get update; ', 'sudo apt-get install -y docker-ce docker-ce-cli containerd.io; ', 'curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash;', 'sudo az login --identity --allow-no-subscription; ', 'export AcrPassword=$(sudo az keyvault secret show --name ContainerRepositoryPassword --vault-name spring-boot-key-vault --query value -o tsv); ', 'echo $AcrPassword | docker login -u privatespringbootappregistry --password-stdin privatespringbootappregistry.azurecr.io; ', 'sudo docker pull privatespringbootappregistry.azurecr.io/spring-boot-app:', parameters('versionTag'), ';', 'sudo docker run -d -p 80:8080 privatespringbootappregistry.azurecr.io/spring-boot-app:', parameters('versionTag'), ';')]"
+                }
+            }
+        }
+    ]
+}

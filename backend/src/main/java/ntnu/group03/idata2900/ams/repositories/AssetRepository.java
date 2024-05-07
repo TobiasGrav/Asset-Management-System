@@ -1,6 +1,7 @@
 package ntnu.group03.idata2900.ams.repositories;
 
 import ntnu.group03.idata2900.ams.model.Asset;
+import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,9 @@ public interface AssetRepository extends CrudRepository<Asset, Integer> {
      * @return An Optional containing the asset list with the given category, or empty if no assets are found.
      */
     Optional<List<Asset>> findAssetsByCategory(Category category);
+
+    Optional<Asset> findAssetByAssetOnSites(AssetOnSite assetOnSite);
+
 
     /**
      * Finding all assets using category and pagination

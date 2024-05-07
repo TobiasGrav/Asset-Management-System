@@ -8,7 +8,7 @@ import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
 import {useParams} from "react-router";
 
-function ServiceTable() {
+function ServiceTable({ displayAllServices }) {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const [data, setData] = useState([]);
@@ -38,16 +38,14 @@ function ServiceTable() {
 
     const fetchData = async () => {
         setLoading(true);
-        HTTPRequest.get(`${URL.BACKEND}/api/services`, cookies.JWT).then(response => {
+        let endpoint = displayAllServices ? `${URL.BACKEND}/api/services` : `${URL.BACKEND}/api/services/${id}/services`;
+        HTTPRequest.get(endpoint, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
             setLoading(false);
         }).catch(error => {setLoading(false)});
     };
 
-    const formatLocalDateTime = (localDateTime) => {
-        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
-    };
 
     const columns = [
         {
@@ -64,7 +62,23 @@ function ServiceTable() {
 
     // Handler for row click event using navigate
     const handleRowClicked = (row) => {
-        navigate(`${row.id}`); // Use navigate to change the route
+        if (displayAllServices){
+            navigate(`${row.id}`); // Use navigate to change the route
+        } else {
+            console.log(row.id)
+            const data = {
+                assetOnSite: {
+                    id: id
+                },
+                service: {
+                    id: row.id
+                },
+            }
+            HTTPRequest.post(`${URL.BACKEND}/api/servicesCompleted`, data, cookies.JWT).then(response => {
+                navigate(-1)
+                alert("Service Request Successful")
+            }).catch(error => {navigate(-1)})
+        }
     };
 
     const customStyles = {

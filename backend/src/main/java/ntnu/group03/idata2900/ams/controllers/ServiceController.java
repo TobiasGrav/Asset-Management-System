@@ -2,7 +2,9 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.ServiceDto;
+import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.Service;
+import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
 import ntnu.group03.idata2900.ams.services.ServiceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class ServiceController {
 
     private final ServiceService serviceService;
+    private final AssetOnSiteService assetOnSiteService;
 
     private static final String SERVICE_NOT_FOUND = "Service not found with id: {}";
 
@@ -25,9 +28,11 @@ public class ServiceController {
      * Creates a new instance of ServiceController.
      *
      * @param serviceService serviceService
+     * @param assetOnSiteService assetOnSiteService
      */
-    public ServiceController(ServiceService serviceService) {
+    public ServiceController(ServiceService serviceService, AssetOnSiteService assetOnSiteService) {
         this.serviceService = serviceService;
+        this.assetOnSiteService = assetOnSiteService;
     }
 
     /**
@@ -55,6 +60,19 @@ public class ServiceController {
         } else {
             log.info("Service found with ID: {}", id);
             return new ResponseEntity<>(service.get(), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/{id}/services")
+    public ResponseEntity<List<Service>> getAllServicesForAssetOnSite(@PathVariable int id){
+        Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
+        if (assetOnSite.isEmpty()){
+            log.warn("Asset on site not found with ID: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("All services found by the asset on site ID: {}", id);
+            List<Service> services = this.assetOnSiteService.getServicesFromAOS(assetOnSite.get());
+            return new ResponseEntity<>(services, HttpStatus.OK);
         }
     }
 

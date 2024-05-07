@@ -1,0 +1,623 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ams_key_vault_name": {
+            "defaultValue": "ams-secret-key-vault",
+            "type": "String"
+        },
+        "ams_ssh_key_name": {
+            "defaultValue": "ams-key",
+            "type": "String"
+        },
+        "ams_ip_name": {
+            "defaultValue": "ams-ip",
+            "type": "String"
+        },
+        "ams_vnet_name": {
+            "defaultValue": "ams-vnet",
+            "type": "String"
+        },
+        "ams_nsg_name": {
+            "defaultValue": "ams-nsg",
+            "type": "String"
+        },
+        "ams_acr_name": {
+            "defaultValue": "amsprojectacr",
+            "type": "String"
+        },
+        "ams_network_interface": {
+            "defaultValue": "ams-network-interface",
+            "type": "String"
+        },
+        "ams_user_assigned_identity_name": {
+            "defaultValue": "ams-identity",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/sshPublicKeys",
+            "apiVersion": "2023-03-01",
+            "name": "[parameters('ams_ssh_key_name')]",
+            "location": "norwayeast",
+            "properties": {
+                "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDemA5SN1xvFRqqlb7Hb4wfQCEYIOrVj/vaI6DRCuzkyMFik3BFNeCd1v5C8p+Nzdu0k56xX7/ediwIIWtsvWo7E/xuvEp2wca111/X7Bu3CD7osC5On7g3n85Tabqj2FBP/T0/VcIZ7LTs81hud47leLk2WIRwjtE1UvB8EVbC9b3n7hJ/TlwMGv6gfs5C2GsldX2ZOyTi3v/J8NUW3+sqLzs/LQ93M1LdTjnlO5SfIKLXjglz0ScQvrtBIW7H18IKTwTEIM2ScTRpZgoNe5UfAP8Sxsf4w0lkoAq2gsXRsdEUcblbHUNLG6puIVTQOZ7pBZ4NmKhJ6012a5VohCYcnMwWWSP3je0RF8TeAJS/2vMFdA29QkC1tCAAP+Aun0Qmk5fTqEuXcIyWvcb1PeoB+CDXVZ0f4uvxvCgkHxVqYexrT92oOrKT4Ttl8EgAghfL8pGfkUQEceoOfGirWVhsfEVkde2jzJRSbMdrgYxuQqeaMwTuL8FnClGgfaIk0tjdpDdhTFP5WC19sOdx1/TlWYS2Ns3pFJ6Z2ubIuTs89nkLwDYj84tg5DKrFC+LD3v1AQ6DaE6dM3HOtqDu6QP0yLKGhDLfwz8ikNkKVpp9kTj5eUNgahKypV6K/tTOVR9CjC5Fodvib6yfq0oWx07clHRKUorj3ps2/xSNQ8G9tQ== tobbetobbeog@outlook.com"
+            }
+        },
+        {
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2023-11-01-preview",
+            "name": "[parameters('ams_acr_name')]",
+            "location": "norwayeast",
+            "sku": {
+                "name": "Premium",
+                "tier": "Premium"
+            },
+            "properties": {
+                "adminUserEnabled": true,
+                "networkRuleSet": {
+                    "defaultAction": "Deny",
+                    "ipRules": [
+                        {
+                            "action": "Allow",
+                            "value": "178.232.59.132"
+                        },
+                        {
+                            "action": "Allow",
+                            "value": "51.120.244.67"
+                        }
+                    ]
+                },
+                "policies": {
+                    "quarantinePolicy": {
+                        "status": "disabled"
+                    },
+                    "trustPolicy": {
+                        "type": "Notary",
+                        "status": "disabled"
+                    },
+                    "retentionPolicy": {
+                        "days": 7,
+                        "status": "disabled"
+                    },
+                    "exportPolicy": {
+                        "status": "enabled"
+                    },
+                    "azureADAuthenticationAsArmPolicy": {
+                        "status": "enabled"
+                    },
+                    "softDeletePolicy": {
+                        "retentionDays": 7,
+                        "status": "disabled"
+                    }
+                },
+                "encryption": {
+                    "status": "disabled"
+                },
+                "dataEndpointEnabled": false,
+                "publicNetworkAccess": "Enabled",
+                "networkRuleBypassOptions": "AzureServices",
+                "zoneRedundancy": "Disabled",
+                "anonymousPullEnabled": false,
+                "metadataSearch": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-07-31-preview",
+            "name": "[parameters('ams_user_assigned_identity_name')]",
+            "location": "norwayeast"
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2023-09-01",
+            "name": "[parameters('ams_nsg_name')]",
+            "location": "norwayeast",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "HTTP",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('ams_nsg_name'), 'HTTP')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 320,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "HTTPS",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('ams_nsg_name'), 'HTTPS')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 340,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "SSH",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('ams_nsg_name'), 'SSH')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "178.232.59.132",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 300,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2023-09-01",
+            "name": "[parameters('ams_ip_name')]",
+            "location": "norwayeast",
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "zones": [
+                "1"
+            ],
+            "properties": {
+                "ipAddress": "51.120.244.67",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "asset-management-system-5",
+                    "fqdn": "asset-management-system-5.norwayeast.cloudapp.azure.com"
+                },
+                "ipTags": [],
+                "ddosSettings": {
+                    "protectionMode": "VirtualNetworkInherited"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+            "apiVersion": "2023-11-01-preview",
+            "name": "[concat(parameters('ams_acr_name'), '/_repositories_admin')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('ams_acr_name'))]"
+            ],
+            "properties": {
+                "description": "Can perform all read, write and delete operations on the registry",
+                "actions": [
+                    "repositories/*/metadata/read",
+                    "repositories/*/metadata/write",
+                    "repositories/*/content/read",
+                    "repositories/*/content/write",
+                    "repositories/*/content/delete"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+            "apiVersion": "2023-11-01-preview",
+            "name": "[concat(parameters('ams_acr_name'), '/_repositories_pull')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('ams_acr_name'))]"
+            ],
+            "properties": {
+                "description": "Can pull any repository of the registry",
+                "actions": [
+                    "repositories/*/content/read"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+            "apiVersion": "2023-11-01-preview",
+            "name": "[concat(parameters('ams_acr_name'), '/_repositories_pull_metadata_read')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('ams_acr_name'))]"
+            ],
+            "properties": {
+                "description": "Can perform all read operations on the registry",
+                "actions": [
+                    "repositories/*/content/read",
+                    "repositories/*/metadata/read"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+            "apiVersion": "2023-11-01-preview",
+            "name": "[concat(parameters('ams_acr_name'), '/_repositories_push')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('ams_acr_name'))]"
+            ],
+            "properties": {
+                "description": "Can push to any repository of the registry",
+                "actions": [
+                    "repositories/*/content/read",
+                    "repositories/*/content/write"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+            "apiVersion": "2023-11-01-preview",
+            "name": "[concat(parameters('ams_acr_name'), '/_repositories_push_metadata_write')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('ams_acr_name'))]"
+            ],
+            "properties": {
+                "description": "Can perform all read and write operations on the registry",
+                "actions": [
+                    "repositories/*/metadata/read",
+                    "repositories/*/metadata/write",
+                    "repositories/*/content/read",
+                    "repositories/*/content/write"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2023-07-01",
+            "name": "[parameters('ams_key_vault_name')]",
+            "location": "norwayeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ams_vnet_name'), 'default')]"
+            ],
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "tenantId": "6c1e6c35-3197-4a7f-85ae-d163067adcfe",
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny",
+                    "ipRules": [
+                        {
+                            "value": "178.232.59.132/32"
+                        }
+                    ],
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ams_vnet_name'), 'default')]",
+                            "ignoreMissingVnetServiceEndpoint": true
+                        }
+                    ]
+                },
+                "accessPolicies": [
+                    {
+                        "tenantId": "6c1e6c35-3197-4a7f-85ae-d163067adcfe",
+                        "objectId": "00cff488-c6ff-4d43-86da-9da2a497f52f",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "GetRotationPolicy",
+                                "SetRotationPolicy",
+                                "Rotate"
+                            ],
+                            "secrets": [
+                                "Get",
+                                "List",
+                                "Set",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore"
+                            ],
+                            "certificates": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "ManageContacts",
+                                "ManageIssuers",
+                                "GetIssuers",
+                                "ListIssuers",
+                                "SetIssuers",
+                                "DeleteIssuers"
+                            ]
+                        }
+                    },
+                    {
+                        "tenantId": "6c1e6c35-3197-4a7f-85ae-d163067adcfe",
+                        "objectId": "b16ea745-d0be-46b8-8a70-510b3869c1d9",
+                        "permissions": {
+                            "certificates": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "ManageContacts",
+                                "ManageIssuers",
+                                "GetIssuers",
+                                "ListIssuers",
+                                "SetIssuers",
+                                "DeleteIssuers",
+                                "Purge"
+                            ],
+                            "keys": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "GetRotationPolicy",
+                                "SetRotationPolicy",
+                                "Rotate",
+                                "Encrypt",
+                                "Decrypt",
+                                "UnwrapKey",
+                                "WrapKey",
+                                "Verify",
+                                "Sign",
+                                "Purge",
+                                "Release"
+                            ],
+                            "secrets": [
+                                "Purge",
+                                "Get",
+                                "List",
+                                "Set",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore"
+                            ]
+                        }
+                    }
+                ],
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 7,
+                "enableRbacAuthorization": false,
+                "vaultUri": "[concat('https://', parameters('ams_key_vault_name'), '.vault.azure.net/')]",
+                "provisioningState": "Succeeded",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2023-07-01",
+            "name": "[concat(parameters('ams_key_vault_name'), '/ContainerRepositoryPassword')]",
+            "location": "norwayeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('ams_key_vault_name'))]"
+            ],
+            "properties": {
+                "contentType": "String",
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('ams_nsg_name'), '/HTTP')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 320,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('ams_nsg_name'), '/HTTPS')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 340,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('ams_nsg_name'), '/SSH')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "178.232.59.132",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2023-09-01",
+            "name": "[parameters('ams_vnet_name')]",
+            "location": "norwayeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "default",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ams_vnet_name'), 'default')]",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+                            },
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        },
+                        "type": "Microsoft.Network/virtualNetworks/subnets"
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2023-09-01",
+            "name": "[parameters('ams_network_interface')]",
+            "location": "norwayeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('ams_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ams_vnet_name'), 'default')]"
+            ],
+            "kind": "Regular",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "Ipv4config",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('ams_network_interface')), '/ipConfigurations/Ipv4config')]",
+                        "etag": "W/\"0a65e4bf-e0c4-48a6-a6bd-0846845ab787\"",
+                        "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.0.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('ams_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ams_vnet_name'), 'default')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "disableTcpStateTracking": false,
+                "nicType": "Standard",
+                "auxiliaryMode": "None",
+                "auxiliarySku": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2023-09-01",
+            "name": "[concat(parameters('ams_vnet_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('ams_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('ams_nsg_name'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    }
+                ],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}

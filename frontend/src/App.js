@@ -41,7 +41,7 @@ function App() {
           <Route path="/asset" element={<Home><Table /></Home>} />
           <Route path="/asset/create" element={<Home><AssetCreate /></Home>} />
           <Route path="/asset/:id" element={<Home><Asset /></Home>} />
-          <Route path="/asset/:id/service" element={<Home><ServiceTable /></Home>} />
+          <Route path="/asset/:id/service" element={<Home><ServiceTable displayAllServices={true}/></Home>} />
           <Route path="/asset/:id/service/:serviceID" element={<Home><AssetService /></Home>} />
           <Route path="/asset/:id/service/create" element={<Home><AssetServiceCreate /></Home>} />
 
@@ -59,6 +59,7 @@ function App() {
           <Route path="/company/:companyID/site/:siteID/assets/add" element={<Home><SiteAssetAddTable /></Home>} />
           <Route path="/company/:companyID/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
           <Route path="/company/:companyID/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/assets/:id/service" element={<Home><ServiceTable displayAllServices={false} /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users/:userID" element={<Home><Customer /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users/add" element={<Home><SiteUserAddTable /></Home>} />

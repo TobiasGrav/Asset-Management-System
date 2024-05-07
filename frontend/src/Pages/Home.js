@@ -68,28 +68,14 @@ const Main = ({children}) => {
       </Helmet>
       <div className="navbarContainer">
         <div className="logoContainer">
-          <img
-            alt="image"
-            src={require('./resources/assetmanagementsystem.png')}
-            className="logoImage"
-          />
+          <img alt="image" src={require('./resources/assetmanagementsystem.png')} className="logoImage"/>
           <span className="logoText">Asset Management Database</span>
         </div>
         <div className="bookmarkContainer">
-          
         </div>
         <div className="utilityContainer">
-          <img
-            alt="image"
-            src={require('./resources/bell.png')}
-            className="utilityIcon"
-          />
-          <div class='dropdown'><img
-              alt="image"
-              src={require('./resources/user.png')}
-              className="utilityIcon"
-              on
-            />
+          <img alt="image" src={require('./resources/bell.png')} className="utilityIcon"/>
+          <div class='dropdown'><img alt="image" src={require('./resources/user.png')} className="utilityIcon" on/>
             <div class='profileDropdown'>
               <a class='dropdownText' onClick={profile}>My profile</a>
               <a class='dropdownText' onClick={logout}>Logout</a>
@@ -103,49 +89,18 @@ const Main = ({children}) => {
             <span>Overview</span>
             <br></br>
           </span>
-          <button
-            type="button"
-            className="navButton"
-            onClick={asset}
-          >
-            Asset
-          </button>
-          <button
-            type="button"
-            className="navButton"
-            onClick={company}
-          >
-            Company
-          </button>
-          <button
-            type="button"
-            className="navButton"
-            onClick={site}
-          >
-            Site
-          </button>
-          <button
-            type="button"
-            className="navButton"
-            onClick={customer}
-          >
-            User
-          </button>
-          <button
-            type="button"
-            className="navButton"
-          >
-            Customer support
-          </button>
+          <button type="button" className="navButton" onClick={asset}>Asset</button>
+          <button type="button" className="navButton" onClick={company}>Company</button>
+          <button type="button" className="navButton" onClick={site}>Site</button>
+          <button type="button" className="navButton" onClick={customer}>User</button>
+          <button type="button" className="navButton">Customer support</button>
         </div>
         <div className="rightContainer">
           {children}
         </div>
       </div>
       <div className="bottomContainer">
-        <span className="asset-overview-text103">
-          This is a product created for a bachelors at NTNU Ålesund
-        </span>
+        <span className="asset-overview-text103">This is a product created for a bachelors at NTNU Ålesund</span>
       </div>
     </div>
   )
