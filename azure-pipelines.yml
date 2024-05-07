@@ -121,6 +121,7 @@ jobs:
       cd frontend
       npm install
       npm run build
+      set -x
       docker build -t ams-nginx .
     displayName: build and dockerize react/nginx
 
