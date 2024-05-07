@@ -14,143 +14,107 @@ variables:
 jobs:
 
 ###### BuildAndTest ###################################################################################################################################
-#
-#- job: BuildAndTest
-#  displayName: Build and Test Spring Boot App
-#  
-#  
-#  
-#  steps:
-#
-#  # Tests and then builds the maven project.
-#  - task: Maven@3
-#    inputs:
-#      mavenPomFile: backend/pom.xml
-#      goals: clean package
-#      javaHomeOption: JDKVersion
-#      mavenVersionOption: Default
-#      mavenAuthenticateFeed: false
-#      effectivePomSkip: false
-#      sonarQubeRunAnalysis: false
-#    env:
-#      DATABASE_URL: "localhost"
-#      DATABASE_USERNAME: "root"
-#      DATABASE_PASSWORD: "root"
-#
-#  # Code coverage is done via JaCoCo, which creates a report over what code is covered with tests or not.
-#  - task: PublishCodeCoverageResults@2
-#    displayName: Publishes the code coverage results
-#    inputs:
-#      summaryFileLocation: $(Build.SourcesDirectory)/backend/target/site/jacoco/jacoco.xml
-#
-####### Dockerize ######################################################################################################################################
-#
-#- job: Dockerize
-#  displayName: Dockerize the spring boot application jar file
-#  dependsOn: BuildAndTest
-#  
-#  steps:
-#  - checkout: none
-#
-#  # Creates a docker image and then runs a container.
-#  - task: Docker@2
-#    inputs:
-#      repository: ams-backend
-#      command: build
-#      Dockerfile: backend/Dockerfile
-#      tags: $(Build.SourceVersion)
-#
-#  # Runs a docker container with the image created above.
-#  - script: |
-#      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:$(Build.SourceVersion)
-#    displayName: Run Docker container
-#
-####### TestingAPI #####################################################################################################################################
-#
-#- job: TestingAPI
-#  displayName: Tests if the APIs function as expected on the docker container
-#  dependsOn: Dockerize
-#  
-#  steps:
-#  - checkout: none
-#
-#  # initializes the directory for testresults and runs the JMeter test script.
-#  - script: |
-#      mkdir $(Build.SourcesDirectory)\JMeterTestReport\api\apiTestReport
-#      jmeter -n -t $(Build.SourcesDirectory)/spring-boot-application-api-test.jmx -l $(Build.SourcesDirectory)/JMeterTestReport/api/ApiTest.xml -e -o $(Build.SourcesDirectory)/JMeterTestReport/api/apiTestReport/
-#    displayName: Run TestApi JMeter script
-#
-#  # Python script which converts JMeter .xml format to JUnit .xml format, downloaded from git repository:
-#  # https://github.com/Azure-Samples/jmeter-aci-terraform/blob/main/scripts/jtl_junit_converter.py
-#  # IT IS A TOOL I DID NOT CREATE, author of this tool is git user: @davidmiguelalves
-#  - script: |
-#      curl https://raw.githubusercontent.com/Azure-Samples/jmeter-aci-terraform/main/scripts/jtl_junit_converter.py -o $(Build.SourcesDirectory)\jtl_junit_converter.py
-#    displayName: Download xml formater, JMeter.xml to JUnit.xml format
-#  
-#  # converts the JMeter .jtl output from the test to a .xml file in JUnit standard via
-#  # the python script downloaded earlier for displaying it in the azure tests tab.
-#  - script: |
-#      py jtl_junit_converter.py $(Build.SourcesDirectory)/JMeterTestReport/api/ApiTest.xml ApiTest.xml
-#    displayName: Convert ApiTest.xml format
-#  
-#  # Publishes the results from the api, in the tests tab.
-#  - task: PublishTestResults@2
-#    inputs:
-#      testResultsFormat: JUnit
-#      testResultsFiles: $(Build.SourcesDirectory)/ApiTest.xml
-#      testRunTitle: Api Test Results
-#    displayName: Publishes API test results
-#  
-#  # Publishes the JMeter test report as an artifact so it can be downloaded and viewed.
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      PathtoPublish: $(Build.SourcesDirectory)/JMeterTestReport/api/apiTestReport/
-#      ArtifactName: JMeter Api test results
-#      publishLocation: Container
-#    displayName: 'Upload JMeter Api test report'
-#
-####### TestingPerformance #############################################################################################################################
-#
-#- job: TestingPerformance
-#  displayName: Tests the performance of the server apis
-#  dependsOn: TestingAPI
-#  
-#  steps:
-#  - checkout: none
-#  
-#  # initializes the directory for testresults and runs the JMeter test script.
-#  - script: |
-#      mkdir $(Build.SourcesDirectory)\JMeterTestReport\performance\performanceTestReport
-#      jmeter -n -t $(Build.SourcesDirectory)/spring-boot-application-performance-test.jmx -l $(Build.SourcesDirectory)/JMeterTestReport/performance/PerformanceTest.xml -e -o $(Build.SourcesDirectory)/JMeterTestReport/performance/performanceTestReport/
-#    displayName: Run TestApi JMeter script
-#
-#  # converts the JMeter .jtl output from the test to a .xml file in JUnit standard via
-#  # the python script downloaded earlier for displaying it in the azure tests tab.
-#  - script: |
-#      py jtl_junit_converter.py $(Build.SourcesDirectory)/JMeterTestReport/performance/PerformanceTest.xml PerformanceTest.xml
-#    displayName: Convert PerformanceTest.xml format
-#  
-#  # Publishes the results from the performance tests, in the tests tab.
-#  - task: PublishTestResults@2
-#    inputs:
-#      testResultsFormat: JUnit
-#      testResultsFiles: $(Build.SourcesDirectory)/PerformanceTest.xml
-#      testRunTitle: Performance Test Results
-#    displayName: Publishes performance test results
-#  
-#  # Publishes the JMeter test report as an artifact so it can be downloaded and viewed.
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      PathtoPublish: $(Build.SourcesDirectory)/JMeterTestReport/performance/performanceTestReport/
-#      ArtifactName: JMeter performance test results
-#      publishLocation: Container
-#    displayName: 'Upload JMeter performance test report'
-#
+
+- job: BuildAndTest
+  displayName: Build and Test Spring Boot App
+  
+  steps:
+
+  # Tests and then builds the maven project.
+  - task: Maven@3
+    inputs:
+      mavenPomFile: backend/pom.xml
+      goals: clean package
+      javaHomeOption: JDKVersion
+      mavenVersionOption: Default
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+    env:
+      DATABASE_URL: "localhost"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
+
+###### Dockerize ######################################################################################################################################
+
+- job: Dockerize
+  displayName: Dockerize the spring boot application jar file
+  dependsOn: BuildAndTest
+  
+  steps:
+  - checkout: none
+
+  # Creates a docker image and then runs a container.
+  - task: Docker@2
+    inputs:
+      repository: ams-backend
+      command: build
+      Dockerfile: backend/Dockerfile
+      tags: latest
+
+  # Runs a docker container with the image created above.
+  - script: |
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
+    displayName: Run Docker container
+
+###### BuildReactApp #####################################################################################################################################
+
+- job: BuildReactApp
+  displayName: builds and creates a docker image of the react application
+  dependsOn: Dockerize
+
+  steps:
+  - checkout: none
+
+  - script: |
+      cd frontend
+      npm install
+    displayName: Install node.js dependencies
+
+  - script: |
+      cd frontend
+      npm run build
+    displayName: Builds the react application
+
+  - script: |
+      cd frontend
+      docker build -t ams-nginx .
+    displayName: Dockerize react/nginx
+
+###### PushDockerImages #############################################################################################################################
+
+- job: PushDockerImages
+  displayName: Pushes images to private container registry
+  dependsOn: BuildReactApp
+  
+  steps:
+  - checkout: none
+
+  # Logs into the private container registry via a source connection
+  - task: Docker@2
+    displayName: Login to Azure Container Registry
+    inputs:
+      command: login
+      containerRegistry: ams-acr
+
+  # Tags the images for pushing them to the private repository in the cloud.
+  # Latest tag overwrites the last latest image, so that the staging server can pull this.
+  - script: |
+      docker tag ams-backend amsprojectacr.azurecr.io/ams-backend:latest
+      docker tag ams-nginx amsprojectacr.azurecr.io/ams-nginx:latest
+    displayName: Tag Docker Image
+
+  # Pushes the images to the registry.
+  - script: |
+        docker push amsprojectacr.azurecr.io/ams-backend:latest
+        docker push amsprojectacr.azurecr.io/ams-nginx:latest
+    displayName: Push Docker Image
+
 ####### Deploy ##########################################################################################################################################
 
 - job: Deploy
   displayName: Deploys the docker to a cloud hosted staging server
-  #dependsOn: BuildAndTest
+  dependsOn: PushDockerImages
 
   steps:
   #- checkout: none
