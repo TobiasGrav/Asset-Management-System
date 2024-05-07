@@ -116,12 +116,14 @@ jobs:
     inputs:
       command: login
       containerRegistry: ams-acr
-  
+
   - script: |
       cd frontend
       npm install
+    displayName: build and dockerize react/nginx
+
+  - script: |
       npm run build
-      set -x
       docker build -t ams-nginx .
     displayName: build and dockerize react/nginx
 
