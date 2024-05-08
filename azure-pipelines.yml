@@ -20,6 +20,10 @@ jobs:
   
   steps:
 
+  - script: |
+      docker run --name ams-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --network ams-network mysql:latest
+    displayName: create database
+
   # Tests and then builds the maven project.
   - task: Maven@3
     inputs:
@@ -54,7 +58,6 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --network ams-network mysql:latest
       docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
     displayName: Run Docker container
 
