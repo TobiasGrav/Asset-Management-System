@@ -112,7 +112,7 @@ jobs:
 
   - script: |
       cd frontend
-      npm install
+      npm install --yes
     displayName: Install node.js dependencies
 
   - script: |
