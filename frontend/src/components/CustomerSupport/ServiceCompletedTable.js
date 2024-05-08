@@ -45,6 +45,9 @@ function ServiceCompletedTable({ displayAllServices }) {
         }).catch(error => {setLoading(false)});
     };
 
+    const formatLocalDateTime = (localDateTime) => {
+        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
+    };
 
     const columns = [
         {
@@ -74,7 +77,7 @@ function ServiceCompletedTable({ displayAllServices }) {
         },
         {
             name: 'Service Completion Time',
-            selector: row => row.timeCompleted !== null ? row.timeCompleted : 'Service Not Completed',
+            selector: row => row.timeCompleted !== null ? formatLocalDateTime(row.timeCompleted) : 'Service Not Completed',
             sortable: true,
         },
     ];

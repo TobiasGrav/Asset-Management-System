@@ -73,19 +73,13 @@ function Table() {
     };
 
     const formatLocalDateTime = (localDateTime) => {
-        let formattedTime;
-        if(localDateTime == null) {
-            formattedTime = "Not in use";
-        } else {
-            formattedTime = format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
-        }
-        return formattedTime;
+        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
     };
 
     const columns = [
         {
             name: 'Asset On Site Tag',
-            selector: row => row.assetOnSiteTag,
+            selector: row => row.assetOnSiteTag !== null ? row.assetOnSiteTag : 'Tag not assigned',
             sortable: true,
         },
         {
@@ -95,7 +89,7 @@ function Table() {
         },
         {
             name: 'Commision date',
-            selector: row => formatLocalDateTime(row.commissionDate),
+            selector: row => row.commissionDate !== null ? formatLocalDateTime(row.commissionDate) : 'Not in use',
             sortable: true,
         },
     ];
