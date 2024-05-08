@@ -77,7 +77,7 @@ jobs:
     displayName: 'Create Results Directory'
 
   - script: |
-      newman run collection.json --reporters cli,junit,htmlextra ^
+      newman run collection.json --environment environment.json --reporters cli,junit,htmlextra ^
       --reporter-junit-export "$(Build.SourcesDirectory)\TestResults\testResults.xml" ^
       --reporter-htmlextra-export "$(Build.SourcesDirectory)\TestResults\testResults.html"
     displayName: 'Run Newman with Postman Collection for Reports'
