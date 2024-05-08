@@ -54,6 +54,7 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
+      docker run --name ams-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root --network ams-network mysql:latest
       docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
     displayName: Run Docker container
 
@@ -198,6 +199,7 @@ jobs:
   steps:
   # Deletes the docker image.
   - script: |
+        docker rm --force ams-db
         docker rm --force ams-backend
     displayName: Deletes the running container
 
