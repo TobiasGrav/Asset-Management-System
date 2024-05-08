@@ -3,7 +3,11 @@ package ntnu.group03.idata2900.ams.controllers;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.CommentDto;
 import ntnu.group03.idata2900.ams.model.Comment;
+import ntnu.group03.idata2900.ams.model.ServiceComment;
+import ntnu.group03.idata2900.ams.model.ServiceCompleted;
+import ntnu.group03.idata2900.ams.repositories.ServiceCommentRepository;
 import ntnu.group03.idata2900.ams.services.CommentService;
+import ntnu.group03.idata2900.ams.services.ServiceCompletedService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +23,23 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    private final ServiceCompletedService serviceCompletedService;
+
+    private final ServiceCommentRepository serviceCommentRepository;
+
     private static final String COMMENT_NOT_FOUND = "Comment not found with id: {}";
 
     /**
      * Creates a new instance of CommentController.
      *
      * @param commentService commentService
+     * @param serviceCompletedService serviceCompletedService
+     * @param serviceCommentRepository serviceCommentRepository
      */
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, ServiceCompletedService serviceCompletedService, ServiceCommentRepository serviceCommentRepository) {
         this.commentService = commentService;
+        this.serviceCompletedService = serviceCompletedService;
+        this.serviceCommentRepository = serviceCommentRepository;
     }
 
     /**
@@ -58,6 +70,29 @@ public class CommentController {
         }
     }
 
+    /**
+     * Get a comment from database matching given id if it exists.
+     *
+     * @param id potential id of a service completed
+     * @return a ModelAndView containing comments in JSON format
+     */
+    @GetMapping("/serviceCompleted/{id}/comments")
+    public ResponseEntity<List<Comment>> getAllCommentsByServiceCompleted(@PathVariable int id) {
+        Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
+        if (serviceCompleted.isEmpty()) {
+            log.warn("ServiceCompleted not found with ID: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        List<Comment> comments = serviceCompletedService.getAllCommentsByServiceCompleted(serviceCompleted.get());
+        if (comments.isEmpty()){
+            log.warn(COMMENT_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+        log.info("Found {} comments for ServiceCompleted with ID: {}", comments.size(), id);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
 
     /**
      * Creates a new comment.
@@ -71,6 +106,36 @@ public class CommentController {
             Comment createdComment = commentService.createComment(comment);
             log.info("Comment created with ID: {}", createdComment.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+        } catch (Exception e) {
+            log.error("Error creating comment", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * Creates a new comment and attach it to a ServiceComment.
+     *
+     * @param comment The comment object to be created.
+     * @param id The id of the service completed
+     * @return ResponseEntity containing the created comment and HTTP status code 201 (CREATED).
+     */
+    @PostMapping("/serviceCompleted/{id}")
+    public ResponseEntity<Comment> createServiceComment(@RequestBody CommentDto comment, @PathVariable int id) {
+        try {
+            Comment createdComment = commentService.createComment(comment);
+            log.info("Comment created with ID: {}", createdComment.getId());
+            Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
+            if (serviceCompleted.isEmpty()){
+                log.warn("Service completed not found with ID: {}", id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            } else {
+                ServiceComment serviceComment = new ServiceComment();
+                serviceComment.setComment(createdComment);
+                serviceComment.setServiceCompleted(serviceCompleted.get());
+                serviceCommentRepository.save(serviceComment);
+                log.info("Service Completed found with ID: {}, and comment was created successfully", id);
+                return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+            }
         } catch (Exception e) {
             log.error("Error creating comment", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
