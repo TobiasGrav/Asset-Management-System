@@ -1,21 +1,27 @@
 package ntnu.group03.idata2900.ams.services;
 
 import ntnu.group03.idata2900.ams.dto.ServiceCompletedDto;
+import ntnu.group03.idata2900.ams.model.Comment;
+import ntnu.group03.idata2900.ams.model.ServiceComment;
 import ntnu.group03.idata2900.ams.model.ServiceCompleted;
+import ntnu.group03.idata2900.ams.repositories.ServiceCommentRepository;
 import ntnu.group03.idata2900.ams.repositories.ServiceCompletedRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceCompletedService {
 
     private final ServiceCompletedRepository serviceCompletedRepository;
+    private final ServiceCommentRepository serviceCommentRepository;
 
-    public ServiceCompletedService(ServiceCompletedRepository serviceCompletedRepository) {
+    public ServiceCompletedService(ServiceCompletedRepository serviceCompletedRepository, ServiceCommentRepository serviceCommentRepository) {
         this.serviceCompletedRepository = serviceCompletedRepository;
+        this.serviceCommentRepository = serviceCommentRepository;
     }
 
     public List<ServiceCompleted> getAll() {
@@ -39,5 +45,12 @@ public class ServiceCompletedService {
 
     public void deleteServiceCompleted(int id){
         this.serviceCompletedRepository.deleteById(id);
+    }
+
+    public List<Comment> getAllCommentsByServiceCompleted(ServiceCompleted serviceCompleted) {
+        return serviceCommentRepository.findAllByServiceCompleted(serviceCompleted)
+                .stream()
+                .map(ServiceComment::getComment)
+                .collect(Collectors.toList());
     }
 }

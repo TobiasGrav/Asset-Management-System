@@ -1,18 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import { Helmet } from 'react-helmet';
-
-import Table from '../Asset/AssetTable';
-
 import './ServuceCompleted.css';
 import { useParams } from 'react-router';
-import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import URL from '../../tools/URL';
 import {format} from "date-fns";
+import ServiceCompletedComment from "./ServiceCompletedComment";
 
 const ServiceCompleted = (props) => {
 
@@ -26,7 +22,12 @@ const ServiceCompleted = (props) => {
 
     const [serviceUrl, setServiceUrl] = useState();
     const [timeCompleted, setTimeCompleted] = useState();
-    const [comment, setComment] = useState();
+
+    const [assetOnSiteId, setAssetOnSiteId] = useState();
+    const [serviceId, setServiceId] = useState();
+    const [assetId, setAssetId] = useState();
+    const [siteId, setSiteId] = useState();
+    const [companyId, setCompanyId] = useState();
 
     // information variables
     const { serviceCompletedID } = useParams();
@@ -48,17 +49,11 @@ const ServiceCompleted = (props) => {
     const back = () => {
         navigate(-1);
     }
-    const edit = () => {
-        setIsEditing(true);
-    }
-    const cancel = () => {
-        setIsEditing(false);
-    }
     const showAsset = () => {
-        navigate(`/support/${serviceCompletedID}`);
+        navigate(`/company/${companyId}/site/${siteId}/assets/${assetOnSiteId}`)
     }
     const showService = () => {
-        navigate(`/support/${serviceCompletedID}`);
+        navigate(`/asset/${assetId}/service/${serviceId}`);
     }
 
     const formatLocalDateTime = (localDateTime) => {
@@ -72,6 +67,11 @@ const ServiceCompleted = (props) => {
                     console.log(response);
                     setAssetName(response.data.assetOnSite.asset.name);
                     setAssetOnSiteTag(response.data.assetOnSite.assetOnSiteTag);
+                    setAssetOnSiteId(response.data.assetOnSite.id)
+                    setAssetId(response.data.assetOnSite.asset.id)
+                    setServiceId(response.data.service.id)
+                    setSiteId(response.data.assetOnSite.site.id)
+                    setCompanyId(response.data.assetOnSite.site.company.id)
                     setServiceUrl(response.data.service.serviceUrl);
                     setTimeCompleted(response.data.timeCompleted !== null ? formatLocalDateTime(response.data.timeCompleted) : "Not Completed Yet");
                 });
@@ -92,32 +92,18 @@ const ServiceCompleted = (props) => {
                     <h3>Options</h3>
                     <button onClick={showAsset}>Show Asset On Site</button>
                     <button onClick={showService}>Show Service</button>
-
-                    <h3>Comments</h3>
-                    <textarea value={comment}></textarea>
-                    <button onClick={showService}>Add Comment</button>
                 </div>
                 <div className='imageContainer'>
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
                 </div>
             </div>
+            <ServiceCompletedComment />
             <div className="buttonContainer">
                 <div className="leftButtonContainer">
                     {isEditing && <button type="button" className="button">Delete</button>}
                 </div>
                 <div className="rightButtonContainer">
-
-                    {!isEditing &&
-                        <button type="button" className="button" onClick={back} >Back</button>}
-
-                    {isEditing &&
-                        <button type="button" className="button" onClick={cancel} >Cancel</button>}
-
-                    {!isEditing && isAdmin &&
-                        <button type="button" className="button" onClick={edit} >Edit</button>}
-
-                    {isEditing &&
-                        <button type="button" className="button" onClick={handleSubmit} >Confirm</button>}
+                    <button type="button" className="button" onClick={back} >Back</button>
                 </div>
             </div>
         </div>
