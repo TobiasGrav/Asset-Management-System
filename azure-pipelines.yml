@@ -54,14 +54,54 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL=ams-db -e DATABASE_USERMAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
     displayName: Run Docker container
+
+###### InstallNewmanAndRunPostmanTests #################################################################################################################
+
+- job: InstallNewmanAndRunPostmanTests
+  dependsOn: Dockerize
+  displayName: 'Execute Postman Tests'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '21.7.1'
+    displayName: 'Install Node.js'
+  
+  - powershell: npm install -g newman newman-reporter-htmlextra
+    displayName: 'Install Newman and HTML Extra Reporter'
+
+  - powershell: |
+      New-Item -ItemType Directory -Force -Path "$(Build.SourcesDirectory)\TestResults"
+    displayName: 'Create Results Directory'
+
+  - script: |
+      newman run collection.json --reporters cli,junit,htmlextra ^
+      --reporter-junit-export "$(Build.SourcesDirectory)\TestResults\testResults.xml" ^
+      --reporter-htmlextra-export "$(Build.SourcesDirectory)\TestResults\testResults.html"
+    displayName: 'Run Newman with Postman Collection for Reports'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '$(Build.SourcesDirectory)/TestResults/testResults.xml'
+      searchFolder: '$(Build.SourcesDirectory)\TestResults'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Postman Test Results'
+    displayName: 'Publish Postman Test Results'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)\TestResults'
+      ArtifactName: 'Postman Test Results'
+      publishLocation: 'Container'
+    displayName: 'Publish Newman Test Results as Artifact'
 
 ###### BuildReactApp #####################################################################################################################################
 
 - job: BuildReactApp
   displayName: builds and creates a docker image of the react application
-  dependsOn: Dockerize
+  dependsOn: InstallNewmanAndRunPostmanTests
 
   steps:
   - checkout: none
