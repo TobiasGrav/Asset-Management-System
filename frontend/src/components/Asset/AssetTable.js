@@ -52,26 +52,31 @@ function Table() {
             name: 'Part Number',
             selector: row => row.partNumber,
             sortable: true,
+            width: '150px',
         },
         {
             name: 'Name',
             selector: row => row.name,
             sortable: true,
+            width: '250px',
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
+            width: '500px',
         },
         {
             name: 'Creation Date',
             selector: row => formatLocalDateTime(row.creationDate),
             sortable: true,
+            width: 'auto',
         },
         {
             name: 'Active',
             selector: row => row.active ? 'Yes' : 'No',
             sortable: true,
+            width: 'auto',
         },
     ];
 

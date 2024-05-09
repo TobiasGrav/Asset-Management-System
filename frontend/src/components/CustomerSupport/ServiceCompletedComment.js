@@ -37,11 +37,13 @@ function CommentTable() {
             selector: row => row.comment,
             sortable: true,
             wrap: true,
+            width: 'auto',
         },
         {
             name: 'Timestamp',
             selector: row =>  formatLocalDateTime(row.creationDate),
             sortable: true,
+            width: '150px',
         },
     ];
 

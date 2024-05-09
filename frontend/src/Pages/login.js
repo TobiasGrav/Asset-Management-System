@@ -11,7 +11,7 @@ const Login = (props) => {
 
   const [cookies, setCookie, removeCookie] = useCookies();
 
-  const [email, setEmail] = useState("Jons@ntnu.no")
+  const [email, setEmail] = useState("Jons@cflow.no")
   const [password, setPassword] = useState("IDATA2024isbased")
   
   const login = () => {

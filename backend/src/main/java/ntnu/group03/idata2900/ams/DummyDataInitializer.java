@@ -104,7 +104,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             User jon = new User(
                     "Jon",
                     "Smith",
-                    "Jons@ntnu.no",
+                    "Jons@cflow.no",
                     BCrypt.hashpw("IDATA2024isbased", BCrypt.gensalt()),
                     "24865413",
                     LocalDateTime.now());
@@ -151,6 +151,113 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
             bob.setRoles(setUserOnly);
 
+            User alice = new User(
+                    "Alice",
+                    "Waters",
+                    "alice@ntnu.no",
+                    BCrypt.hashpw("SecurePass123!", BCrypt.gensalt()),
+                    "34865987",
+                    LocalDateTime.now());
+            alice.setRoles(setUserAdmin);
+
+            User tom = new User(
+                    "Tom",
+                    "Hardy",
+                    "tom@meta.com",
+                    BCrypt.hashpw("BetterPassword456?", BCrypt.gensalt()),
+                    "15648975",
+                    LocalDateTime.now());
+            tom.setRoles(setUserOnly);
+
+            User maria = new User(
+                    "Maria",
+                    "Velasquez",
+                    "maria@meta.com",
+                    BCrypt.hashpw("Password789$", BCrypt.gensalt()),
+                    "45612378",
+                    LocalDateTime.now());
+            maria.setRoles(setUserOnly);
+
+            User nick = new User(
+                    "Nick",
+                    "Johnson",
+                    "nick@cflow.no",
+                    BCrypt.hashpw("UltraSecure0!", BCrypt.gensalt()),
+                    "98234567",
+                    LocalDateTime.now());
+            nick.setRoles(setUserAdmin);
+
+            User lily = new User(
+                    "Lily",
+                    "Evans",
+                    "lily@ntnu.no",
+                    BCrypt.hashpw("Lifeisgood123", BCrypt.gensalt()),
+                    "12345678",
+                    LocalDateTime.now());
+            lily.setRoles(setUserOnly);
+
+            User carl = new User(
+                    "Carl",
+                    "Mason",
+                    "carl@cflow.no",
+                    BCrypt.hashpw("RememberMe1234", BCrypt.gensalt()),
+                    "87654321",
+                    LocalDateTime.now());
+            carl.setRoles(setUserAdmin);
+
+            User ivy = new User(
+                    "Ivy",
+                    "Black",
+                    "ivy@ntnu.no",
+                    BCrypt.hashpw("IvyLeague#1", BCrypt.gensalt()),
+                    "23456789",
+                    LocalDateTime.now());
+            ivy.setRoles(setUserOnly);
+
+            User gary = new User(
+                    "Gary",
+                    "White",
+                    "gary@meta.com",
+                    BCrypt.hashpw("Secure!2024", BCrypt.gensalt()),
+                    "98765432",
+                    LocalDateTime.now());
+            gary.setRoles(setUserOnly);
+
+            User elsa = new User(
+                    "Elsa",
+                    "Morales",
+                    "elsa@cflow.no",
+                    BCrypt.hashpw("SnowQueen123", BCrypt.gensalt()),
+                    "65432198",
+                    LocalDateTime.now());
+            elsa.setRoles(setUserAdmin);
+
+            User danny = new User(
+                    "Danny",
+                    "Roberts",
+                    "danny@meta.com",
+                    BCrypt.hashpw("Doomsday2024", BCrypt.gensalt()),
+                    "34567890",
+                    LocalDateTime.now());
+            danny.setRoles(setUserOnly);
+
+            User zara = new User(
+                    "Zara",
+                    "Pitt",
+                    "zara@ntnu.no",
+                    BCrypt.hashpw("ZebraCrossing456", BCrypt.gensalt()),
+                    "76543210",
+                    LocalDateTime.now());
+            zara.setRoles(setUserOnly);
+
+            User hector = new User(
+                    "Hector",
+                    "Finn",
+                    "hector@cflow.no",
+                    BCrypt.hashpw("H3inz57Varieties!", BCrypt.gensalt()),
+                    "43218765",
+                    LocalDateTime.now());
+            hector.setRoles(setUserAdmin);
 
             // Setting up sites
             Site site1 = new Site("Nordlandsbåten");
@@ -158,13 +265,17 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             Site site3 = new Site("Ålesundbåten");
 
             Set<Site> setAllSites = new HashSet<>();
-            Set<Site> setSiteUsers1 = new HashSet<>();
+            Set<Site> setSite1 = new HashSet<>();
+            Set<Site> setSite2 = new HashSet<>();
+            Set<Site> setSite3 = new HashSet<>();
 
             setAllSites.add(site1);
             setAllSites.add(site2);
             setAllSites.add(site3);
 
-            setSiteUsers1.add(site1);
+            setSite1.add(site1);
+            setSite2.add(site2);
+            setSite3.add(site3);
 
             // Setting up Companies
 
@@ -180,21 +291,59 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             siteRepository.save(site2);
             siteRepository.save(site3);
 
-            jon.setSites(setAllSites);
             jon.setCompany(company1);
-
-            jenny.setSites(setSiteUsers1);
-            jenny.setCompany(company3);
+            nick.setCompany(company1);
+            carl.setCompany(company1);
+            elsa.setCompany(company1);
+            hector.setCompany(company1);
 
             mark.setCompany(company2);
             gunnar.setCompany(company2);
             bob.setCompany(company2);
+            tom.setCompany(company2);
+            maria.setCompany(company2);
+            gary.setCompany(company2);
+            danny.setCompany(company2);
+
+            alice.setCompany(company3);
+            lily.setCompany(company3);
+            jenny.setCompany(company3);
+            ivy.setCompany(company3);
+            zara.setCompany(company3);
+
+            nick.setSites(setSite1);
+            carl.setSites(setSite1);
+            elsa.setSites(setSite1);
+            hector.setSites(setSite1);
+
+            mark.setSites(setSite2);
+            bob.setSites(setSite2);
+            tom.setSites(setSite2);
+            maria.setSites(setSite2);
+
+            alice.setSites(setSite3);
+            ivy.setSites(setSite3);
+            jenny.setSites(setSite3);
 
             userRepository.save(jon);
-            userRepository.save(jenny);
+            userRepository.save(nick);
+            userRepository.save(carl);
+            userRepository.save(elsa);
+            userRepository.save(hector);
             userRepository.save(mark);
             userRepository.save(gunnar);
             userRepository.save(bob);
+            userRepository.save(tom);
+            userRepository.save(maria);
+            userRepository.save(gary);
+            userRepository.save(danny);
+            userRepository.save(alice);
+            userRepository.save(lily);
+            userRepository.save(jenny);
+            userRepository.save(ivy);
+            userRepository.save(zara);
+
+
 
             // Setting up categories
             Category category1 = new Category("Pump");
@@ -224,77 +373,151 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             datasheetRepository.save(datasheet3);
 
             // Setting up assets
+            //Asset asset1 = new Asset(
+            //        "Pump",
+            //        "A random pump",
+            //        LocalDateTime.now(),
+            //        "12354.3245.2342");
+//
+            //Asset asset2 = new Asset(
+            //        "Vent",
+            //        "A random vent",
+            //        LocalDateTime.now(),
+            //        "1234.567.8.87..54.43");
+//
+            //Asset asset3 = new Asset(
+            //        "Filter",
+            //        "A random filter",
+            //        LocalDateTime.now(),
+            //        "1234.324.23.423.4.234.23");
+//
+            //Asset asset4 = new Asset(
+            //        "Pump123",
+            //        "A random pump321",
+            //        LocalDateTime.now(),
+            //        "1234.423.4.234.32.4.234.23");
+//
+            //Asset asset5 = new Asset(
+            //        "Vent3333",
+            //        "A random vent2222",
+            //        LocalDateTime.now(),
+            //        "1234.765..765.7.567.65.7.65");
+//
+            //Asset asset6 = new Asset(
+            //        "Filter6565",
+            //        "A random filter5455",
+            //        LocalDateTime.now(),
+            //        "1234..765.756.7.65.765.7.65");
+//
+            //Asset asset7 = new Asset(
+            //        "Pump656565",
+            //        "A random pump656565",
+            //        LocalDateTime.now(),
+            //        "12341.7.17.17.17.1.71.71");
+//
+            //Asset asset8 = new Asset(
+            //        "Vent321321321",
+            //        "A random vent12312321",
+            //        LocalDateTime.now(),
+            //        "12344.61.4.3.63.6.34.63.6.43");
+//
+            //Asset asset9 = new Asset(
+            //        "Filter321321321",
+            //        "A random filter321321321",
+            //        LocalDateTime.now(),
+            //        "1234..72.8..87.7.43.534");
+//
+            //Asset asset10 = new Asset(
+            //        "Pump454545",
+            //        "A random pump321321321",
+            //        LocalDateTime.now(),
+            //        "1234..1435.43.5.235.234.52345423");
+//
+            //Asset asset11 = new Asset(
+            //        "Vent54654654",
+            //        "A random vent654654654",
+            //        LocalDateTime.now(),
+            //        "1234..34.5.345.34534.5345.34.534.534");
+//
+            //Asset asset12 = new Asset(
+            //        "Filter654654",
+            //        "A random filter5454665",
+            //        LocalDateTime.now(),
+            //        "12341145.34.5.1345.135435.315.314534");
+
+            // Setting up assets
             Asset asset1 = new Asset(
-                    "Pump",
-                    "A random pump",
+                    "HydroTech Bilge Pump 3.2L",
+                    "Designed for rapid water evacuation from deep compartments, this high-capacity 3.2-liter pump is essential for maintaining the integrity of boat hulls under adverse conditions.",
                     LocalDateTime.now(),
-                    "12354.3245.2342");
+                    "314159");
 
             Asset asset2 = new Asset(
-                    "Vent",
-                    "A random vent",
+                    "AeroFlow Ventilation Fan 200W",
+                    "This 200-watt heavy-duty fan ensures efficient air circulation throughout enclosed spaces, preventing humidity and gas buildup critical in maintaining a safe maritime environment.",
                     LocalDateTime.now(),
-                    "1234.567.8.87..54.43");
+                    "265358");
 
             Asset asset3 = new Asset(
-                    "Filter",
-                    "A random filter",
+                    "LubeMaster Oil Filter 15cm",
+                    "High-efficiency 15 cm engine oil filter designed to remove contaminants and ensure engine longevity. Essential for high-performance engines.",
                     LocalDateTime.now(),
-                    "1234.324.23.423.4.234.23");
+                    "979323");
 
             Asset asset4 = new Asset(
-                    "Pump123",
-                    "A random pump321",
+                    "AquaPump Water Pump 2.8L",
+                    "An industrial-grade 2.8-liter water circulation pump, reliable for managing onboard water systems, supporting everything from cooling systems to hygiene facilities.",
                     LocalDateTime.now(),
-                    "1234.423.4.234.32.4.234.23");
+                    "597565");
 
             Asset asset5 = new Asset(
-                    "Vent3333",
-                    "A random vent2222",
+                    "VentTech Air Vent 12cm",
+                    "Adjustable 12 cm air vent capable of managing airflow in both intake and exhaust modes, optimized for both efficiency and noise reduction.",
                     LocalDateTime.now(),
-                    "1234.765..765.7.567.65.7.65");
+                    "846264");
 
             Asset asset6 = new Asset(
-                    "Filter6565",
-                    "A random filter5455",
+                    "FuelSafe Fuel Filter 10cm",
+                    "A 10 cm diesel engine fuel filter, crucial for preventing impurities from damaging engine components, thereby ensuring smooth and efficient fuel flow.",
                     LocalDateTime.now(),
-                    "1234..765.756.7.65.765.7.65");
+                    "338327");
 
             Asset asset7 = new Asset(
-                    "Pump656565",
-                    "A random pump656565",
+                    "HydroTech Water Pump 1.5L",
+                    "A compact 1.5-liter manual water pump, ideal for emergency situations where power is unavailable, ensuring water access is maintained.",
                     LocalDateTime.now(),
-                    "12341.7.17.17.17.1.71.71");
+                    "950288");
 
             Asset asset8 = new Asset(
-                    "Vent321321321",
-                    "A random vent12312321",
+                    "AeroFlow Ventilation Fan 150W",
+                    "A compact 150-watt fan designed for small, enclosed spaces, providing essential ventilation to prevent condensation and maintain air quality.",
                     LocalDateTime.now(),
-                    "12344.61.4.3.63.6.34.63.6.43");
+                    "419716");
 
             Asset asset9 = new Asset(
-                    "Filter321321321",
-                    "A random filter321321321",
+                    "ClearWater Water Filter 8cm",
+                    "Portable 8 cm water purification unit designed for on-the-go usage, ensuring safe and clean drinking water is available onboard at all times.",
                     LocalDateTime.now(),
-                    "1234..72.8..87.7.43.534");
+                    "939937");
 
             Asset asset10 = new Asset(
-                    "Pump454545",
-                    "A random pump321321321",
+                    "FireGuard Fire Pump 4.0L",
+                    "A robust 4.0-liter fire suppression water pump designed for quick response in emergency fire situations, ensuring safety and minimizing damage risk.",
                     LocalDateTime.now(),
-                    "1234..1435.43.5.235.234.52345423");
+                    "510582");
 
             Asset asset11 = new Asset(
-                    "Vent54654654",
-                    "A random vent654654654",
+                    "AeroFlow Ventilation Fan 120W",
+                    "Designed specifically for kitchen exhaust, this 120-watt fan promotes air circulation and heat removal, critical for maintaining a comfortable and safe cooking environment.",
                     LocalDateTime.now(),
-                    "1234..34.5.345.34534.5345.34.534.534");
+                    "797496");
 
             Asset asset12 = new Asset(
-                    "Filter654654",
-                    "A random filter5454665",
+                    "FuelSafe Fuel Filter 7cm",
+                    "A smaller 7 cm auxiliary fuel system filter, designed to provide additional protection for secondary engines or backup systems, ensuring operational readiness.",
                     LocalDateTime.now(),
-                    "12341145.34.5.1345.135435.315.314534");
+                    "442881");
+
 
             asset1.setCategory(category1);
             asset2.setCategory(category2);

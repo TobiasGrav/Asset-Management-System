@@ -103,6 +103,7 @@ const Company = (props) => {
         <div style={{textAlign:'center'}}><input className='inputSiteName' value={siteName} disabled={!isEditing} /></div>
         <div className='companyContainer'>
             <div className='valueContainer'>
+              <div style={{display:'flex', flexDirection:'column'}}>
                 <p>Site ID</p>
                 <input className='inputField' value={siteID} disabled={!isEditing}></input>
                 <p>This site belongs to:</p>
@@ -110,8 +111,9 @@ const Company = (props) => {
                 <input className='inputField' value={compName} disabled={!isEditing}></input>
                 <p>Company ID</p>
                 <input className='inputField' value={compID} disabled={!isEditing}></input>
-                <button onClick={showAssets}>Show Assets</button>
-                <button onClick={showUsers}>Show Users</button>
+                <button className='optionButton' onClick={showAssets}>Show Assets</button>
+                <button className='optionButton' onClick={showUsers}>Show Users</button>
+              </div>
             </div>
             <div className='imageContainer'>
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>

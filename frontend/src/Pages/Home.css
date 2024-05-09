@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 0px;
-    justify-content: flex-start;
+    justify-content: space-between;
     background-color: transparent;
   }
   .logoContainer {
@@ -41,16 +41,7 @@
     height: auto;
     text-align: left;
   }
-  .bookmarkContainer {
-    gap: 16px;
-    flex: 0 0 auto;
-    width: 70%;
-    height: 75px;
-    display: flex;
-    align-items: flex-end;
-    padding-right: 25px;
-    justify-content: flex-start;
-  }
+
   .utilityIcon {
     width: auto;
     margin-top: 0px;
@@ -73,7 +64,7 @@
     cursor: pointer;
   }
   .utilityContainer {
-    margin-right: 32px;
+    margin-right: 64px;
     flex: 0 0 auto;
     gap:32px;
     width: auto;
@@ -136,6 +127,7 @@
 
   .profileDropdown {
     display: none;
+    border-radius: 0px 5px 5px 5px;
   }
 
   .dropdown:hover .profileDropdown {

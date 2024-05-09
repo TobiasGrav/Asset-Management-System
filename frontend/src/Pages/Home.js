@@ -75,8 +75,6 @@ const Main = ({children}) => {
           <img alt="image" src={require('./resources/assetmanagementsystem.png')} className="logoImage"/>
           <span className="logoText">Asset Management Database</span>
         </div>
-        <div className="bookmarkContainer">
-        </div>
         <div className="utilityContainer">
           <img alt="image" src={require('./resources/bell.png')} className="utilityIcon"/>
           <div class='dropdown'><img alt="image" src={require('./resources/user.png')} className="utilityIcon" on/>
