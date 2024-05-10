@@ -91,11 +91,13 @@ const Main = ({children}) => {
             <span>Overview</span>
             <br></br>
           </span>
-          <button type="button" className="navButton" onClick={asset}>Asset</button>
-          <button type="button" className="navButton" onClick={company}>Company</button>
-          <button type="button" className="navButton" onClick={site}>Site</button>
-          <button type="button" className="navButton" onClick={customer}>User</button>
-          <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>
+          <div className="navbarButtonContainer">
+            <button type="button" className="navButton" onClick={asset}>Asset</button>
+            <button type="button" className="navButton" onClick={company}>Company</button>
+            <button type="button" className="navButton" onClick={site}>Site</button>
+            <button type="button" className="navButton" onClick={customer}>User</button>
+            <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>
+          </div>
         </div>
         <div className="rightContainer">
           {children}
