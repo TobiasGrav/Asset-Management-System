@@ -54,7 +54,7 @@
   }
   .navButton {
     text-align: left;
-    margin-right: 25px;
+    margin-right: 5px;
     background: none;
     border: none;
     color: #083F4C;
@@ -118,6 +118,9 @@
     display: flex;
     align-items: center;
     min-height: 100px;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .dropdown:hover {
@@ -186,6 +189,7 @@
     }
     .navbarButtonContainer {
       flex-direction: row;
+      gap: 0px;
     }
     .leftContainer {
       max-width: 100%;
