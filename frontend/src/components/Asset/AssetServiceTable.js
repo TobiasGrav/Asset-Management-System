@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
 import {useParams} from "react-router";
+import {getAdminStatus} from "../../tools/globals";
 
 function ServiceTable({ displayAllServices }) {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -38,7 +39,7 @@ function ServiceTable({ displayAllServices }) {
 
     const fetchData = async () => {
         setLoading(true);
-        let endpoint = displayAllServices ? `${URL.BACKEND}/api/services` : `${URL.BACKEND}/api/services/${id}/services`;
+        let endpoint = displayAllServices ? `${URL.BACKEND}/api/user/services` : `${URL.BACKEND}/api/user/services/${id}/services`;
         HTTPRequest.get(endpoint, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
@@ -134,7 +135,7 @@ function ServiceTable({ displayAllServices }) {
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Service Overview</h1></div>
             <input placeholder='Search for service' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Service</button>
+            { getAdminStatus() && <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Service</button>}
             <DataTable
                 columns={columns}
                 data={tableData}

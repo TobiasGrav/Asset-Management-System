@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 import URL from "../../tools/URL";
+import {getAdminStatus} from "../../tools/globals";
 
 const Main = (props) => {
 
@@ -32,7 +33,6 @@ const Main = (props) => {
 
   // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const nameReference = useRef(null);
   const idReference = useRef(null);
@@ -43,14 +43,12 @@ const Main = (props) => {
   const cancelButtonReference = useRef(null);
   const partNumberReference = useRef(null);
 
-  // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
-  useEffect(() => {
-    jwtDecode(cookies.JWT).roles.forEach(role => {
-      if(role.authority === "ADMIN") {
-            setIsAdmin(true);
-      }
-    })
-  })
+// If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
+        }
+    }, []);
 
 
   // Prevents the user from inputing values when not in editing mode.
@@ -175,7 +173,7 @@ const Main = (props) => {
           {isEditing &&
               <button type="button" className="button" onClick={cancel} ref={ cancelButtonReference }>Cancel</button>}
 
-          {!isEditing && isAdmin &&
+          {!isEditing && getAdminStatus() &&
               <button type="button" className="button" onClick={edit} ref={ editButtonReference }>Edit</button>}
 
           {isEditing &&

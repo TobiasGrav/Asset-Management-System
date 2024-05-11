@@ -49,20 +49,30 @@ public class UserController {
     }
 
     /**
+     * Returns list of all users in company
+     *
+     * @return List of all users in company
+     */
+    @GetMapping("/manager/users")
+    public List<SignUpDto> getAllUsersForManager() {
+        return this.userService.convertAll(this.userService.getSessionUser().getCompany().getUsers());
+    }
+
+    /**
      * Get a user from database matching given id if it exists.
      *
      * @param id potential id of a user
      * @return a user object in JSON format
      */
     @GetMapping("/admin/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
-        Optional<User> user = this.userService.getUserById(id);
-        if (user.isEmpty()) {
+    public ResponseEntity<SignUpDto> getUser(@PathVariable int id) {
+        SignUpDto user = this.userService.getUserByIdThenConvertToSignupDto(id);
+        if (user == null) {
             log.warn(USER_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             log.info("User found with ID: {}", id);
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 
@@ -73,14 +83,15 @@ public class UserController {
      * @return returns set of all users connected to given site id
      */
     @GetMapping( "/admin/sites/{id}/users")
-    public ResponseEntity<Set<User>> getAllUsersBySite(@PathVariable int id){
+    public ResponseEntity<List<SignUpDto>> getAllUsersBySite(@PathVariable int id){
         Optional<Site> site = this.siteService.getSite(id);
         if (site.isEmpty()){
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
+            List<SignUpDto> users = this.userService.convertAll(site.get().getUsers());
             log.info("All users found with given site ID: {}", id);
-            return new ResponseEntity<>(site.get().getUsers(), HttpStatus.OK);
+            return new ResponseEntity<>(users, HttpStatus.OK);
         }
     }
 

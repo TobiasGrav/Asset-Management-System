@@ -68,7 +68,7 @@ function App() {
 
           <Route path="/user" element={<Home><CustomerTable /></Home>} />
           <Route path="/user/:userID" element={<Home><Customer /></Home>} />
-          <Route path="/user/create" element={<Home><AssetCreate /></Home>} />
+          <Route path="/user/create" element={<Home><CompanyUserCreate /></Home>} />
           <Route path="/user/:userID/sites" element={<Home><UserSiteTable /></Home>} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home><Welcome /></Home>} />

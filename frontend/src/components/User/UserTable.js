@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
 import URL from '../../tools/URL';
+import {getAdminStatus} from "../../tools/globals";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -37,12 +38,13 @@ function Table() {
     };
 
     const create = () => {
-        navigate('/asset/create');
+        navigate('create');
     };
 
     const fetchData = () => {
         setLoading(true);
-        HTTPRequest.get(`${URL.BACKEND}/api/admin/users`, cookies.JWT)
+        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/users` : `${URL.BACKEND}/api/manager/users`;
+        HTTPRequest.get(endpoint, cookies.JWT)
         .then(response => {
             console.log(response);
             setData(response.data);
@@ -142,7 +144,7 @@ function Table() {
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>User Overview</h1></div>
             <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
+            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new User</button>
             <DataTable
                 columns={columns}
                 data={tableData}

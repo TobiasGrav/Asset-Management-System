@@ -12,13 +12,13 @@ import { useNavigate } from 'react-router-dom'
 import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 import URL from "../../tools/URL";
+import {getAdminStatus} from "../../tools/globals";
 
 const AssetService = (props) => {
 
     // Cookie initializer for react
     const [cookies, setCookie, removeCookie] = useCookies();
     const [isEditing, setIsEditing] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(true);
 
     const [description, setDescription] = useState();
     const [intervalName, setIntervalName] = useState();
@@ -65,7 +65,7 @@ const AssetService = (props) => {
             }};
         console.log(updateService);
         try {
-            HTTPRequest.put(`${URL.BACKEND}/api/services/${serviceID}`, updateService, cookies.JWT);
+            HTTPRequest.put(`${URL.BACKEND}/api/user/services/${serviceID}`, updateService, cookies.JWT);
             alert("Service updated successfully!");
         } catch (error) {
             console.error("Error updating the service:", error);
@@ -75,7 +75,7 @@ const AssetService = (props) => {
     };
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/services/${serviceID}`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/user/services/${serviceID}`, cookies.JWT)
             .then(response => {
                 setDescription(response.data.description);
                 setIntervalName(response.data.intervalName);
@@ -111,7 +111,7 @@ const AssetService = (props) => {
                     {isEditing &&
                         <button type="button" className="button" onClick={cancel} >Cancel</button>}
 
-                    {!isEditing && isAdmin &&
+                    {!isEditing && getAdminStatus() &&
                         <button type="button" className="button" onClick={edit} >Edit</button>}
 
                     {isEditing &&

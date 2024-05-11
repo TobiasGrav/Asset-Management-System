@@ -12,6 +12,11 @@ public class SecurityAccessUtil {
      */
     public static final String USER = "USER";
 
+    /**
+     * Represents the authentication access level for company managers
+     */
+    public static final String MANAGER = "MANAGER";
+
     private SecurityAccessUtil(){
 
     }

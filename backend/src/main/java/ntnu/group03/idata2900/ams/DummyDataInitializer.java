@@ -89,16 +89,22 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             // Setting up roles
             Role user = new Role(SecurityAccessUtil.USER);
             Role admin = new Role(SecurityAccessUtil.ADMIN);
+            Role manager = new Role(SecurityAccessUtil.MANAGER);
 
             Set<Role> setUserAdmin = new HashSet<>();
             Set<Role> setUserOnly = new HashSet<>();
+            Set<Role> setManager = new HashSet<>();
             setUserAdmin.add(user);
             setUserAdmin.add(admin);
 
             setUserOnly.add(user);
 
+            setManager.add(user);
+            setManager.add(manager);
+
             roleRepository.save(user);
             roleRepository.save(admin);
+            roleRepository.save(manager);
 
             // Setting up test users
             User jon = new User(
@@ -129,7 +135,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     "32156646",
                     LocalDateTime.now());
 
-            mark.setRoles(setUserOnly);
+            mark.setRoles(setManager);
 
             User gunnar = new User(
                     "Gunnar",
@@ -194,7 +200,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     BCrypt.hashpw("Lifeisgood123", BCrypt.gensalt()),
                     "12345678",
                     LocalDateTime.now());
-            lily.setRoles(setUserOnly);
+            lily.setRoles(setManager);
 
             User carl = new User(
                     "Carl",
@@ -257,7 +263,7 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
                     BCrypt.hashpw("H3inz57Varieties!", BCrypt.gensalt()),
                     "43218765",
                     LocalDateTime.now());
-            hector.setRoles(setUserAdmin);
+            hector.setRoles(setManager);
 
             // Setting up sites
             Site site1 = new Site("Nordlandsbåten");

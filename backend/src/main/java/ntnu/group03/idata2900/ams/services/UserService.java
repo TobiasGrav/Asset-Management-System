@@ -79,6 +79,32 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Converts all users to signup dto and returns them
+     *
+     * @param users users to be converted
+     * @return returns list of all signup DTOs
+     */
+    public List<SignUpDto> convertAll(Set<User> users) {
+        return users.stream()
+                .map(user -> {
+                    SignUpDto signUpDto = new SignUpDto();
+                    signUpDto.setFirstName(user.getFirstName());
+                    signUpDto.setLastName(user.getLastName());
+                    signUpDto.setCompany(user.getCompany());
+                    signUpDto.setEmail(user.getEmail());
+                    signUpDto.setPhoneNumber(user.getPhoneNumber());
+                    signUpDto.setActive(user.isActive());
+                    signUpDto.setCreationDate(user.getCreationDate());
+                    signUpDto.setSites(user.getSites());
+                    signUpDto.setServicesCompleted(user.getServicesCompleted());
+                    signUpDto.setRoles(user.getRoles());
+                    signUpDto.setId(user.getId());
+                    return signUpDto;
+                })
+                .toList();
+    }
+
+    /**
      * Creates a new user if params are valid and email is not yet registered.
      *
      * @param userInfo information provided by SignUpDto instance
@@ -115,7 +141,6 @@ public class UserService implements UserDetailsService {
             return user;
         }
     }
-
 
     /**
      * Retrieves a user by ID, then convert it to a signupDto and return it.

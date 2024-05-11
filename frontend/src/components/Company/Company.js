@@ -32,6 +32,13 @@ const Company = (props) => {
       navigate(-1);
     }
 
+    // If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
+        }
+    }, []);
+
     const edit = () => {
       setIsEditing(true);
     }

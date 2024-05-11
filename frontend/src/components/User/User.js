@@ -15,6 +15,7 @@ import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import QRCode from 'qrcode.react';
 import DataTable from 'react-data-table-component';
+import {getAdminStatus} from "../../tools/globals";
 
 const Main = (props) => {
 
@@ -38,23 +39,18 @@ const Main = (props) => {
 
   // Conditional variables
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const backButtonReference = useRef(null);
   const editButtonReference = useRef(null);
   const deleteButtonReference = useRef(null);
   const cancelButtonReference = useRef(null);
 
-  // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
-  useEffect(() => {
-    if(cookies.JWT != null) {
-      jwtDecode(cookies.JWT).roles.forEach(role => {
-        if(role.authority == "ADMIN") {
-              setIsAdmin(true);
+    // If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
         }
-      })
-    }
-  }, []);
+    }, []);
 
 
 // // Prevents the user from inputing values when not in editing mode.
@@ -205,7 +201,7 @@ const Main = (props) => {
           {isEditing &&
               <button type="button" className="button" onClick={cancel} ref={ cancelButtonReference }>Cancel</button>}
 
-          {!isEditing && isAdmin &&
+          {!isEditing && getAdminStatus() &&
               <button type="button" className="button" onClick={edit} ref={ editButtonReference }>Edit</button>}
 
           {isEditing &&

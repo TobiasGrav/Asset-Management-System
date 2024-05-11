@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
+import {jwtDecode} from "jwt-decode";
+import {getAdminStatus} from "../../tools/globals";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -15,6 +17,15 @@ function Table() {
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    // If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
+        }
+    }, []);
+
 
     useEffect(() => {
         fetchData();
@@ -138,7 +149,7 @@ function Table() {
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Asset Overview</h1></div>
             <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>
+            { getAdminStatus() && <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Asset</button>}
             <DataTable
                 columns={columns}
                 data={tableData}

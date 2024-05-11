@@ -7,11 +7,10 @@ import { useCookies } from 'react-cookie';
 import HTTPRequest from '../../tools/HTTPRequest';
 import {jwtDecode} from "jwt-decode";
 import URL from '../../tools/URL';
+import {getAdminStatus} from "../../tools/globals";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
-
-    const [isAdmin, setIsAdmin] = useState();
 
     const [data, setData] = useState([]);
     const [searchData, setSearchData] = useState([]);
@@ -20,6 +19,13 @@ function Table() {
     const navigate = useNavigate();
 
     const datatable = useRef(null);
+
+    // If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
+        }
+    }, []);
 
     const search = (event) => {
         setSearchData([]);
@@ -34,25 +40,12 @@ function Table() {
     };
 
     useEffect(() => {
-        if(cookies.JWT != null) {
-            setIsAdmin(false);
-            jwtDecode(cookies.JWT).roles.forEach(role => {
-                if(role.authority === "ADMIN") {
-                    setIsAdmin(true);
-                }
-            });
-        }
+        fetchData();
     }, []);
 
-    useEffect(() => {
-        if(isAdmin != null) {
-            fetchData();
-        }
-    }, [isAdmin]);
-
     const fetchData = () => {
-        if(isAdmin) {
-            HTTPRequest.get(`${URL.BACKEND}/api/admin/sites`, cookies.JWT)
+        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/sites` : `${URL.BACKEND}/api/user/sites`;
+        HTTPRequest.get(endpoint, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);
@@ -60,15 +53,6 @@ function Table() {
                 console.log(response);
             })
             .catch(error => {setLoading(false)});
-        } else {
-            HTTPRequest.get(`${URL.BACKEND}/api/user/sites`, cookies.JWT)
-            .then(response => {
-                    setData(response.data);
-                    setTableData(response.data);
-                    setLoading(false);
-            })
-            .catch(error => {setLoading(false)});
-        };
     };
 
     const columns = [

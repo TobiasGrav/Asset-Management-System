@@ -32,17 +32,6 @@ const ServiceCompleted = (props) => {
     // information variables
     const { serviceCompletedID } = useParams();
 
-    useEffect(() => {
-        if(cookies.JWT != null) {
-            setIsAdmin("user");
-            jwtDecode(cookies.JWT).roles.forEach(role => {
-                if(role.authority === "ADMIN") {
-                    setIsAdmin("admin");
-                }
-            });
-        }
-    }, []);
-
     // back button functionality, goes back to the last page /asset.
     const navigate = useNavigate();
 
@@ -61,22 +50,21 @@ const ServiceCompleted = (props) => {
     };
 
     useEffect(() => {
-        if(isAdmin != null) {
-            HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted/${serviceCompletedID}`, cookies.JWT)
-                .then(response => {
-                    console.log(response);
-                    setAssetName(response.data.assetOnSite.asset.name);
-                    setAssetOnSiteTag(response.data.assetOnSite.assetOnSiteTag);
-                    setAssetOnSiteId(response.data.assetOnSite.id)
-                    setAssetId(response.data.assetOnSite.asset.id)
-                    setServiceId(response.data.service.id)
-                    setSiteId(response.data.assetOnSite.site.id)
-                    setCompanyId(response.data.assetOnSite.site.company.id)
-                    setServiceUrl(response.data.service.serviceUrl);
-                    setTimeCompleted(response.data.timeCompleted !== null ? formatLocalDateTime(response.data.timeCompleted) : "Not Completed Yet");
-                });
-        }
-    }, [isAdmin]);
+
+        HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted/${serviceCompletedID}`, cookies.JWT)
+            .then(response => {
+                console.log(response);
+                setAssetName(response.data.assetOnSite.asset.name);
+                setAssetOnSiteTag(response.data.assetOnSite.assetOnSiteTag);
+                setAssetOnSiteId(response.data.assetOnSite.id)
+                setAssetId(response.data.assetOnSite.asset.id)
+                setServiceId(response.data.service.id)
+                setSiteId(response.data.assetOnSite.site.id)
+                setCompanyId(response.data.assetOnSite.site.company.id)
+                setServiceUrl(response.data.service.serviceUrl);
+                setTimeCompleted(response.data.timeCompleted !== null ? formatLocalDateTime(response.data.timeCompleted) : "Not Completed Yet");
+            });
+    }, []);
 
     return (
         <div className='companyBody'>

@@ -15,6 +15,7 @@ import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import QRCode from 'qrcode.react';
 import DataTable from 'react-data-table-component';
+import {getAdminStatus} from "../../tools/globals";
 
 const Main = (props) => {
 
@@ -32,7 +33,6 @@ const Main = (props) => {
   const [image, setImage] = useState(require('../../Pages/resources/nerd.png'));
 
   // Conditional variables
-  const [isAdmin, setIsAdmin] = useState(false);
   const [validFirstName, setValidFirstName] = useState();
   const [validLastName, setValidLastName] = useState();
   const [validEmail, setValidEmail] = useState();
@@ -40,16 +40,6 @@ const Main = (props) => {
 
   const emailInput = useRef();
 
-  // Checks if the current user is an admin, and if so isAdmin is true. It decodes the JWT and extracts the roles.
-  useEffect(() => {
-    if(cookies.JWT != null) {
-      jwtDecode(cookies.JWT).roles.forEach(role => {
-        if(role.authority == "ADMIN") {
-            setIsAdmin(true);
-        }
-      })
-    }
-  }, []);
 
   const navigate = useNavigate();
 
@@ -119,7 +109,8 @@ const Main = (props) => {
             company: { id: companyID }
         }
         console.log(userData);
-        HTTPRequest.post(`${URL.BACKEND}/api/admin/users`, userData, cookies.JWT)
+        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/users` : `${URL.BACKEND}/api/manager/users`;
+        HTTPRequest.post(endpoint, userData, cookies.JWT)
         .then(response => {
             if(response == null) {
                 alert('Email already in use!');
@@ -153,7 +144,7 @@ const Main = (props) => {
           
           <b>Pick role</b>
 
-          { isAdmin && 
+          { getAdminStatus() &&
           <b>Pick role</b>
           &&
           <select onChange={handleRoleChange}>

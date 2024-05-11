@@ -12,13 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import URL from '../../tools/URL';
+import {getAdminStatus, getManagerStatus, setAdminStatus} from "../../tools/globals";
 
-const Company = (props) => {
+const Site = (props) => {
 
   // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState();
 
   const [siteName, setSiteName] = useState();
   const [siteID, setSiteID] = useState();
@@ -30,19 +30,16 @@ const Company = (props) => {
   const { id } = useParams();
   const { companyID } = useParams();
 
-  useEffect(() => {
-    if(cookies.JWT != null) {
-        setIsAdmin("user");
-        jwtDecode(cookies.JWT).roles.forEach(role => {
-            if(role.authority === "ADMIN") {
-                setIsAdmin("admin");
-            }
-        });
-    }
-  }, []);
 
   // back button functionality, goes back to the last page /asset.
   const navigate = useNavigate();
+
+    // If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
+        }
+    }, []);
 
   const back = () => {
     navigate(-1);
@@ -86,8 +83,9 @@ const Company = (props) => {
       setIsEditing(false);
   };
   useEffect(() => {
-    if(isAdmin != null) {
-      HTTPRequest.get(`${URL.BACKEND}/api/${isAdmin}/sites/${id}`, cookies.JWT)
+
+      let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/sites/${id}` : `${URL.BACKEND}/api/user/sites/${id}`;
+      HTTPRequest.get(endpoint, cookies.JWT)
       .then(response => {
         console.log(response);
         setSiteName(response.data.name);
@@ -95,25 +93,24 @@ const Company = (props) => {
         setCompanyName(response.data.company.name);
         setCompanyID(response.data.company.id);
       });
-    }
-  }, [isAdmin]);
+  }, []);
 
   return (
     <div className='companyBody'>
         <div style={{textAlign:'center'}}><input className='inputSiteName' value={siteName} disabled={!isEditing} /></div>
         <div className='companyContainer'>
             <div className='valueContainer'>
-              <div style={{display:'flex', flexDirection:'column'}}>
-                <p>Site ID</p>
-                <input className='inputField' value={siteID} disabled={!isEditing}></input>
-                <p>This site belongs to:</p>
-                <p>Company Name</p>
-                <input className='inputField' value={compName} disabled={!isEditing}></input>
-                <p>Company ID</p>
-                <input className='inputField' value={compID} disabled={!isEditing}></input>
-                <button className='optionButton' onClick={showAssets}>Show Assets</button>
-                <button className='optionButton' onClick={showUsers}>Show Users</button>
-              </div>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <p>Site ID</p>
+                    <input className='inputField' value={siteID} disabled={!isEditing}></input>
+                    <p>Company Name</p>
+                    <input className='inputField' value={compName} disabled={!isEditing}></input>
+                    <p>Company ID</p>
+                    <input className='inputField' value={compID} disabled={!isEditing}></input>
+                    <br></br>
+                    <button className='optionButton' onClick={showAssets}>Show Assets</button>
+                    {(getAdminStatus() || getManagerStatus()) && <button className='optionButton' onClick={showUsers}>Show Users</button>}
+                </div>
             </div>
             <div className='imageContainer'>
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
@@ -131,7 +128,7 @@ const Company = (props) => {
           {isEditing &&
               <button type="button" className="button" onClick={cancel} >Cancel</button>}
 
-          {!isEditing && isAdmin &&
+          {!isEditing && getAdminStatus() &&
               <button type="button" className="button" onClick={edit} >Edit</button>}
 
           {isEditing &&
@@ -142,4 +139,4 @@ const Company = (props) => {
   )
 }
 
-export default Company;
+export default Site;

@@ -14,26 +14,13 @@ import './Home.css'
 import { Route, Router, Routes, useNavigate } from 'react-router'
 import { useCookies } from 'react-cookie'
 import HTTPRequest from '../tools/HTTPRequest'
+import {getAdminStatus, getManagerStatus} from "../tools/globals";
 
 const Main = ({children}) => {
 
   const [cookies, setCookie, deleteCookie] = useCookies();
-  const [isAdmin, setIsAdmin] = useState();
 
   const navigate = useNavigate();
-
-  // If user doesn't have a JWT cookie it will redirect them to the login page.
-  useEffect(() => {
-    if(cookies.JWT == null) {
-        navigate('/login');
-    } else {
-      jwtDecode(cookies.JWT).roles.forEach(role => {
-        if(role.authority === "ADMIN") {
-            setIsAdmin(true);
-        }
-    });
-    }
-  }, []);
 
   const asset = () => {
     navigate("/asset/");
@@ -93,10 +80,10 @@ const Main = ({children}) => {
           </span>
           <div className="navbarButtonContainer">
             <button type="button" className="navButton" onClick={asset}>Asset</button>
-            <button type="button" className="navButton" onClick={company}>Company</button>
+            { getAdminStatus() && <button type="button" className="navButton" onClick={company}>Company</button>}
             <button type="button" className="navButton" onClick={site}>Site</button>
-            <button type="button" className="navButton" onClick={customer}>User</button>
-            <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>
+            { (getAdminStatus() || getManagerStatus()) && <button type="button" className="navButton" onClick={customer}>User</button>}
+            { getAdminStatus() && <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>}
           </div>
         </div>
         <div className="rightContainer">
