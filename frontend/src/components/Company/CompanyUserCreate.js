@@ -43,6 +43,13 @@ const Main = (props) => {
 
   const navigate = useNavigate();
 
+    // If user doesn't have a JWT cookie it will redirect them to the login page.
+    useEffect(() => {
+        if(cookies.JWT == null) {
+            navigate('/login');
+        }
+    }, []);
+
   const cancel = () => {
     navigate(-1);
   }
