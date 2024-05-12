@@ -2,10 +2,7 @@ package ntnu.group03.idata2900.ams.services;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
-import ntnu.group03.idata2900.ams.model.AssetOnSite;
-import ntnu.group03.idata2900.ams.model.Role;
-import ntnu.group03.idata2900.ams.model.Site;
-import ntnu.group03.idata2900.ams.model.User;
+import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.AssetOnSiteRepository;
 import ntnu.group03.idata2900.ams.repositories.RoleRepository;
 import ntnu.group03.idata2900.ams.repositories.SiteRepository;
@@ -109,7 +106,7 @@ public class UserService implements UserDetailsService {
      *
      * @param userInfo information provided by SignUpDto instance
      */
-    public User createUserForSignUp(SignUpDto userInfo) {
+    public User createUserForSignUp(SignUpDto userInfo, Company company) {
         if (!validEmail(userInfo.getEmail())) {
             log.error("Invalid email format: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Invalid email format.");
@@ -134,7 +131,13 @@ public class UserService implements UserDetailsService {
             userInfo.setPassword(createHash(userInfo.getPassword()));
             User user = new User(userInfo);
 
-            setUserRole(user);
+            user.setCompany(company);
+
+            if (userInfo.getCompany() != null){
+                user.setCompany(userInfo.getCompany());
+            }
+
+            setRole(user, userInfo.getRole());
 
             userRepository.save(user);
             log.info("New user created with email: {}", userInfo.getEmail());
@@ -189,7 +192,7 @@ public class UserService implements UserDetailsService {
     public User createAdmin(SignUpDto signUpDto) {
         User user = new User(signUpDto);
         user.setPassword(createHash(user.getPassword()));
-        setUserRole(user);
+        setRole(user, signUpDto.getRole());
         // TODO: Should user be added to sites when created or after?
         //setSitesForUser(user, signUpDto.getSites());
         return userRepository.save(user);
@@ -204,7 +207,7 @@ public class UserService implements UserDetailsService {
     public User createUser(SignUpDto signUpDto){
         User user = new User(signUpDto);
         user.setPassword(createHash(user.getPassword()));
-        setUserRole(user);
+        setRole(user, signUpDto.getRole());
         setAdminRole(user);
         setAllSitesForAdmin(user);
         return userRepository.save(user);
@@ -271,12 +274,12 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Adds user role to user
+     * Adds role to user
      *
      * @param user user
      */
-    public void setUserRole(User user){
-        Role userRole = roleRepository.findByName(SecurityAccessUtil.USER).orElseThrow(() -> new IllegalArgumentException("Role USER not found"));
+    public void setRole(User user, String roleName){
+        Role userRole = roleRepository.findByName(roleName).orElseThrow(() -> new IllegalArgumentException("Role " + roleName + " not found"));
         user.getRoles().add(userRole);
     }
 

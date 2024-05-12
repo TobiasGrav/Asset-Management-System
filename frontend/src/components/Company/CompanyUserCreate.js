@@ -15,7 +15,7 @@ import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import QRCode from 'qrcode.react';
 import DataTable from 'react-data-table-component';
-import {getAdminStatus} from "../../tools/globals";
+import {getAdminStatus, getManagerStatus} from "../../tools/globals";
 
 const Main = (props) => {
 
@@ -43,13 +43,6 @@ const Main = (props) => {
 
   const navigate = useNavigate();
 
-    // If user doesn't have a JWT cookie it will redirect them to the login page.
-    useEffect(() => {
-        if(cookies.JWT == null) {
-            navigate('/login');
-        }
-    }, []);
-
   const cancel = () => {
     navigate(-1);
   }
@@ -73,11 +66,17 @@ const Main = (props) => {
     //}
   }
   const handleRoleChange = (event) => {
-    if(event.target.value == 'USER') {
+    if(event.target.value === 'USER') {
         setImage(require('../../Pages/resources/nerd.png'));
+        setRole("USER");
     }
-    if(event.target.value == 'MODERATOR') {
+    if(event.target.value === 'MANAGER') {
         setImage(require('../../Pages/resources/superior.png'));
+        setRole("MANAGER");
+    }
+    if (event.target.value === 'TECHNICIAN'){
+        setImage(require('../../Pages/resources/technician.png'));
+        setRole("TECHNICIAN");
     }
   }
   function isValidName(name) {
@@ -113,7 +112,8 @@ const Main = (props) => {
             email: email,
             password: 'tester',
             phoneNumber: phoneNumber,
-            company: { id: companyID }
+            company: { id: companyID },
+            role: role
         }
         console.log(userData);
         let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/users` : `${URL.BACKEND}/api/manager/users`;
@@ -136,29 +136,35 @@ const Main = (props) => {
       <br></br>
       <div className="assetContainer">
         <div className="containerLeft">
-          <b>First Name</b>
-          <input className='input' placeholder="Enter First Name" value={firstName} onChange={handleFirstNameChange} ></input>
-          {validFirstName != null && !validFirstName && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid first name</p>}
-          <b>Last Name</b>
-          <input className='input' placeholder="Enter Last Name" value={lastName} onChange={handleLastNameChange} ></input>
-          {validLastName != null && !validLastName && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid last name</p>}
-          <b>Email:</b>
-          <input className='inputField' ref={emailInput} placeholder="Enter Email" value={email} onChange={handleEmailChange} ></input>
-          {validEmail != null && !validEmail && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Not a valid email format</p>}
-          <b>Phone number:</b>
-          <input className='input' placeholder="Enter Phone number" value={phoneNumber} onChange={handlePhoneNumberChange} ></input>
-          {/*{validPhoneNumber != null && !validPhoneNumber && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid Phone Number</p>}*/}
-          
-          <b>Pick role</b>
+            <b>First Name</b>
+            <input className='input' placeholder="Enter First Name" value={firstName} onChange={handleFirstNameChange} ></input>
+            {validFirstName != null && !validFirstName && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid first name</p>}
+            <b>Last Name</b>
+            <input className='input' placeholder="Enter Last Name" value={lastName} onChange={handleLastNameChange} ></input>
+            {validLastName != null && !validLastName && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid last name</p>}
+            <b>Email:</b>
+            <input className='inputField' ref={emailInput} placeholder="Enter Email" value={email} onChange={handleEmailChange} ></input>
+            {validEmail != null && !validEmail && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Not a valid email format</p>}
+            <b>Phone number:</b>
+            <input className='input' placeholder="Enter Phone number" value={phoneNumber} onChange={handlePhoneNumberChange} ></input>
+            {/*{validPhoneNumber != null && !validPhoneNumber && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid Phone Number</p>}*/}
 
-          { getAdminStatus() &&
-          <b>Pick role</b>
-          &&
-          <select onChange={handleRoleChange}>
-            <option value={'USER'}>User</option>
-            <option value={'MODERATOR'}>Moderator</option>
-          </select>
-          }
+            {/* Admin and manager options */}
+            {(getAdminStatus() || getManagerStatus()) && (
+                <>
+                    <b>Pick role</b>
+                    <select onChange={handleRoleChange}>
+                        <option value={'USER'}>User</option>
+                        {/* Only admin options */}
+                        {getAdminStatus() && (
+                            <>
+                                <option value={'MANAGER'}>Manager</option>
+                                <option value={'TECHNICIAN'}>Technician</option>
+                            </>
+                        )}
+                    </select>
+                </>
+            )}
 
         </div>
         <img alt="image" src={image} className="assetImage"/>

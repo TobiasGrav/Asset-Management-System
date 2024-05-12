@@ -49,14 +49,6 @@ const Main = ({  size }) => {
   const cancelButtonReference = useRef(null);
   const touchTimerRef = useRef(null);
 
-
-  // If user doesn't have a JWT cookie it will redirect them to the login page.
-  useEffect(() => {
-    if(cookies.JWT == null) {
-      navigate('/login');
-    }
-  }, []);
-
   // Prevents the user from inputing values when not in editing mode.
   useEffect(() => {
     if(descriptionReference.current != null) {

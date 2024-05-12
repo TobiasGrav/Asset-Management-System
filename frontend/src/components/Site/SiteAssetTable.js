@@ -29,13 +29,6 @@ function Table() {
         navigate(-1);
     }
 
-    // If user doesn't have a JWT cookie it will redirect them to the login page.
-    useEffect(() => {
-        if(cookies.JWT == null) {
-            navigate('/login');
-        }
-    }, []);
-
     useEffect(() => {
         let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/sites/${siteID}/assetsOnSite` : `${URL.BACKEND}/api/user/sites/${siteID}/assetsOnSite`;
         HTTPRequest.get(endpoint, cookies.JWT).then(response => {

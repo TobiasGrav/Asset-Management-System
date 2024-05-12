@@ -54,8 +54,9 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN, SecurityAccessUtil.MANAGER)
+                        .requestMatchers("/api/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN, SecurityAccessUtil.MANAGER, SecurityAccessUtil.TECHNICIAN)
                         .requestMatchers("/api/manager/**").hasAuthority(SecurityAccessUtil.MANAGER)
+                        .requestMatchers("/api/technician/**").hasAuthority(SecurityAccessUtil.TECHNICIAN)
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/api/assets").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
                         .requestMatchers("/api/assets/{id}").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)

@@ -20,13 +20,6 @@ function Table() {
 
     const datatable = useRef(null);
 
-    // If user doesn't have a JWT cookie it will redirect them to the login page.
-    useEffect(() => {
-        if(cookies.JWT == null) {
-            navigate('/login');
-        }
-    }, []);
-
     const search = (event) => {
         setSearchData([]);
         data.forEach(element => {

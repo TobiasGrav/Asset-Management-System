@@ -1,5 +1,5 @@
 const URL = {
-    BACKEND: "http://localhost:8080",
+    BACKEND: "https://mngsys.norwayeast.cloudapp.azure.com",
     FRONTEND: "https://mngsys.norwayeast.cloudapp.azure.com"
 };
 

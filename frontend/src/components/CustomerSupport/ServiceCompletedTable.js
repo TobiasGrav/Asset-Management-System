@@ -18,13 +18,6 @@ function ServiceCompletedTable({ displayAllServices }) {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // If user doesn't have a JWT cookie it will redirect them to the login page.
-    useEffect(() => {
-        if(cookies.JWT == null) {
-            navigate('/login');
-        }
-    }, []);
-
     useEffect(() => {
         fetchData();
     }, []);

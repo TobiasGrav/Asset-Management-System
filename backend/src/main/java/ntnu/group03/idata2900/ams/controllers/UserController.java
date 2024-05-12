@@ -124,7 +124,26 @@ public class UserController {
     @PostMapping("/admin/users")
     public ResponseEntity<User> createUser(@RequestBody SignUpDto user) {
         try {
-            User createdUser = userService.createUserForSignUp(user);
+            User createdUser = userService.createUserForSignUp(user, null);
+            log.info("User created with ID: {}", createdUser.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            log.error("Error creating user", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * Creates a new user.
+     *
+     * @param user The user object to be created.
+     * @return ResponseEntity containing the created user and HTTP status code 201 (CREATED).
+     */
+    @PostMapping("/manager/users")
+    public ResponseEntity<User> createUserAsManager(@RequestBody SignUpDto user) {
+        try {
+            User moderator = userService.getSessionUser();
+            User createdUser = userService.createUserForSignUp(user, moderator.getCompany());
             log.info("User created with ID: {}", createdUser.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (Exception e) {

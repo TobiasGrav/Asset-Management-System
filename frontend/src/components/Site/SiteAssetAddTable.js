@@ -23,13 +23,6 @@ function Table() {
 
     const searchInput = useRef(null);
 
-    // If user doesn't have a JWT cookie it will redirect them to the login page.
-    useEffect(() => {
-        if(cookies.JWT == null) {
-            navigate('/login');
-        }
-    }, []);
-
     useEffect(() => {
         fetchData();
     }, []);

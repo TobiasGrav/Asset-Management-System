@@ -90,10 +90,13 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
             Role user = new Role(SecurityAccessUtil.USER);
             Role admin = new Role(SecurityAccessUtil.ADMIN);
             Role manager = new Role(SecurityAccessUtil.MANAGER);
+            Role technician = new Role(SecurityAccessUtil.TECHNICIAN);
 
             Set<Role> setUserAdmin = new HashSet<>();
             Set<Role> setUserOnly = new HashSet<>();
             Set<Role> setManager = new HashSet<>();
+            Set<Role> setTechnician = new HashSet<>();
+
             setUserAdmin.add(user);
             setUserAdmin.add(admin);
 
@@ -101,10 +104,13 @@ public class DummyDataInitializer implements ApplicationListener<ApplicationEven
 
             setManager.add(user);
             setManager.add(manager);
+            setTechnician.add(user);
+            setTechnician.add(technician);
 
             roleRepository.save(user);
             roleRepository.save(admin);
             roleRepository.save(manager);
+            roleRepository.save(technician);
 
             // Setting up test users
             User jon = new User(
