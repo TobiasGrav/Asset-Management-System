@@ -22,6 +22,7 @@ const AssetService = (props) => {
 
     const [description, setDescription] = useState();
     const [intervalName, setIntervalName] = useState();
+    const [serviceUrl, setServiceUrl] = useState();
     const { id } = useParams();
     const { serviceID } = useParams();
 
@@ -55,11 +56,17 @@ const AssetService = (props) => {
 
     };
 
+    const handleServiceUrlChange = (event) => {
+        setServiceUrl(event.target.value);
+
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updateService = {
             intervalName: intervalName,
             description: description,
+            serviceUrl: serviceUrl,
             asset: {
                 id: id
             }};
@@ -79,6 +86,7 @@ const AssetService = (props) => {
             .then(response => {
                 setDescription(response.data.description);
                 setIntervalName(response.data.intervalName);
+                setServiceUrl(response.data.serviceUrl);
             })
             .catch(error => {console.log(error)});
     }, [serviceID, cookies.JWT]);
@@ -93,6 +101,9 @@ const AssetService = (props) => {
                     <br></br>
                     <b>Service Interval</b>
                     <input value={intervalName} disabled={!isEditing} onChange={handleIntervalNameChange}></input>
+                    <br></br>
+                    <b>Service URL</b>
+                    <input value={serviceUrl} onChange={handleServiceUrlChange}></input>
                 </div>
                 <div className='imageContainer'>
                     <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")}

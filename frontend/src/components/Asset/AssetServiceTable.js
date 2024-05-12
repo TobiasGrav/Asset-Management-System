@@ -39,7 +39,7 @@ function ServiceTable({ displayAllServices }) {
 
     const fetchData = async () => {
         setLoading(true);
-        let endpoint = displayAllServices ? `${URL.BACKEND}/api/user/services` : `${URL.BACKEND}/api/user/services/${id}/services`;
+        let endpoint = `${URL.BACKEND}/api/user/services/${id}/services`;
         HTTPRequest.get(endpoint, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
@@ -57,6 +57,11 @@ function ServiceTable({ displayAllServices }) {
         {
             name: 'Description',
             selector: row => row.description,
+            sortable: true,
+        },
+        {
+            name: 'Service URL',
+            selector: row => row.serviceUrl,
             sortable: true,
         },
     ];

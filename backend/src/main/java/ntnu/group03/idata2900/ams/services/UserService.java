@@ -137,6 +137,10 @@ public class UserService implements UserDetailsService {
                 user.setCompany(userInfo.getCompany());
             }
 
+            if (!userInfo.getRole().equals("USER")){
+                setRole(user, SecurityAccessUtil.USER);
+            }
+
             setRole(user, userInfo.getRole());
 
             userRepository.save(user);
@@ -225,7 +229,7 @@ public class UserService implements UserDetailsService {
             User user = existingUser.get();
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
-            user.setEmail(updatedUser.getEmail());;
+            user.setEmail(updatedUser.getEmail());
             user.setPhoneNumber(updatedUser.getPhoneNumber());
             user.setPassword(createHash(updatedUser.getPassword()));
             user.setUpdatedDate(LocalDateTime.now());

@@ -80,6 +80,14 @@ function Table() {
             sortable: true,
         },
         {
+            name: 'Role',
+            selector: row => {
+                const rolesArray = Array.from(row.roles);
+                return rolesArray.join(', '); // Join roles with a comma and space
+            },
+            sortable: true,
+        },
+        {
             name: 'Active',
             selector: row => row.active ? 'Yes' : 'No',
             sortable: true,

@@ -85,7 +85,9 @@ const ServiceCompleted = (props) => {
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
                 </div>
             </div>
+            <div style={{width: "auto", alignItems: "center"}}>
             <ServiceCompletedComment />
+            </div>
             <div className="buttonContainer">
                 <div className="leftButtonContainer">
                     {isEditing && <button type="button" className="button">Delete</button>}

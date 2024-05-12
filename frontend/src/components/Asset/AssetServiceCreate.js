@@ -18,10 +18,10 @@ const Service = (props) => {
     // Cookie initializer for react
     const [cookies, setCookie, removeCookie] = useCookies();
     const [isEditing, setIsEditing] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(true);
 
     const [description, setDescription] = useState();
     const [intervalName, setIntervalName] = useState();
+    const [serviceUrl, setServiceUrl] = useState();
     const { id } = useParams();
 
     // information variables
@@ -38,10 +38,11 @@ const Service = (props) => {
         const data = {
             intervalName: intervalName,
             description: description,
+            serviceUrl: serviceUrl,
             asset: {
                 id: id
             }};
-        HTTPRequest.post(`${URL.BACKEND}/api/services`, data, cookies.JWT)
+        HTTPRequest.post(`${URL.BACKEND}/api/user/services`, data, cookies.JWT)
             .then(response => {
                 console.log(response);
                 navigate(-1);
@@ -67,6 +68,11 @@ const Service = (props) => {
         setIntervalName(event.target.value);
 
     };
+    const handleServiceUrlChange = (event) => {
+        setServiceUrl(event.target.value);
+
+    };
+
 
     return (
         <div className='companyBody'>
@@ -78,6 +84,9 @@ const Service = (props) => {
                     <br></br>
                     <b>Service Interval</b>
                     <input value={intervalName} onChange={handleIntervalNameChange}></input>
+                    <br></br>
+                    <b>Service URL</b>
+                    <input value={serviceUrl} onChange={handleServiceUrlChange}></input>
                 </div>
                 <div className='imageContainer'>
                     <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>

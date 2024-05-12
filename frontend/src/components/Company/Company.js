@@ -86,6 +86,7 @@ const Company = (props) => {
             <div className='valueContainer'>
                 <b>Company ID</b>
                 <input value={companyID}></input>
+                <br></br>
                 <b>Options</b>
                 <button onClick={showUsers} >Show Users</button>
                 <button onClick={showSites} >Show Sites</button>

@@ -138,7 +138,7 @@ const Main = (props) => {
       <br></br>
       <div className="assetContainer">
           <div className="assetInfoContainer">
-              <b>Asset ID</b>
+              <b>Part Number</b>
               <input placeholder="Enter Part Number" value={partNumber} onChange={handlePartNumberChange}></input>
               <span><b>Description</b><br></br></span>
               <textarea type="text" className='descriptionText' placeholder="Enter Description" name={description}

@@ -119,23 +119,26 @@ function CommentTable() {
     };
 
     return (
-        <div style={{margin: '20px', width: '90%'}}>
-            <div style={{textAlign: "center"}}><h3>Comments</h3></div>
-            <br></br>
-            <div style={{textAlign: "center"}}>
-                <textarea value={comment} onChange={handleCommentChange} style={{width: "60vw"}}></textarea>
-                <br/>
+        <div style={{ margin: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ textAlign: "center" }}><h3>Comments</h3></div>
+            <br />
+            <div style={{ textAlign: "center", width: "60vw" }}>
+                <textarea value={comment} onChange={handleCommentChange} style={{ width: "100%" }}></textarea>
+                <br />
                 <button onClick={addComment}>Add Comment</button>
             </div>
-            <br></br>
-            <DataTable
-                columns={columns}
-                data={tableData}
-                progressPending={loading}
-                pagination
-                persistTableHead
-                customStyles={customStyles}
-            />
+            <br />
+            <div style={{ width: "60vw" }}>
+                <DataTable
+                    columns={columns}
+                    data={tableData}
+                    progressPending={loading}
+                    pagination
+                    persistTableHead
+                    customStyles={customStyles}
+                    style={{ width: "100%" }}
+                />
+            </div>
         </div>
     );
 }

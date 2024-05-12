@@ -25,7 +25,7 @@ const Main = (props) => {
   // information variables
   const { userID } = useParams();
   const { companyID } = useParams();
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState('USER');
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
@@ -112,7 +112,7 @@ const Main = (props) => {
             email: email,
             password: 'tester',
             phoneNumber: phoneNumber,
-            company: { id: companyID },
+            company: companyID ? { id: companyID } : null,
             role: role
         }
         console.log(userData);

@@ -32,10 +32,6 @@ function ServiceCompletedTable({ displayAllServices }) {
         });
     };
 
-    const create = () => {
-        navigate(`create`);
-    };
-
     const fetchData = async () => {
         setLoading(true);
         HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted`, cookies.JWT).then(response => {
@@ -140,7 +136,6 @@ function ServiceCompletedTable({ displayAllServices }) {
         <div style={{ margin: '20px', width: '90%' }}>
             <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Requested Services Overview</h1></div>
             <input placeholder='Search for ongoing services' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
-            <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Service</button>
             <DataTable
                 columns={columns}
                 data={tableData}

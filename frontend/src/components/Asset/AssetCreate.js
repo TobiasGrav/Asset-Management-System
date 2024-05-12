@@ -22,8 +22,10 @@ const Main = (props) => {
   const [image, setImage] = useState();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState();
+  const [partNumber, setPartNumber] = useState();
 
   const nameReference = useRef(null);
+  const partNumberReference = useRef(null);
   const descriptionReference = useRef(null);
   const datasheetNameReference = useRef(null);
   const referenceNumberReference = useRef(null);
@@ -68,7 +70,8 @@ const Main = (props) => {
                     name: name,
                     description: description,
                     category: selectedCategory,
-                    datasheet: datasheet
+                    datasheet: datasheet,
+                    partNumber: partNumber
                 },
                 {
                     headers: {
@@ -121,6 +124,10 @@ const Main = (props) => {
 
     };
 
+    const handlePartNumberChange = (event) => {
+        setPartNumber(event.target.value);
+    };
+
     const handleCategoryChange = (event) => {
         setSelectedCategory(event.target.value ? JSON.parse(event.target.value) : null);
     };
@@ -131,12 +138,15 @@ const Main = (props) => {
             <div style={{textAlign: 'center', width: '100%', marginBottom: '32px'}}><input ref={nameReference} onChange={handleNameChange} placeholder='Input Name' style={{width: '100%', textAlign: 'center', fontSize: 32}}/></div>
             <div className='center'>
                 <div className='infoContainer'>
+                    <b>Part Number</b>
+                    <input ref={partNumberReference} onChange={handlePartNumberChange}></input>
                     <b>Description</b>
                     <textarea ref={descriptionReference} onChange={handleDescriptionChange} className='description'
                               placeholder=''/>
                     <br></br>
                     <b>Category</b>
-                    <select value={selectedCategory ? JSON.stringify(selectedCategory) : ""} onChange={handleCategoryChange}>
+                    <select value={selectedCategory ? JSON.stringify(selectedCategory) : ""}
+                            onChange={handleCategoryChange}>
                         <option value="">Select a category</option>
                         {categories.map(category => (
                             <option key={category.id} value={JSON.stringify(category)}>{category.name}</option>
