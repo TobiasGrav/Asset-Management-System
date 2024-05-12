@@ -49,6 +49,7 @@ const Main = ({children}) => {
   const logout = () => {
     deleteCookie('JWT', {path: '/'});
     navigate('/login');
+    location.reload();
   };
 
   return (
