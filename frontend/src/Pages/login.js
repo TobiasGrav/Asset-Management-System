@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
+import './login.css';
 import URL from '../tools/URL';
 
-
-import './login.css';
 
 const Login = (props) => {
 
@@ -54,8 +53,50 @@ const Login = (props) => {
       console.log(error);
     });
   }
-
   return (
+    <div className="login-container">
+      <div className="login-box">
+        <div className="logo-section">
+          <img
+            alt="Asset Management System Logo"
+            src={require("./resources/assetmanagementsystem.png")}
+            className="logo-image"
+          />
+          <h1 className="logo-text">Asset Management Database</h1>
+        </div>
+        <form onSubmit={login} className="login-form">
+          <h2>Log in</h2>
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="Email"
+            className="input-field"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Password"
+            className="input-field"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <a href="http://localhost:8080/recover" target="_blank" rel="noopener noreferrer" className="forgot-password-link">
+            Forgot your password?
+          </a>
+          <button onClick={login} type="button" className="login-button">Login</button>
+          <button onClick={loginUser} type="button" className="secondary-button">Login User</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+
+  /*return (
     <div className="login-container">
       <div className="mainLogin">
         <div className="navbar">
@@ -92,7 +133,8 @@ const Login = (props) => {
         </form>
       </div>
     </div>
-  )
-}
+  )*/
+
 
 export default Login
+

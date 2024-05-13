@@ -1,4 +1,4 @@
-* {
+/* {
     font-family: 'Open Sans', sans-serif;
     font-style: normal;
 }
@@ -101,4 +101,78 @@ body {
     width: 64px;
     height: 64px;
     object-fit: cover;
-}
+}*/
+
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #2C3E50; /* Dark blue background */
+  }
+  
+  .login-box {
+    padding: 45px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    width: 340px;
+  }
+  
+  .logo-section {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .logo-image {
+    max-width: 100px; /* Adjust size as needed */
+  }
+  
+  .logo-text {
+    color: #333;
+    font-size: 1.5rem;
+  }
+  
+  .login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .forgot-password-link {
+    display: block;
+    text-align: right;
+    margin-bottom: 20px;
+    color: #3498DB;
+    text-decoration: none;
+  }
+  
+  .login-button, .secondary-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  .login-button {
+    background-color: #3498DB;
+  }
+  
+  .secondary-button {
+    background-color: #95A5A6;
+  }
+  
+  .login-button:hover, .secondary-button:hover {
+    opacity: 0.9;
+  }
