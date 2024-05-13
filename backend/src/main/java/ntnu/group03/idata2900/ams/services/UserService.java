@@ -287,6 +287,10 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(userRole);
     }
 
+    public Set<User> getUsersByRole(String role) {
+        return userRepository.findByRoleName(role);
+    }
+
     /**
      * Checks if user has access to the site
      *

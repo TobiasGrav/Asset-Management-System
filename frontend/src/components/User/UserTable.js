@@ -80,11 +80,8 @@ function Table() {
             sortable: true,
         },
         {
-            name: 'Role',
-            selector: row => {
-                const rolesArray = Array.from(row.roles);
-                return rolesArray.join(', '); // Join roles with a comma and space
-            },
+            name: 'Roles',
+            selector: row => Array.from(row.roles).map(role => role.name).join(', '),
             sortable: true,
         },
         {

@@ -104,6 +104,11 @@ function Table() {
             sortable: true,
         },
         {
+            name: 'Roles',
+            selector: row => Array.from(row.roles).map(role => role.name).join(', '),
+            sortable: true,
+        },
+        {
             name: 'Active',
             selector: row => row.active ? 'Yes' : 'No',
             sortable: true,

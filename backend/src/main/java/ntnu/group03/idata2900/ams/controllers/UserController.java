@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -77,13 +78,35 @@ public class UserController {
     }
 
     /**
-     * Returns set of all users by site id
+     * Returns set of all users by site id, including all technicians
      *
      * @param id id of site
      * @return returns set of all users connected to given site id
      */
     @GetMapping( "/admin/sites/{id}/users")
     public ResponseEntity<List<SignUpDto>> getAllUsersBySite(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            Set<User> allUsers = site.get().getUsers();
+            Set<User> technicianUsers = userService.getUsersByRole("TECHNICIAN");
+
+            allUsers.addAll(technicianUsers);
+
+            log.info("All users found with given site ID: {}", id);
+            return new ResponseEntity<>(this.userService.convertAll(allUsers), HttpStatus.OK);
+        }
+    }
+    /**
+     * Returns set of all users by site id
+     *
+     * @param id id of site
+     * @return returns set of all users connected to given site id
+     */
+    @GetMapping( "/manager/sites/{id}/users")
+    public ResponseEntity<List<SignUpDto>> getAllUsersBySiteForManager(@PathVariable int id){
         Optional<Site> site = this.siteService.getSite(id);
         if (site.isEmpty()){
             log.warn(SITE_NOT_FOUND, id);

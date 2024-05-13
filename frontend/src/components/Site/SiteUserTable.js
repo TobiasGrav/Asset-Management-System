@@ -8,6 +8,7 @@ import HTTPRequest from '../../tools/HTTPRequest';
 import URL from '../../tools/URL';
 import { hover } from '@testing-library/user-event/dist/hover';
 import './Site.css';
+import {getAdminStatus} from "../../tools/globals";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -22,7 +23,8 @@ function Table() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        HTTPRequest.get(`${URL.BACKEND}/api/admin/sites/${siteID}/users`, cookies.JWT)
+        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/sites/${siteID}/users` : `${URL.BACKEND}/api/manager/sites/${siteID}/users`;
+        HTTPRequest.get(endpoint, cookies.JWT)
             .then(response => {
                 setData(response.data);
                 setTableData(response.data);
@@ -63,7 +65,7 @@ function Table() {
     };
 
     const removeUser = (id) => {
-        HTTPRequest.delete(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${id}`, cookies.JWT)
+        HTTPRequest.delete(`${URL.BACKEND}/api/manager/sites/${siteID}/users/${id}`, cookies.JWT)
         .then(reponse => {
             setUpdateData([]);
             data.forEach(user => {
@@ -106,6 +108,11 @@ function Table() {
         {
             name: 'Creation Date',
             selector: row => formatLocalDateTime(row.creationDate),
+            sortable: true,
+        },
+        {
+            name: 'Roles',
+            selector: row => Array.from(row.roles).map(role => role.name).join(', '),
             sortable: true,
         },
         {

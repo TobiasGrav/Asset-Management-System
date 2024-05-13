@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import URL from '../../tools/URL';
 import HTTPRequest from '../../tools/HTTPRequest';
 import './Site.css';
+import {getAdminStatus} from "../../tools/globals";
 
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -33,7 +34,8 @@ function Table() {
     const fetchData = () => {
         if(!hasRun) {
             setLoading(true);
-            HTTPRequest.get(`${URL.BACKEND}/api/admin/companies/${companyID}/users`, cookies.JWT)
+            let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/companies/${companyID}/users` : `${URL.BACKEND}/api/manager/companies/${companyID}/users`;
+            HTTPRequest.get(endpoint, cookies.JWT)
             .then(response => {
                 let filteredData = (response.data.filter((user) => !user.sites.some(site => site.id == siteID)));
                 setTableData(filteredData);
@@ -64,7 +66,7 @@ function Table() {
     };
 
     const addUser = (id) => {
-        HTTPRequest.put(`${URL.BACKEND}/api/admin/sites/${siteID}/users/${id}`, null, cookies.JWT)
+        HTTPRequest.put(`${URL.BACKEND}/api/manager/sites/${siteID}/users/${id}`, null, cookies.JWT)
         .then(response => {
             setUpdateData([]);
             data.forEach(user => {
@@ -102,6 +104,11 @@ function Table() {
         {
             name: 'Creation Date',
             selector: row => formatLocalDateTime(row.creationDate),
+            sortable: true,
+        },
+        {
+            name: 'Roles',
+            selector: row => Array.from(row.roles).map(role => role.name).join(', '),
             sortable: true,
         },
         {

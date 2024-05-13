@@ -125,7 +125,7 @@ public class SiteController {
      * @return ResponseEntity containing the HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the site or user with the given ID doesn't exist.
      */
-    @PutMapping("/admin/sites/{id}/users/{userId}")
+    @PutMapping("/manager/sites/{id}/users/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable int id, @PathVariable int userId){
         Optional<Site> site = siteService.getSite(id);
         Optional<User> user = userService.getUserById(userId);
@@ -194,7 +194,7 @@ public class SiteController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the user with the given ID doesn't exist.
      */
-    @DeleteMapping("/admin/sites/{id}/users/{userId}")
+    @DeleteMapping("/manager/sites/{id}/users/{userId}")
     public ResponseEntity<Site> deleteUserFromSite(@PathVariable int id, @PathVariable int userId) {
         Optional<Site> existingSite = siteService.getSite(id);
         Optional<User> existingUser = userService.getUserById(userId);

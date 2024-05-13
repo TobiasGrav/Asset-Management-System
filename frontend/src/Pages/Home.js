@@ -14,7 +14,7 @@ import './Home.css'
 import { Route, Router, Routes, useNavigate } from 'react-router'
 import { useCookies } from 'react-cookie'
 import HTTPRequest from '../tools/HTTPRequest'
-import {getAdminStatus, getManagerStatus} from "../tools/globals";
+import {getAdminStatus, getManagerStatus, getTechnicianStatus} from "../tools/globals";
 
 const Main = ({children}) => {
 
@@ -84,7 +84,7 @@ const Main = ({children}) => {
             { getAdminStatus() && <button type="button" className="navButton" onClick={company}>Company</button>}
             <button type="button" className="navButton" onClick={site}>Site</button>
             { (getAdminStatus() || getManagerStatus()) && <button type="button" className="navButton" onClick={customer}>User</button>}
-            { getAdminStatus() && <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>}
+            { (getAdminStatus() || getTechnicianStatus()) && <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>}
           </div>
         </div>
         <div className="rightContainer">

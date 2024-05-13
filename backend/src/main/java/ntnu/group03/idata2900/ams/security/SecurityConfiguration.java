@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN, SecurityAccessUtil.MANAGER, SecurityAccessUtil.TECHNICIAN)
-                        .requestMatchers("/api/manager/**").hasAuthority(SecurityAccessUtil.MANAGER)
+                        .requestMatchers("/api/manager/**").hasAnyAuthority(SecurityAccessUtil.MANAGER, SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/technician/**").hasAuthority(SecurityAccessUtil.TECHNICIAN)
                         .requestMatchers("/api/authenticate").permitAll()
                         .requestMatchers("/api/assets").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
@@ -66,7 +66,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/services/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/comments/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/servicesCompleted/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/companies/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/users/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/datasheets/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/spareParts/**").hasAuthority(SecurityAccessUtil.ADMIN)
