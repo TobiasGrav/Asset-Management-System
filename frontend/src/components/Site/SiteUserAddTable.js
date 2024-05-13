@@ -7,13 +7,14 @@ import { useCookies } from 'react-cookie';
 import URL from '../../tools/URL';
 import HTTPRequest from '../../tools/HTTPRequest';
 import './Site.css';
-import {getAdminStatus} from "../../tools/globals";
+import {getAdminStatus, getManagerStatus, getTechnicianStatus} from "../../tools/globals";
 
-function Table() {
+function Table({assign}) {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const { siteID } = useParams();
     const { companyID } = useParams();
+    const { serviceCompletedID } = useParams();
     const [data, setData] = useState([]);
     const [updateData, setUpdateData] = useState([]);
     const [tableData, setTableData] = useState([]);
@@ -66,16 +67,22 @@ function Table() {
     };
 
     const addUser = (id) => {
-        HTTPRequest.put(`${URL.BACKEND}/api/manager/sites/${siteID}/users/${id}`, null, cookies.JWT)
+        let endpoint = !assign ? `${URL.BACKEND}/api/manager/sites/${siteID}/users/${id}` : `${URL.BACKEND}/api/admin/servicesCompleted/${serviceCompletedID}/users/${id}`;
+        HTTPRequest.put(endpoint, null, cookies.JWT)
         .then(response => {
             setUpdateData([]);
-            data.forEach(user => {
-                if(user.id != id) {
-                    updateData.push(user);
-                }
-            });
-            setData(updateData);
-            setTableData(updateData);
+            if (!assign){
+                data.forEach(user => {
+                    if(user.id != id) {
+                        updateData.push(user);
+                    }
+                });
+                setData(updateData);
+                setTableData(updateData);
+            } else {
+                navigate(-1)
+            }
+
         })
         .catch(error => {alert('Something went wrong, user not added to site!'); console.error(error)});
     };
@@ -182,7 +189,7 @@ function Table() {
         <div style={{width:'100%', height:'100%'}}>
             <button className='backArrow' onClick={back}>← Go back</button>
             <div style={{ marginLeft:'auto', marginRight:'auto', width: '90%' }}>
-                <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Add user</h1></div>
+                <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>{assign ? "Assign User" : "Add User"}</h1></div>
                 <input placeholder='Search for asset' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
                 <DataTable
                     columns={columns}

@@ -16,7 +16,7 @@ const ServiceCompleted = (props) => {
     // Cookie initializer for react
     const [cookies, setCookie, removeCookie] = useCookies();
     const [isEditing, setIsEditing] = useState(false);
-    const [isAdmin, setIsAdmin] = useState();
+    const [companyID, setCompanyID] = useState();
 
     const [assetName, setAssetName] = useState();
     const [assetOnSiteTag, setAssetOnSiteTag] = useState();
@@ -29,6 +29,7 @@ const ServiceCompleted = (props) => {
     const [assetId, setAssetId] = useState();
     const [siteId, setSiteId] = useState();
     const [companyId, setCompanyId] = useState();
+    const [fullName, setFullName] = useState();
 
     // information variables
     const { serviceCompletedID } = useParams();
@@ -47,11 +48,11 @@ const ServiceCompleted = (props) => {
     }
 
     const assignUser = () => {
-        navigate(`/asset/${assetId}/service/${serviceId}`);
+        navigate(`assign/${companyID}`);
     }
 
     const completeService = () => {
-        HTTPRequest.put(`${URL.BACKEND}/api/servicesCompleted/${serviceCompletedID}`, null, cookies.JWT)
+        HTTPRequest.put(`${URL.BACKEND}/api/technician/servicesCompleted/${serviceCompletedID}`, null, cookies.JWT)
             .then(() => {
                 fetchData();
             }).catch(error => {console.error("Error completing service:", error)})
@@ -62,7 +63,7 @@ const ServiceCompleted = (props) => {
     };
 
     const fetchData = () => {
-        HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted/${serviceCompletedID}`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/technician/servicesCompleted/${serviceCompletedID}`, cookies.JWT)
             .then(response => {
                 console.log(response);
                 setAssetName(response.data.assetOnSite.asset.name);
@@ -73,6 +74,8 @@ const ServiceCompleted = (props) => {
                 setSiteId(response.data.assetOnSite.site.id)
                 setCompanyId(response.data.assetOnSite.site.company.id)
                 setServiceUrl(response.data.service.serviceUrl);
+                setCompanyID(response.data.assetOnSite.site.company.id)
+                setFullName(response.data.user?.firstName + " " + response.data.user?.lastName)
                 setTimeCompleted(response.data.timeCompleted !== null ? formatLocalDateTime(response.data.timeCompleted) : "Service Not Completed Yet");
             }).catch(error => {console.error('Error fetching data:', error)
             }
@@ -98,6 +101,8 @@ const ServiceCompleted = (props) => {
                     <button onClick={completeService}>Complete Service</button>
 
                     {getAdminStatus() && <h3>Assign User This Service</h3>}
+                    {getAdminStatus() && <input className="inputField" style={{textAlign: "center"}} value={fullName || "No user assigned"} disabled={true}></input>}
+                    <br></br>
                     {getAdminStatus() && <button onClick={assignUser}>Assign User</button>}
 
                     <h3>Options</h3>

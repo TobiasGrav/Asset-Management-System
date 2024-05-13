@@ -3,10 +3,7 @@ package ntnu.group03.idata2900.ams.services;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.model.*;
-import ntnu.group03.idata2900.ams.repositories.AssetOnSiteRepository;
-import ntnu.group03.idata2900.ams.repositories.RoleRepository;
-import ntnu.group03.idata2900.ams.repositories.SiteRepository;
-import ntnu.group03.idata2900.ams.repositories.UserRepository;
+import ntnu.group03.idata2900.ams.repositories.*;
 import ntnu.group03.idata2900.ams.security.AccessUserDetails;
 import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
 import org.springframework.security.core.Authentication;
@@ -30,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final SiteRepository siteRepository;
     private final AssetOnSiteRepository assetOnSiteRepository;
+    private final ServiceCompletedRepository serviceCompletedRepository;
 
     private final Optional<Role> admin;
     private final Iterable<Site> sites;
@@ -41,11 +39,13 @@ public class UserService implements UserDetailsService {
      * @param roleRepository roleRepository
      * @param siteRepository siteRepository
      * @param assetOnSiteRepository assetOnSiteRepository
+     * @param serviceCompletedRepository serviceCompletedRepository
      */
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceCompletedRepository serviceCompletedRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetOnSiteRepository = assetOnSiteRepository;
+        this.serviceCompletedRepository = serviceCompletedRepository;
         this.admin = this.roleRepository.findByName(SecurityAccessUtil.ADMIN);
         this.siteRepository = siteRepository;
         this.sites = siteRepository.findAll();
@@ -289,6 +289,16 @@ public class UserService implements UserDetailsService {
 
     public Set<User> getUsersByRole(String role) {
         return userRepository.findByRoleName(role);
+    }
+
+    public boolean hasAccessToServiceCompleted(User user, String roleName){
+        Optional<Role> role = roleRepository.findByName(roleName);
+        return role.isPresent() && user.getRoles().contains(role.get());
+    }
+
+    public boolean hasAccessToGivenServiceCompleted(User user, int id){
+        Optional<ServiceCompleted> servicesCompleted = serviceCompletedRepository.findById(id);
+        return servicesCompleted.filter(value -> user.getServicesCompleted().contains(value)).isEmpty();
     }
 
     /**

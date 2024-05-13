@@ -64,7 +64,7 @@ function App() {
           <Route path="/company/:companyID/site/:siteID/assets/:id/service" element={<Home><ServiceTable displayAllServices={false} /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users/:userID" element={<Home><Customer /></Home>} />
-          <Route path="/company/:companyID/site/:siteID/users/add" element={<Home><SiteUserAddTable /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/users/add" element={<Home><SiteUserAddTable assign={false}/></Home>} />
 
           <Route path="/user" element={<Home><CustomerTable /></Home>} />
           <Route path="/user/:userID" element={<Home><Customer /></Home>} />
@@ -75,6 +75,7 @@ function App() {
 
           <Route path="/support" element={<Home><ServiceCompletedTable /></Home>} />
           <Route path="/support/:serviceCompletedID" element={<Home><ServiceCompleted /></Home>} />
+          <Route path="/support/:serviceCompletedID/assign/:companyID" element={<Home><SiteUserAddTable assign={true} /></Home>} />
 
           <Route path="/403" element={<Home><AccessDenied /></Home>} />
           <Route path="/404" element={<Home><NotFound /></Home>} />

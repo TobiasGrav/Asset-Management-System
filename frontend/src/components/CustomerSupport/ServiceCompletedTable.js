@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
 import {useParams} from "react-router";
+import {getAdminStatus} from "../../tools/globals";
 
 function ServiceCompletedTable({ displayAllServices }) {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -34,7 +35,8 @@ function ServiceCompletedTable({ displayAllServices }) {
 
     const fetchData = async () => {
         setLoading(true);
-        HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted`, cookies.JWT).then(response => {
+        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/servicesCompleted` : `${URL.BACKEND}/api/technician/servicesCompleted`;
+        HTTPRequest.get(endpoint, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);
             setLoading(false);
