@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,23 +83,18 @@ public class ServiceCompletedController {
      * Updates an existing serviceCompleted.
      *
      * @param id             The ID of the serviceCompleted to be updated.
-     * @param updatedServiceCompleted The updated serviceCompleted object.
      * @return ResponseEntity containing the updated serviceCompleted (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the serviceCompleted with the given ID doesn't exist.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ServiceCompleted> updateServiceCompleted(@PathVariable int id, @RequestBody ServiceCompletedDto updatedServiceCompleted) {
+    public ResponseEntity<ServiceCompleted> updateServiceCompleted(@PathVariable int id) {
         Optional<ServiceCompleted> existingServiceCompleted = serviceCompletedService.getServiceCompleted(id);
         if (existingServiceCompleted.isEmpty()) {
             log.warn(SERVICE_COMPLETED_NOT_FOUND, id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             ServiceCompleted serviceCompletedToUpdate = existingServiceCompleted.get();
-            serviceCompletedToUpdate.setLastService(updatedServiceCompleted.getLastService());
-            serviceCompletedToUpdate.setTimeCompleted(updatedServiceCompleted.getTimeCompleted());
-            serviceCompletedToUpdate.setService(updatedServiceCompleted.getService());
-            serviceCompletedToUpdate.setAssetOnSite(updatedServiceCompleted.getAssetOnSite());
-            serviceCompletedToUpdate.setUser(updatedServiceCompleted.getUser());
+            serviceCompletedToUpdate.setTimeCompleted(LocalDateTime.now());
             serviceCompletedService.updateServiceCompleted(serviceCompletedToUpdate);
             log.info("ServiceCompleted updated with ID: {}", id);
             return new ResponseEntity<>(serviceCompletedToUpdate, HttpStatus.OK);

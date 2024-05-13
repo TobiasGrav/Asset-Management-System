@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 import URL from '../../tools/URL';
 import {format} from "date-fns";
 import ServiceCompletedComment from "./ServiceCompletedComment";
+import {getAdminStatus} from "../../tools/globals";
 
 const ServiceCompleted = (props) => {
 
@@ -45,12 +46,22 @@ const ServiceCompleted = (props) => {
         navigate(`/asset/${assetId}/service/${serviceId}`);
     }
 
+    const assignUser = () => {
+        navigate(`/asset/${assetId}/service/${serviceId}`);
+    }
+
+    const completeService = () => {
+        HTTPRequest.put(`${URL.BACKEND}/api/servicesCompleted/${serviceCompletedID}`, null, cookies.JWT)
+            .then(() => {
+                fetchData();
+            }).catch(error => {console.error("Error completing service:", error)})
+    }
+
     const formatLocalDateTime = (localDateTime) => {
         return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
     };
 
-    useEffect(() => {
-
+    const fetchData = () => {
         HTTPRequest.get(`${URL.BACKEND}/api/servicesCompleted/${serviceCompletedID}`, cookies.JWT)
             .then(response => {
                 console.log(response);
@@ -62,8 +73,14 @@ const ServiceCompleted = (props) => {
                 setSiteId(response.data.assetOnSite.site.id)
                 setCompanyId(response.data.assetOnSite.site.company.id)
                 setServiceUrl(response.data.service.serviceUrl);
-                setTimeCompleted(response.data.timeCompleted !== null ? formatLocalDateTime(response.data.timeCompleted) : "Not Completed Yet");
-            });
+                setTimeCompleted(response.data.timeCompleted !== null ? formatLocalDateTime(response.data.timeCompleted) : "Service Not Completed Yet");
+            }).catch(error => {console.error('Error fetching data:', error)
+            }
+        );
+    };
+
+    useEffect(() => {
+        fetchData();
     }, []);
 
     return (
@@ -76,10 +93,17 @@ const ServiceCompleted = (props) => {
                     <h3>Service URL</h3>
                     <input className='inputField' value={serviceUrl} disabled={!isEditing}></input>
                     <h3>Completion Date</h3>
-                    <input className='inputField' value={timeCompleted} disabled={!isEditing}></input>
+                    <input className='inputField' style={{textAlign: "center"}} value={timeCompleted} disabled={true}></input>
+                    <br></br>
+                    <button onClick={completeService}>Complete Service</button>
+
+                    {getAdminStatus() && <h3>Assign User This Service</h3>}
+                    {getAdminStatus() && <button onClick={assignUser}>Assign User</button>}
+
                     <h3>Options</h3>
                     <button onClick={showAsset}>Show Asset On Site</button>
                     <button onClick={showService}>Show Service</button>
+
                 </div>
                 <div className='imageContainer'>
                 <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
