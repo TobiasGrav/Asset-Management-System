@@ -51,6 +51,6 @@ public class ServiceCompletedService {
         return serviceCommentRepository.findAllByServiceCompleted(serviceCompleted)
                 .stream()
                 .map(ServiceComment::getComment)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

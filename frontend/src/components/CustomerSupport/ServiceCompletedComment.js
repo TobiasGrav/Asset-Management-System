@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
 import {useParams} from "react-router";
+import {getAdminStatus, getTechnicianStatus} from "../../tools/globals";
 
 function CommentTable() {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -24,7 +25,7 @@ function CommentTable() {
     const fetchData = async () => {
         setLoading(true);
 
-        HTTPRequest.get(`${URL.BACKEND}/api/comments/serviceCompleted/${serviceCompletedID}/comments`, cookies.JWT)
+        HTTPRequest.get(`${URL.BACKEND}/api/user/comments/serviceCompleted/${serviceCompletedID}/comments`, cookies.JWT)
             .then(response => {
             setTableData(response.data);
             setLoading(false);
@@ -100,7 +101,7 @@ function CommentTable() {
         const data = {
             comment: comment
         }
-        HTTPRequest.post(`${URL.BACKEND}/api/comments/serviceCompleted/${serviceCompletedID}`, data, cookies.JWT)
+        HTTPRequest.post(`${URL.BACKEND}/api/user/comments/serviceCompleted/${serviceCompletedID}`, data, cookies.JWT)
             .then(response => {
                 fetchData()
                 console.log(response)
@@ -123,7 +124,7 @@ function CommentTable() {
             <div style={{ textAlign: "center" }}><h3>Comments</h3></div>
             <br />
             <div style={{ textAlign: "center", width: "60vw" }}>
-                <textarea value={comment} onChange={handleCommentChange} style={{ width: "100%" }}></textarea>
+                <textarea value={comment} onChange={handleCommentChange} disabled={!(getAdminStatus() || getTechnicianStatus())} style={{ width: "100%" }}></textarea>
                 <br />
                 <button onClick={addComment}>Add Comment</button>
             </div>

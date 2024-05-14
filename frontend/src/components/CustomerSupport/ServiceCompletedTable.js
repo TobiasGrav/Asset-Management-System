@@ -9,7 +9,7 @@ import HTTPRequest from "../../tools/HTTPRequest";
 import {useParams} from "react-router";
 import {getAdminStatus} from "../../tools/globals";
 
-function ServiceCompletedTable({ displayAllServices }) {
+function ServiceCompletedTable({serviceHistory}) {
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const [data, setData] = useState([]);
@@ -18,6 +18,8 @@ function ServiceCompletedTable({ displayAllServices }) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
+    const { assetID } = useParams();
+    const { siteID } = useParams();
 
     useEffect(() => {
         fetchData();
@@ -36,6 +38,9 @@ function ServiceCompletedTable({ displayAllServices }) {
     const fetchData = async () => {
         setLoading(true);
         let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/servicesCompleted` : `${URL.BACKEND}/api/technician/servicesCompleted`;
+        if (serviceHistory){
+            endpoint = `${URL.BACKEND}/api/user/assetsOnSite/${assetID}/servicesCompleted`
+        }
         HTTPRequest.get(endpoint, cookies.JWT).then(response => {
             setData(response.data);
             setTableData(response.data);

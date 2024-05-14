@@ -103,7 +103,7 @@ const AssetService = (props) => {
                     <input value={intervalName} disabled={!isEditing} onChange={handleIntervalNameChange}></input>
                     <br></br>
                     <b>Service URL</b>
-                    <input value={serviceUrl} onChange={handleServiceUrlChange}></input>
+                    <input value={serviceUrl} disabled={!isEditing} onChange={handleServiceUrlChange}></input>
                 </div>
                 <div className='imageContainer'>
                     <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")}

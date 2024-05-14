@@ -9,9 +9,9 @@ import { jwtDecode } from 'jwt-decode';
 import URL from '../../tools/URL';
 import {format} from "date-fns";
 import ServiceCompletedComment from "./ServiceCompletedComment";
-import {getAdminStatus} from "../../tools/globals";
+import {getAdminStatus, getTechnicianStatus} from "../../tools/globals";
 
-const ServiceCompleted = (props) => {
+const ServiceCompleted = ({user}) => {
 
     // Cookie initializer for react
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -63,7 +63,11 @@ const ServiceCompleted = (props) => {
     };
 
     const fetchData = () => {
-        HTTPRequest.get(`${URL.BACKEND}/api/technician/servicesCompleted/${serviceCompletedID}`, cookies.JWT)
+        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/servicesCompleted/${serviceCompletedID}` : `${URL.BACKEND}/api/technician/servicesCompleted/${serviceCompletedID}`
+        if (user){
+            endpoint = `${URL.BACKEND}/api/user/servicesCompleted/${serviceCompletedID}`
+        }
+        HTTPRequest.get(endpoint, cookies.JWT)
             .then(response => {
                 console.log(response);
                 setAssetName(response.data.assetOnSite.asset.name);
@@ -92,13 +96,17 @@ const ServiceCompleted = (props) => {
             <div className='companyContainer'>
                 <div className='valueContainer'>
                     <h3>Asset On Site Tag</h3>
-                    <input className='inputField' value={assetOnSiteTag} disabled={!isEditing}></input>
+                    <input className='inputField' style={{textAlign: "center"}} value={assetOnSiteTag} disabled={!isEditing}></input>
                     <h3>Service URL</h3>
-                    <input className='inputField' value={serviceUrl} disabled={!isEditing}></input>
-                    <h3>Completion Date</h3>
-                    <input className='inputField' style={{textAlign: "center"}} value={timeCompleted} disabled={true}></input>
-                    <br></br>
-                    <button onClick={completeService}>Complete Service</button>
+                    <input className='inputField' style={{textAlign: "center"}} value={serviceUrl} disabled={!isEditing}></input>
+                    {(getAdminStatus() || getTechnicianStatus()) && (
+                        <>
+                            <h3>Completion Date</h3>
+                            <input className='inputField' style={{textAlign: "center"}} value={timeCompleted} disabled={true}></input>
+                            <br></br>
+                            <button onClick={completeService}>Complete Service</button>
+                        </>
+                    )}
 
                     {getAdminStatus() && <h3>Assign User This Service</h3>}
                     {getAdminStatus() && <input className="inputField" style={{textAlign: "center"}} value={fullName || "No user assigned"} disabled={true}></input>}

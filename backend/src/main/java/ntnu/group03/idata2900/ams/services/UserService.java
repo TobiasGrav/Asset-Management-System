@@ -302,6 +302,24 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Returns true if user has access to service completed, otherwise false
+     *
+     * @param user user to be checked for access
+     * @param id asset on site id
+     * @return returns true if user has access to service completed, otherwise false
+     */
+    public boolean hasAccessToAllServiceCompletedOnSite(User user, int id) {
+        Optional<AssetOnSite> assetOnSite = assetOnSiteRepository.findById(id);
+
+        if (assetOnSite.isEmpty() || !user.getSites().contains(assetOnSite.get().getSite())){
+            return false;
+        }
+
+        return assetOnSite.get().getSite().getUsers().contains(user);
+
+    }
+
+    /**
      * Checks if user has access to the site
      *
      * @param user user to be checked for access

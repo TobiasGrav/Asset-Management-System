@@ -5,9 +5,11 @@ import ntnu.group03.idata2900.ams.dto.CommentDto;
 import ntnu.group03.idata2900.ams.model.Comment;
 import ntnu.group03.idata2900.ams.model.ServiceComment;
 import ntnu.group03.idata2900.ams.model.ServiceCompleted;
+import ntnu.group03.idata2900.ams.model.User;
 import ntnu.group03.idata2900.ams.repositories.ServiceCommentRepository;
 import ntnu.group03.idata2900.ams.services.CommentService;
 import ntnu.group03.idata2900.ams.services.ServiceCompletedService;
+import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/user/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -26,6 +28,8 @@ public class CommentController {
     private final ServiceCompletedService serviceCompletedService;
 
     private final ServiceCommentRepository serviceCommentRepository;
+
+    private final UserService userService;
 
     private static final String COMMENT_NOT_FOUND = "Comment not found with id: {}";
 
@@ -35,11 +39,13 @@ public class CommentController {
      * @param commentService commentService
      * @param serviceCompletedService serviceCompletedService
      * @param serviceCommentRepository serviceCommentRepository
+     * @param userService userService
      */
-    public CommentController(CommentService commentService, ServiceCompletedService serviceCompletedService, ServiceCommentRepository serviceCommentRepository) {
+    public CommentController(CommentService commentService, ServiceCompletedService serviceCompletedService, ServiceCommentRepository serviceCommentRepository, UserService userService) {
         this.commentService = commentService;
         this.serviceCompletedService = serviceCompletedService;
         this.serviceCommentRepository = serviceCommentRepository;
+        this.userService = userService;
     }
 
     /**
@@ -79,6 +85,7 @@ public class CommentController {
     @GetMapping("/serviceCompleted/{id}/comments")
     public ResponseEntity<List<Comment>> getAllCommentsByServiceCompleted(@PathVariable int id) {
         Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
+        User user = userService.getSessionUser();
         if (serviceCompleted.isEmpty()) {
             log.warn("ServiceCompleted not found with ID: {}", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -89,6 +96,12 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         }
+
+        if (!userService.hasAccessToAllServiceCompletedOnSite(user, serviceCompleted.get().getAssetOnSite().getId())){
+            log.warn("User with ID {} does not have access to comments", user.getId());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         log.info("Found {} comments for ServiceCompleted with ID: {}", comments.size(), id);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }

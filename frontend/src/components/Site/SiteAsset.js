@@ -188,6 +188,10 @@ const Main = ({  size }) => {
     navigate(`service`);
   }
 
+  const viewServiceHistory = () => {
+    navigate('history')
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedAsset = {
@@ -222,8 +226,9 @@ const Main = ({  size }) => {
           </div>
           <b>Options</b>
           <button onClick={requestService}>Request Service</button>
+          <button onClick={viewServiceHistory}>View Service History</button>
         </div>
-        <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
+        <img src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">

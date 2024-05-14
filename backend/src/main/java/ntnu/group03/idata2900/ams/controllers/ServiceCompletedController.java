@@ -2,8 +2,10 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.ServiceCompletedDto;
+import ntnu.group03.idata2900.ams.model.AssetOnSite;
 import ntnu.group03.idata2900.ams.model.ServiceCompleted;
 import ntnu.group03.idata2900.ams.model.User;
+import ntnu.group03.idata2900.ams.services.AssetOnSiteService;
 import ntnu.group03.idata2900.ams.services.ServiceCompletedService;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ public class ServiceCompletedController {
 
     private final ServiceCompletedService serviceCompletedService;
     private final UserService userService;
+    private final AssetOnSiteService assetOnSiteService;
 
     private static final String SERVICE_COMPLETED_NOT_FOUND = "ServiceCompleted not found with id: {}";
 
@@ -31,10 +34,12 @@ public class ServiceCompletedController {
      *
      * @param serviceCompletedService serviceCompletedService
      * @param userService userService
+     * @param assetOnSiteService assetOnSiteService
      */
-    public ServiceCompletedController(ServiceCompletedService serviceCompletedService, UserService userService) {
+    public ServiceCompletedController(ServiceCompletedService serviceCompletedService, UserService userService, AssetOnSiteService assetOnSiteService) {
         this.serviceCompletedService = serviceCompletedService;
         this.userService = userService;
+        this.assetOnSiteService = assetOnSiteService;
     }
 
     /**
@@ -50,7 +55,7 @@ public class ServiceCompletedController {
     /**
      * Returns list of all completedServices in database
      *
-     * @return List of all completedServices in database
+     * @return Set of all completedServices in database
      */
     @GetMapping("/technician/servicesCompleted")
     public ResponseEntity<Set<ServiceCompleted>> getAllByUser() {
@@ -62,6 +67,28 @@ public class ServiceCompletedController {
             log.warn("User with name {} does not have authority to access services completed", user.getFirstName() + " " + user.getLastName());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
+
+    /**
+     * Returns set of all completedServices for given asset on site
+     *
+     * @return Set of all completedServices for given asset on site
+     */
+    @GetMapping("/user/assetsOnSite/{id}/servicesCompleted")
+    public ResponseEntity<Set<ServiceCompleted>> getAllByAssetOnSite(@PathVariable int id) {
+        Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
+        User user = userService.getSessionUser();
+        if (assetOnSite.isEmpty()){
+            log.warn("Asset on site not found with ID: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        if (!userService.hasAccessToAllServiceCompletedOnSite(user, id)){
+            log.warn("User with ID {} does not have authority to access this asset on site", user.getId());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        log.info("Services completed found with ID: {}",id);
+        return new ResponseEntity<>(assetOnSite.get().getServicesCompleted(), HttpStatus.OK);
     }
 
     /**
@@ -78,6 +105,49 @@ public class ServiceCompletedController {
             log.warn("User with name {} does not have authority to access services completed", user.getFirstName() + " " + user.getLastName());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        if (serviceCompleted.isEmpty()) {
+            log.warn(SERVICE_COMPLETED_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("ServiceCompleted found with ID: {}", id);
+            return new ResponseEntity<>(serviceCompleted.get(), HttpStatus.OK);
+        }
+    }
+
+    /**
+     * Get a serviceCompleted from database matching given id if it exists.
+     *
+     * @param id potential id of a serviceCompleted
+     * @return a ModelAndView containing serviceCompleted in JSON format
+     */
+    @GetMapping("/user/servicesCompleted/{id}")
+    public ResponseEntity<ServiceCompleted> getServiceCompletedForUser(@PathVariable int id) {
+        Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
+        User user = userService.getSessionUser();
+
+        if (serviceCompleted.isEmpty()) {
+            log.warn(SERVICE_COMPLETED_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if (!userService.hasAccessToAssetOnSite(user, serviceCompleted.get().getAssetOnSite().getSite().getId(), serviceCompleted.get().getAssetOnSite().getId())){
+            log.warn("User with name {} does not have authority to access services completed", user.getFirstName() + " " + user.getLastName());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        log.info("ServiceCompleted found with ID: {}", id);
+        return new ResponseEntity<>(serviceCompleted.get(), HttpStatus.OK);
+    }
+
+    /**
+     * Get a serviceCompleted from database matching given id if it exists.
+     *
+     * @param id potential id of a serviceCompleted
+     * @return a ModelAndView containing serviceCompleted in JSON format
+     */
+    @GetMapping("/admin/servicesCompleted/{id}")
+    public ResponseEntity<ServiceCompleted> getServiceCompletedForAdmin(@PathVariable int id) {
+        Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
         if (serviceCompleted.isEmpty()) {
             log.warn(SERVICE_COMPLETED_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

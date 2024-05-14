@@ -89,7 +89,7 @@ const Main = (props) => {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            HTTPRequest.get(URL.BACKEND + "/api/categories", cookies.JWT).then(response => {
+            HTTPRequest.get(URL.BACKEND + "/api/admin/categories", cookies.JWT).then(response => {
                 console.log(response.data);
                 setCategories(response.data);
                 }).catch(error => {console.log(error)});
