@@ -80,7 +80,7 @@ function ServiceTable({ displayAllServices }) {
                     id: row.id
                 },
             }
-            HTTPRequest.post(`${URL.BACKEND}/api/servicesCompleted`, data, cookies.JWT).then(response => {
+            HTTPRequest.post(`${URL.BACKEND}/api/user/servicesCompleted`, data, cookies.JWT).then(response => {
                 navigate(-1)
                 alert("Service Request Successful")
             }).catch(error => {navigate(-1)})

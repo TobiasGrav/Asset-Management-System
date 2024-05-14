@@ -164,7 +164,7 @@ public class ServiceCompletedController {
      * @param serviceCompleted The serviceCompleted object to be created.
      * @return ResponseEntity containing the created serviceCompleted and HTTP status code 201 (CREATED).
      */
-    @PostMapping("/servicesCompleted")
+    @PostMapping("/user/servicesCompleted")
     public ResponseEntity<ServiceCompleted> createServiceCompleted(@RequestBody ServiceCompletedDto serviceCompleted) {
         try {
             ServiceCompleted createdServiceCompleted = serviceCompletedService.createServiceCompleted(serviceCompleted);
@@ -233,7 +233,7 @@ public class ServiceCompletedController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the serviceCompleted with the given ID doesn't exist.
      */
-    @DeleteMapping("/servicesCompleted/{id}")
+    @DeleteMapping("/admin/servicesCompleted/{id}")
     public ResponseEntity<ServiceCompleted> deleteServiceCompleted(@PathVariable int id) {
         Optional<ServiceCompleted> existingServiceCompleted = serviceCompletedService.getServiceCompleted(id);
         if (existingServiceCompleted.isEmpty()) {

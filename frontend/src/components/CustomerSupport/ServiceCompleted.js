@@ -11,7 +11,7 @@ import {format} from "date-fns";
 import ServiceCompletedComment from "./ServiceCompletedComment";
 import {getAdminStatus, getTechnicianStatus} from "../../tools/globals";
 
-const ServiceCompleted = ({user}) => {
+const ServiceCompleted = () => {
 
     // Cookie initializer for react
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -63,9 +63,9 @@ const ServiceCompleted = ({user}) => {
     };
 
     const fetchData = () => {
-        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/servicesCompleted/${serviceCompletedID}` : `${URL.BACKEND}/api/technician/servicesCompleted/${serviceCompletedID}`
-        if (user){
-            endpoint = `${URL.BACKEND}/api/user/servicesCompleted/${serviceCompletedID}`
+        let endpoint = getTechnicianStatus() ? `${URL.BACKEND}/api/technician/servicesCompleted/${serviceCompletedID}` : `${URL.BACKEND}/api/user/servicesCompleted/${serviceCompletedID}`
+        if (getAdminStatus()){
+            endpoint =  `${URL.BACKEND}/api/admin/servicesCompleted/${serviceCompletedID}`
         }
         HTTPRequest.get(endpoint, cookies.JWT)
             .then(response => {

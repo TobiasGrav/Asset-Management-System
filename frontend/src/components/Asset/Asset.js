@@ -132,6 +132,10 @@ const Main = (props) => {
         navigate(`/asset/${id}/service`);
     }
 
+    const showSpareParts = () => {
+        navigate(`/asset/${id}/sparepart`);
+    }
+
   return (
     <div className="assetBody">
       <input type="text" placeholder="Name" name={name} value={name} onChange={handleNameChange} className="nameInput" disabled={!isEditing}/>
@@ -150,6 +154,7 @@ const Main = (props) => {
               <br></br>
               <b>Options</b>
               <button onClick={showServices}>Show Services</button>
+              <button onClick={showSpareParts}>Show Spare Parts</button>
           </div>
           <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
       </div>

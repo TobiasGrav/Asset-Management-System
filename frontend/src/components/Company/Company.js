@@ -12,13 +12,13 @@ import { useNavigate } from 'react-router-dom'
 import HTTPRequest from '../../tools/HTTPRequest'
 import { jwtDecode } from 'jwt-decode'
 import URL from "../../tools/URL";
+import {getAdminStatus} from "../../tools/globals";
 
 const Company = (props) => {
 
   // Cookie initializer for react
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isEditing, setIsEditing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(true);
 
   const [companyName, setCompanyName] = useState();
   //const [companyID, setCompanyID] = useState();
@@ -107,7 +107,7 @@ const Company = (props) => {
           {isEditing &&
               <button type="button" className="button" onClick={cancel} >Cancel</button>}
 
-          {!isEditing && isAdmin &&
+          {!isEditing && getAdminStatus() &&
               <button type="button" className="button" onClick={edit} >Edit</button>}
 
           {isEditing &&

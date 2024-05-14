@@ -7,47 +7,64 @@ import { useCookies } from 'react-cookie';
 import URL from "../../tools/URL";
 import HTTPRequest from "../../tools/HTTPRequest";
 import {useParams} from "react-router";
-import {getAdminStatus, getTechnicianStatus} from "../../tools/globals";
+import {getAdminStatus} from "../../tools/globals";
 
-function CommentTable() {
-    const [cookies, setCookie, removeCookie] = useCookies();
+function SparePartTable() {
+    const [cookies] = useCookies();
 
+    const [data, setData] = useState([]);
+    const [searchData, setSearchData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [comment, setComment] = useState();
-
-    const { serviceCompletedID } = useParams();
+    const navigate = useNavigate();
+    const { id } = useParams();
 
     useEffect(() => {
         fetchData();
     }, []);
 
+    const search = (event) => {
+        setSearchData([]);
+        data.forEach(element => {
+            if(element.positionDiagramUrl.toLowerCase().includes(event.target.value.toLowerCase()) || element.numberOfParts.toString().includes(event.target.value.toLowerCase())) {
+                searchData.push(element);
+            }
+            setTableData(searchData);
+        });
+    };
+
+    const create = () => {
+        navigate(`create`);
+    };
+
     const fetchData = async () => {
         setLoading(true);
-
-        let endpoint = getAdminStatus() ? `${URL.BACKEND}/api/admin/comments/serviceCompleted/${serviceCompletedID}/comments` : `${URL.BACKEND}/api/user/comments/serviceCompleted/${serviceCompletedID}/comments`
-        HTTPRequest.get(endpoint, cookies.JWT)
-            .then(response => {
+        let endpoint = `${URL.BACKEND}/api/user/asset/${id}/spareParts`;
+        HTTPRequest.get(endpoint, cookies.JWT).then(response => {
+            setData(response.data);
             setTableData(response.data);
             setLoading(false);
-        }).catch(error => {setLoading(false); console.error(error)})
+        }).catch(error => {setLoading(false)});
     };
+
 
     const columns = [
         {
-            name: 'Comment',
-            selector: row => row.comment,
+            name: 'Number of Parts',
+            selector: row => row.numberOfParts,
             sortable: true,
-            wrap: true,
-            width: 'auto',
         },
         {
-            name: 'Timestamp',
-            selector: row =>  formatLocalDateTime(row.creationDate),
+            name: 'Positional Diagram',
+            selector: row => row.positionDiagramUrl,
             sortable: true,
-            width: '150px',
         },
     ];
+
+    // Handler for row click event using navigate
+    const handleRowClicked = (row) => {
+        navigate(`${row.id}`);
+    };
 
     const customStyles = {
         headCells: {
@@ -98,51 +115,22 @@ function CommentTable() {
         },
     };
 
-    const addComment = () => {
-        const data = {
-            comment: comment
-        }
-        HTTPRequest.post(`${URL.BACKEND}/api/technician/comments/serviceCompleted/${serviceCompletedID}`, data, cookies.JWT)
-            .then(response => {
-                fetchData()
-                console.log(response)
-            }
-        ).catch(error => {alert("Something went wrong!\nComment was not added")})
-
-    }
-
-    const handleCommentChange = (event) => {
-        setComment(event.target.value);
-
-    };
-
-    const formatLocalDateTime = (localDateTime) => {
-        return format(new Date(localDateTime), 'dd.MM.yyyy HH:mm');
-    };
-
     return (
-        <div style={{ margin: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ textAlign: "center" }}><h3>Comments</h3></div>
-            <br />
-            <div style={{ textAlign: "center", width: "60vw" }}>
-                <textarea value={comment} onChange={handleCommentChange} disabled={!(getAdminStatus() || getTechnicianStatus())} style={{ width: "100%" }}></textarea>
-                <br />
-                <button onClick={addComment}>Add Comment</button>
-            </div>
-            <br />
-            <div style={{ width: "60vw" }}>
-                <DataTable
-                    columns={columns}
-                    data={tableData}
-                    progressPending={loading}
-                    pagination
-                    persistTableHead
-                    customStyles={customStyles}
-                    style={{ width: "100%" }}
-                />
-            </div>
+        <div style={{ margin: '20px', width: '90%' }}>
+            <div style={{ textAlign:"center" }}><h1 style={{fontSize:30, color:"#003341"}}>Spare Parts Overview</h1></div>
+            <input placeholder='Search for service' onChange={search} style={{marginBottom:"10px", minWidth:"25%", minHeight:"25px", borderRadius:'5px'}}></input>
+            { getAdminStatus() && <button className='button' style={{marginLeft:'16px'}} onClick={create} >Create new Spare Part</button>}
+            <DataTable
+                columns={columns}
+                data={tableData}
+                progressPending={loading}
+                pagination
+                persistTableHead
+                onRowClicked={handleRowClicked}
+                customStyles={customStyles}
+            />
         </div>
     );
 }
 
-export default CommentTable;
+export default SparePartTable;

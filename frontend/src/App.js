@@ -34,6 +34,9 @@ import AssetServiceCreate from "./components/Asset/AssetServiceCreate";
 import AssetService from "./components/Asset/AssetService";
 import ServiceCompletedTable from "./components/CustomerSupport/ServiceCompletedTable";
 import ServiceCompleted from "./components/CustomerSupport/ServiceCompleted";
+import AssetSparePartTable from "./components/Asset/AssetSparePartTable";
+import AssetSparePart from "./components/Asset/AssetSparePart";
+import AssetSparePartCreate from "./components/Asset/AssetSparePartCreate";
 
 
 function App() {
@@ -43,6 +46,9 @@ function App() {
           <Route path="/asset" element={<Home><Table /></Home>} />
           <Route path="/asset/create" element={<Home><AssetCreate /></Home>} />
           <Route path="/asset/:id" element={<Home><Asset /></Home>} />
+          <Route path="/asset/:id/sparepart" element={<Home><AssetSparePartTable /></Home>} />
+          <Route path="/asset/:id/sparepart/:sparePartID" element={<Home><AssetSparePart /></Home>} />
+          <Route path="/asset/:id/sparepart/create" element={<Home><AssetSparePartCreate /></Home>} />
           <Route path="/asset/:id/service" element={<Home><ServiceTable displayAllServices={true}/></Home>} />
           <Route path="/asset/:id/service/:serviceID" element={<Home><AssetService /></Home>} />
           <Route path="/asset/:id/service/create" element={<Home><AssetServiceCreate /></Home>} />
@@ -62,7 +68,7 @@ function App() {
           <Route path="/company/:companyID/site/:siteID/assets/add/:assetID" element={<Home><SiteAssetAdd /></Home>} />
           <Route path="/company/:companyID/site/:siteID/assets/:assetID" element={<Home><SiteAsset /></Home>} />
           <Route path="/company/:companyID/site/:siteID/assets/:assetID/history" element={<Home><ServiceCompletedTable serviceHistory={true} /></Home>} />
-          <Route path="/company/:companyID/site/:siteID/assets/:assetID/history/:serviceCompletedID" element={<Home><ServiceCompleted user={true} /></Home>} />
+          <Route path="/company/:companyID/site/:siteID/assets/:assetID/history/:serviceCompletedID" element={<Home><ServiceCompleted /></Home>} />
           <Route path="/company/:companyID/site/:siteID/assets/:id/service" element={<Home><ServiceTable displayAllServices={false} /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users" element={<Home><SiteUserTable /></Home>} />
           <Route path="/company/:companyID/site/:siteID/users/:userID" element={<Home><Customer /></Home>} />
@@ -76,7 +82,7 @@ function App() {
           <Route path="/" element={<Home><Welcome /></Home>} />
 
           <Route path="/support" element={<Home><ServiceCompletedTable serviceHistory={false}/></Home>} />
-          <Route path="/support/:serviceCompletedID" element={<Home><ServiceCompleted  user={false}/></Home>} />
+          <Route path="/support/:serviceCompletedID" element={<Home><ServiceCompleted  /></Home>} />
           <Route path="/support/:serviceCompletedID/assign/:companyID" element={<Home><SiteUserAddTable assign={true} /></Home>} />
 
           <Route path="/403" element={<Home><AccessDenied /></Home>} />

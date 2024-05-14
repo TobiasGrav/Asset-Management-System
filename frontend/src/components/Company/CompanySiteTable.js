@@ -11,8 +11,6 @@ import URL from '../../tools/URL';
 function Table() {
     const [cookies, setCookie, removeCookie] = useCookies();
 
-    const [isAdmin, setIsAdmin] = useState();
-
     const { companyID } = useParams();
 
     const [data, setData] = useState([]);
@@ -46,21 +44,9 @@ function Table() {
     }
 
     useEffect(() => {
-        if(cookies.JWT != null) {
-            setIsAdmin(false);
-            jwtDecode(cookies.JWT).roles.forEach(role => {
-                if(role.authority === "ADMIN") {
-                    setIsAdmin(true);
-                }
-            });
-        }
-    }, []);
+        fetchData();
 
-    useEffect(() => {
-        if(isAdmin != null) {
-            fetchData();
-        }
-    }, [isAdmin]);
+    }, []);
 
     const fetchData = () => {
         HTTPRequest.get(`${URL.BACKEND}/api/admin/companies/${companyID}/sites`, cookies.JWT)
