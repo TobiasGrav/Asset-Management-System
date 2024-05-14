@@ -69,6 +69,7 @@ public class AssetOnSite {
     public AssetOnSite(AssetOnSiteDto assetOnSiteDto){
         this.commissionDate = assetOnSiteDto.getCommissionDate();
         this.site = assetOnSiteDto.getSite();
+        this.assetOnSiteTag = assetOnSiteDto.getAssetOnSiteTag();
         this.asset = assetOnSiteDto.getAsset();
     }
 }
