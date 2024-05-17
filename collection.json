@@ -32,55 +32,13 @@
 					],
 					"request": {
 						"auth": {
-							"type": "jwt",
-							"jwt": [
-								{
-									"key": "header",
-									"value": "{}",
-									"type": "string"
-								},
-								{
-									"key": "isSecretBase64Encoded",
-									"value": false,
-									"type": "boolean"
-								},
-								{
-									"key": "secret",
-									"value": "1234@£fdsuifsdufsduåpåsdlvødslkfdgpiosdhgopreqht3498yt34yud!&!%#&##¤¤%%%",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "algorithm",
-									"value": "HS256",
-									"type": "string"
-								},
-								{
-									"key": "payload",
-									"value": "{}",
-									"type": "string"
-								},
-								{
-									"key": "headerPrefix",
-									"value": "Bearer",
-									"type": "string"
-								},
-								{
-									"key": "queryParamKey",
-									"value": "token",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"Jons@ntnu.no\",\n    \"password\": \"IDATA2024isbased\"\n}",
+							"raw": "{\n\t\"email\": \"Jons@cflow.no\",\n    \"password\": \"IDATA2024isbased\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -926,7 +884,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/services",
+							"raw": "http://localhost:8080/api/user/services",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -934,6 +892,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"services"
 							]
 						},
@@ -967,7 +926,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/services/3?=",
+							"raw": "http://localhost:8080/api/user/services/3?=",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -975,12 +934,13 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"services",
 								"3"
 							],
 							"query": [
 								{
-									"key": null,
+									"key": "",
 									"value": ""
 								}
 							]
@@ -1025,7 +985,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/services",
+							"raw": "http://localhost:8080/api/user/services",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1033,6 +993,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"services"
 							]
 						},
@@ -1084,7 +1045,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/services/12",
+							"raw": "http://localhost:8080/api/user/services/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1092,6 +1053,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"services",
 								"12"
 							]
@@ -1144,7 +1106,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/services/{{serviceID}}",
+							"raw": "http://localhost:8080/api/user/services/{{serviceID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1152,6 +1114,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"services",
 								"{{serviceID}}"
 							]
@@ -1191,7 +1154,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/comments",
+							"raw": "http://localhost:8080/api/admin/comments",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1199,6 +1162,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"comments"
 							]
 						},
@@ -1232,7 +1196,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/comments/1",
+							"raw": "http://localhost:8080/api/admin/comments/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1240,6 +1204,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"comments",
 								"1"
 							]
@@ -1284,7 +1249,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/comments",
+							"raw": "http://localhost:8080/api/admin/comments",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1292,6 +1257,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"comments"
 							]
 						},
@@ -1343,7 +1309,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/comments/5",
+							"raw": "http://localhost:8080/api/admin/comments/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1351,6 +1317,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"comments",
 								"5"
 							]
@@ -1403,7 +1370,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/comments/{{commentID}}",
+							"raw": "http://localhost:8080/api/admin/comments/{{commentID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1411,6 +1378,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"comments",
 								"{{commentID}}"
 							]
@@ -1450,7 +1418,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/servicesCompleted",
+							"raw": "http://localhost:8080/api/admin/servicesCompleted",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1458,6 +1426,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"servicesCompleted"
 							]
 						},
@@ -1491,7 +1460,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/servicesCompleted/1",
+							"raw": "http://localhost:8080/api/admin/servicesCompleted/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1499,8 +1468,9 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"servicesCompleted",
-								"1"
+								"5"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -1543,7 +1513,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/servicesCompleted",
+							"raw": "http://localhost:8080/api/user/servicesCompleted",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1551,6 +1521,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"servicesCompleted"
 							]
 						},
@@ -1602,7 +1573,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/servicesCompleted/5",
+							"raw": "http://localhost:8080/api/technician/servicesCompleted/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1610,6 +1581,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"technician",
 								"servicesCompleted",
 								"5"
 							]
@@ -1662,7 +1634,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/servicesCompleted/{{serviceCompletedID}}",
+							"raw": "http://localhost:8080/api/admin/servicesCompleted/{{serviceCompletedID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1670,6 +1642,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"servicesCompleted",
 								"{{serviceCompletedID}}"
 							]
@@ -2060,7 +2033,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"companyId\": \"CompanyID#02\",\n    \"groupId\": \"GroupID#01\",\n    \"firstName\": \"Jenny\",\n    \"lastName\": \"Dow\",\n    \"email\": \"Je3232nd@ntnu.no\",\n    \"password\": \"$2a$10$riArAAcu5We3BVrxUokaR.giVHDcdFhdpi7yRjkwri2T5prMzeTEm\",\n    \"phoneNumber\": \"12345678\",\n    \"creationDate\": \"2024-04-08T13:09:10.162178\",\n    \"updatedDate\": null,\n    \"active\": true,\n    \"roles\": [\n        {\n            \"id\": 1,\n            \"name\": \"USER\"\n        }\n    ],\n    \"sites\": [\n        {\n            \"id\": 1,\n            \"name\": \"Bodøb33å\",\n            \"active\": true,\n            \"company\": {\n                \"id\": 1,\n                \"name\": \"CFlow\"\n            }\n        }\n    ]\n}",
+							"raw": "{\n    \"companyId\": \"CompanyID#02\",\n    \"groupId\": \"GroupID#01\",\n    \"firstName\": \"Jenny\",\n    \"lastName\": \"Dow\",\n    \"email\": \"Je3232nd@ntnu.no\",\n    \"password\": \"$2a$10$riArAAcu5We3BVrxUokaR.giVHDcdFhdpi7yRjkwri2T5prMzeTEm\",\n    \"phoneNumber\": \"12345678\",\n    \"creationDate\": \"2024-04-08T13:09:10.162178\",\n    \"updatedDate\": null,\n    \"active\": true,\n    \"role\": \"USER\",\n    \"roles\": [\n        {\n            \"id\": 1,\n            \"name\": \"USER\"\n        }\n    ],\n    \"sites\": [\n        {\n            \"id\": 1,\n            \"name\": \"Bodøb33å\",\n            \"active\": true,\n            \"company\": {\n                \"id\": 1,\n                \"name\": \"CFlow\"\n            }\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2504,7 +2477,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/spareParts",
+							"raw": "http://localhost:8080/api/admin/spareParts",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2512,6 +2485,51 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
+								"spareParts"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All SP For Asset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/user/asset/3/spareParts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"asset",
+								"3",
 								"spareParts"
 							]
 						},
@@ -2545,7 +2563,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/spareParts/1?=",
+							"raw": "http://localhost:8080/api/user/spareParts/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2553,14 +2571,9 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"user",
 								"spareParts",
-								"1"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": ""
-								}
+								"3"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -2603,7 +2616,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/spareParts",
+							"raw": "http://localhost:8080/api/admin/spareParts",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2611,6 +2624,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"spareParts"
 							]
 						},
@@ -2662,7 +2676,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/spareParts/2",
+							"raw": "http://localhost:8080/api/admin/spareParts/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2670,6 +2684,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"spareParts",
 								"2"
 							]
@@ -2723,7 +2738,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/spareParts/{{sparePartID}}",
+							"raw": "http://localhost:8080/api/admin/spareParts/{{sparePartID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2731,6 +2746,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"spareParts",
 								"{{sparePartID}}"
 							]
@@ -2777,7 +2793,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/categories",
+							"raw": "http://localhost:8080/api/admin/categories",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2785,6 +2801,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"categories"
 							]
 						},
@@ -2818,7 +2835,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/categories/3",
+							"raw": "http://localhost:8080/api/admin/categories/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2826,6 +2843,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"categories",
 								"3"
 							]
@@ -2870,7 +2888,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/categories",
+							"raw": "http://localhost:8080/api/admin/categories",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2878,6 +2896,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"categories"
 							]
 						},
@@ -2929,7 +2948,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/categories/{{categoryID}}",
+							"raw": "http://localhost:8080/api/admin/categories/{{categoryID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2937,6 +2956,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"categories",
 								"{{categoryID}}"
 							]
@@ -2990,7 +3010,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/categories/{{categoryID}}",
+							"raw": "http://localhost:8080/api/admin/categories/{{categoryID}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -2998,6 +3018,7 @@
 							"port": "8080",
 							"path": [
 								"api",
+								"admin",
 								"categories",
 								"{{categoryID}}"
 							]
