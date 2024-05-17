@@ -1,4 +1,4 @@
-package ntnu.group03.idata2900.ams.util;
+package ntnu.group03.idata2900.ams.security.util;
 
 public class SecurityAccessUtil {
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin()
 public class WebController {
     @GetMapping("/")
-    @PreAuthorize("hasAuthority(T(ntnu.group03.idata2900.ams.util.SecurityAccessUtil).ADMIN)")
+    @PreAuthorize("hasAuthority(T(ntnu.group03.idata2900.ams.security.util.SecurityAccessUtil).ADMIN)")
     public String index() {
         return "welcome";
     }

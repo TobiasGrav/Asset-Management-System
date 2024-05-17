@@ -1,6 +1,6 @@
 package ntnu.group03.idata2900.ams.security;
 
-import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
+import ntnu.group03.idata2900.ams.security.util.SecurityAccessUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -5,7 +5,7 @@ import ntnu.group03.idata2900.ams.dto.SignUpDto;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
 import ntnu.group03.idata2900.ams.security.AccessUserDetails;
-import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
+import ntnu.group03.idata2900.ams.security.util.SecurityAccessUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

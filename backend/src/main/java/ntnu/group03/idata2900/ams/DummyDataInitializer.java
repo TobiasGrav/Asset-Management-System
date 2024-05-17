@@ -3,7 +3,7 @@ package ntnu.group03.idata2900.ams;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.model.*;
 import ntnu.group03.idata2900.ams.repositories.*;
-import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
+import ntnu.group03.idata2900.ams.security.util.SecurityAccessUtil;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.bcrypt.BCrypt;

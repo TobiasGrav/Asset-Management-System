@@ -2,7 +2,7 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import ntnu.group03.idata2900.ams.security.AuthenticationRequest;
 import ntnu.group03.idata2900.ams.security.AuthenticationResponse;
-import ntnu.group03.idata2900.ams.util.JwtUtil;
+import ntnu.group03.idata2900.ams.security.util.JwtUtil;
 import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
