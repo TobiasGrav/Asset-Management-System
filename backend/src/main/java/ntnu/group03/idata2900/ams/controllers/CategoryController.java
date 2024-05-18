@@ -14,7 +14,7 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/admin/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;

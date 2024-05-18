@@ -1,6 +1,6 @@
 const URL = {
-    BACKEND: "https://asset-management-system.norwayeast.cloudapp.azure.com",
-    FRONTEND: "https://asset-management-system.norwayeast.cloudapp.azure.com"
+    BACKEND: "https://mngsys.norwayeast.cloudapp.azure.com",
+    FRONTEND: "https://mngsys.norwayeast.cloudapp.azure.com"
 };
 
 export default URL;

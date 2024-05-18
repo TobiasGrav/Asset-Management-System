@@ -1,6 +1,6 @@
 package ntnu.group03.idata2900.ams.security;
 
-import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
+import ntnu.group03.idata2900.ams.security.util.SecurityAccessUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,21 +54,12 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/user/**").hasAnyAuthority(SecurityAccessUtil.USER, SecurityAccessUtil.ADMIN, SecurityAccessUtil.MANAGER, SecurityAccessUtil.TECHNICIAN)
+                        .requestMatchers("/api/manager/**").hasAnyAuthority(SecurityAccessUtil.MANAGER, SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/technician/**").hasAnyAuthority(SecurityAccessUtil.TECHNICIAN, SecurityAccessUtil.ADMIN)
                         .requestMatchers("/api/authenticate").permitAll()
-                        .requestMatchers("/api/assets").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
-                        .requestMatchers("/api/assets/{id}").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
-                        .requestMatchers("/api/assets/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/assetOnSites/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/sites/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/services/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/comments/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/servicesCompleted/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/companies/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/users/**").hasAuthority(SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/api/assets/**").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
                         .requestMatchers("/api/datasheets/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/spareParts/**").hasAuthority(SecurityAccessUtil.ADMIN)
-                        .requestMatchers("/api/categories/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

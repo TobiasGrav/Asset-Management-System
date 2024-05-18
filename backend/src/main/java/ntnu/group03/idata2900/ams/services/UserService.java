@@ -2,16 +2,10 @@ package ntnu.group03.idata2900.ams.services;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SignUpDto;
-import ntnu.group03.idata2900.ams.model.AssetOnSite;
-import ntnu.group03.idata2900.ams.model.Role;
-import ntnu.group03.idata2900.ams.model.Site;
-import ntnu.group03.idata2900.ams.model.User;
-import ntnu.group03.idata2900.ams.repositories.AssetOnSiteRepository;
-import ntnu.group03.idata2900.ams.repositories.RoleRepository;
-import ntnu.group03.idata2900.ams.repositories.SiteRepository;
-import ntnu.group03.idata2900.ams.repositories.UserRepository;
+import ntnu.group03.idata2900.ams.model.*;
+import ntnu.group03.idata2900.ams.repositories.*;
 import ntnu.group03.idata2900.ams.security.AccessUserDetails;
-import ntnu.group03.idata2900.ams.util.SecurityAccessUtil;
+import ntnu.group03.idata2900.ams.security.util.SecurityAccessUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final SiteRepository siteRepository;
     private final AssetOnSiteRepository assetOnSiteRepository;
+    private final ServiceCompletedRepository serviceCompletedRepository;
 
     private final Optional<Role> admin;
     private final Iterable<Site> sites;
@@ -44,11 +39,13 @@ public class UserService implements UserDetailsService {
      * @param roleRepository roleRepository
      * @param siteRepository siteRepository
      * @param assetOnSiteRepository assetOnSiteRepository
+     * @param serviceCompletedRepository serviceCompletedRepository
      */
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, SiteRepository siteRepository, AssetOnSiteRepository assetOnSiteRepository, ServiceCompletedRepository serviceCompletedRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.assetOnSiteRepository = assetOnSiteRepository;
+        this.serviceCompletedRepository = serviceCompletedRepository;
         this.admin = this.roleRepository.findByName(SecurityAccessUtil.ADMIN);
         this.siteRepository = siteRepository;
         this.sites = siteRepository.findAll();
@@ -79,11 +76,37 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Converts all users to signup dto and returns them
+     *
+     * @param users users to be converted
+     * @return returns list of all signup DTOs
+     */
+    public List<SignUpDto> convertAll(Set<User> users) {
+        return users.stream()
+                .map(user -> {
+                    SignUpDto signUpDto = new SignUpDto();
+                    signUpDto.setFirstName(user.getFirstName());
+                    signUpDto.setLastName(user.getLastName());
+                    signUpDto.setCompany(user.getCompany());
+                    signUpDto.setEmail(user.getEmail());
+                    signUpDto.setPhoneNumber(user.getPhoneNumber());
+                    signUpDto.setActive(user.isActive());
+                    signUpDto.setCreationDate(user.getCreationDate());
+                    signUpDto.setSites(user.getSites());
+                    signUpDto.setServicesCompleted(user.getServicesCompleted());
+                    signUpDto.setRoles(user.getRoles());
+                    signUpDto.setId(user.getId());
+                    return signUpDto;
+                })
+                .toList();
+    }
+
+    /**
      * Creates a new user if params are valid and email is not yet registered.
      *
      * @param userInfo information provided by SignUpDto instance
      */
-    public User createUserForSignUp(SignUpDto userInfo) {
+    public User createUserForSignUp(SignUpDto userInfo, Company company) {
         if (!validEmail(userInfo.getEmail())) {
             log.error("Invalid email format: {}", userInfo.getEmail());
             throw new IllegalArgumentException("Invalid email format.");
@@ -108,14 +131,23 @@ public class UserService implements UserDetailsService {
             userInfo.setPassword(createHash(userInfo.getPassword()));
             User user = new User(userInfo);
 
-            setUserRole(user);
+            user.setCompany(company);
+
+            if (userInfo.getCompany() != null){
+                user.setCompany(userInfo.getCompany());
+            }
+
+            if (!userInfo.getRole().equals("USER")){
+                setRole(user, SecurityAccessUtil.USER);
+            }
+
+            setRole(user, userInfo.getRole());
 
             userRepository.save(user);
             log.info("New user created with email: {}", userInfo.getEmail());
             return user;
         }
     }
-
 
     /**
      * Retrieves a user by ID, then convert it to a signupDto and return it.
@@ -164,7 +196,7 @@ public class UserService implements UserDetailsService {
     public User createAdmin(SignUpDto signUpDto) {
         User user = new User(signUpDto);
         user.setPassword(createHash(user.getPassword()));
-        setUserRole(user);
+        setRole(user, signUpDto.getRole());
         // TODO: Should user be added to sites when created or after?
         //setSitesForUser(user, signUpDto.getSites());
         return userRepository.save(user);
@@ -179,7 +211,7 @@ public class UserService implements UserDetailsService {
     public User createUser(SignUpDto signUpDto){
         User user = new User(signUpDto);
         user.setPassword(createHash(user.getPassword()));
-        setUserRole(user);
+        setRole(user, signUpDto.getRole());
         setAdminRole(user);
         setAllSitesForAdmin(user);
         return userRepository.save(user);
@@ -197,7 +229,7 @@ public class UserService implements UserDetailsService {
             User user = existingUser.get();
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
-            user.setEmail(updatedUser.getEmail());;
+            user.setEmail(updatedUser.getEmail());
             user.setPhoneNumber(updatedUser.getPhoneNumber());
             user.setPassword(createHash(updatedUser.getPassword()));
             user.setUpdatedDate(LocalDateTime.now());
@@ -246,13 +278,45 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Adds user role to user
+     * Adds role to user
      *
      * @param user user
      */
-    public void setUserRole(User user){
-        Role userRole = roleRepository.findByName(SecurityAccessUtil.USER).orElseThrow(() -> new IllegalArgumentException("Role USER not found"));
+    public void setRole(User user, String roleName){
+        Role userRole = roleRepository.findByName(roleName).orElseThrow(() -> new IllegalArgumentException("Role " + roleName + " not found"));
         user.getRoles().add(userRole);
+    }
+
+    public Set<User> getUsersByRole(String role) {
+        return userRepository.findByRoleName(role);
+    }
+
+    public boolean hasAccessToServiceCompleted(User user, String roleName){
+        Optional<Role> role = roleRepository.findByName(roleName);
+        return role.isPresent() && user.getRoles().contains(role.get());
+    }
+
+    public boolean hasAccessToGivenServiceCompleted(User user, int id){
+        Optional<ServiceCompleted> servicesCompleted = serviceCompletedRepository.findById(id);
+        return servicesCompleted.filter(value -> user.getServicesCompleted().contains(value)).isEmpty();
+    }
+
+    /**
+     * Returns true if user has access to service completed, otherwise false
+     *
+     * @param user user to be checked for access
+     * @param id asset on site id
+     * @return returns true if user has access to service completed, otherwise false
+     */
+    public boolean hasAccessToAllServiceCompletedOnSite(User user, int id) {
+        Optional<AssetOnSite> assetOnSite = assetOnSiteRepository.findById(id);
+
+        if (assetOnSite.isEmpty() || !user.getSites().contains(assetOnSite.get().getSite())){
+            return false;
+        }
+
+        return assetOnSite.get().getSite().getUsers().contains(user);
+
     }
 
     /**

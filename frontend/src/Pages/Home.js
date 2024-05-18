@@ -2,8 +2,8 @@ import React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from '../components/Asset/AssetTable'
-import Asset from '../components/Asset/Asset'
+import Table from '../components/asset/AssetTable'
+import Asset from '../components/asset/Asset'
 import { jwtDecode } from 'jwt-decode'
 
 import URL from '../tools/URL';
@@ -14,26 +14,13 @@ import './Home.css'
 import { Route, Router, Routes, useNavigate } from 'react-router'
 import { useCookies } from 'react-cookie'
 import HTTPRequest from '../tools/HTTPRequest'
+import {getAdminStatus, getManagerStatus, getTechnicianStatus} from "../tools/globals";
 
 const Main = ({children}) => {
 
   const [cookies, setCookie, deleteCookie] = useCookies();
-  const [isAdmin, setIsAdmin] = useState();
 
   const navigate = useNavigate();
-
-  // If user doesn't have a JWT cookie it will redirect them to the login page.
-  useEffect(() => {
-    if(cookies.JWT == null) {
-        navigate('/login');
-    } else {
-      jwtDecode(cookies.JWT).roles.forEach(role => {
-        if(role.authority === "ADMIN") {
-            setIsAdmin(true);
-        }
-    });
-    }
-  }, []);
 
   const asset = () => {
     navigate("/asset/");
@@ -51,13 +38,18 @@ const Main = ({children}) => {
     navigate("/user/");
   };
 
+  const customerSupport = () => {
+    navigate("/support/")
+  };
+
   const profile = () => {
     navigate('/profile');
   };
 
   const logout = () => {
     deleteCookie('JWT', {path: '/'});
-    window.location.reload();
+    navigate('/login');
+    location.reload();
   };
 
   return (
@@ -70,8 +62,6 @@ const Main = ({children}) => {
         <div className="logoContainer">
           <img alt="image" src={require('./resources/assetmanagementsystem.png')} className="logoImage"/>
           <span className="logoText">Asset Management Database</span>
-        </div>
-        <div className="bookmarkContainer">
         </div>
         <div className="utilityContainer">
           <img alt="image" src={require('./resources/bell.png')} className="utilityIcon"/>
@@ -89,11 +79,13 @@ const Main = ({children}) => {
             <span>Overview</span>
             <br></br>
           </span>
-          <button type="button" className="navButton" onClick={asset}>Asset</button>
-          <button type="button" className="navButton" onClick={company}>Company</button>
-          <button type="button" className="navButton" onClick={site}>Site</button>
-          <button type="button" className="navButton" onClick={customer}>User</button>
-          <button type="button" className="navButton">Customer support</button>
+          <div className="navbarButtonContainer">
+            <button type="button" className="navButton" onClick={asset}>Asset</button>
+            { getAdminStatus() && <button type="button" className="navButton" onClick={company}>Company</button>}
+            <button type="button" className="navButton" onClick={site}>Site</button>
+            { (getAdminStatus() || getManagerStatus()) && <button type="button" className="navButton" onClick={customer}>User</button>}
+            { (getAdminStatus() || getTechnicianStatus()) && <button type="button" className="navButton" onClick={customerSupport}>Customer support</button>}
+          </div>
         </div>
         <div className="rightContainer">
           {children}

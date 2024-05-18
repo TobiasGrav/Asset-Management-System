@@ -16,7 +16,7 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/services")
+@RequestMapping("/api/user/services")
 public class ServiceController {
 
     private final ServiceService serviceService;

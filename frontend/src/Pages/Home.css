@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 0px;
-    justify-content: flex-start;
+    justify-content: space-between;
     background-color: transparent;
   }
   .logoContainer {
@@ -41,16 +41,7 @@
     height: auto;
     text-align: left;
   }
-  .bookmarkContainer {
-    gap: 16px;
-    flex: 0 0 auto;
-    width: 70%;
-    height: 75px;
-    display: flex;
-    align-items: flex-end;
-    padding-right: 25px;
-    justify-content: flex-start;
-  }
+
   .utilityIcon {
     width: auto;
     margin-top: 0px;
@@ -63,7 +54,7 @@
   }
   .navButton {
     text-align: left;
-    margin-right: 25px;
+    margin-right: 5px;
     background: none;
     border: none;
     color: #083F4C;
@@ -73,7 +64,7 @@
     cursor: pointer;
   }
   .utilityContainer {
-    margin-right: 32px;
+    margin-right: 64px;
     flex: 0 0 auto;
     gap:32px;
     width: auto;
@@ -127,6 +118,9 @@
     display: flex;
     align-items: center;
     min-height: 100px;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .dropdown:hover {
@@ -136,6 +130,7 @@
 
   .profileDropdown {
     display: none;
+    border-radius: 0px 5px 5px 5px;
   }
 
   .dropdown:hover .profileDropdown {
@@ -154,7 +149,13 @@
     color: #E7EDF0;
     cursor: pointer;
   }
-
+  
+  .navbarButtonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
 
   /* width */
   ::-webkit-scrollbar {
@@ -175,4 +176,27 @@
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #82A2B0;
+  }
+
+  @media (max-width: 1000px) {
+    .mainContainer {
+      flex-direction: column;
+      align-items: center;
+    }
+    .rightContainer {
+      width: 100%;
+      border-radius: 0px 0px 0px 20px;
+    }
+    .navbarButtonContainer {
+      flex-direction: row;
+      gap: 0px;
+    }
+    .leftContainer {
+      max-width: 100%;
+      width: 100%;
+      padding-bottom: 16px;
+      align-items: center;
+      background-color: #C9D7DD;
+      border-bottom-width: 2px;
+    }
   }

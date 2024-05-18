@@ -2,7 +2,9 @@ package ntnu.group03.idata2900.ams.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.SparePartDto;
+import ntnu.group03.idata2900.ams.model.Asset;
 import ntnu.group03.idata2900.ams.model.SparePart;
+import ntnu.group03.idata2900.ams.services.AssetService;
 import ntnu.group03.idata2900.ams.services.SparePartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/spareParts")
+@RequestMapping("/api")
 public class SparePartController {
 
     private final SparePartService sparePartService;
+    private final AssetService assetService;
 
     private static final String SPARE_PART_NOT_FOUND = "SparePart not found with id: {}";
 
@@ -25,9 +29,11 @@ public class SparePartController {
      * Creates a new instance of SparePartController.
      *
      * @param sparePartService sparePartService
+     * @param assetService assetService
      */
-    public SparePartController(SparePartService sparePartService) {
+    public SparePartController(SparePartService sparePartService, AssetService assetService) {
         this.sparePartService = sparePartService;
+        this.assetService = assetService;
     }
 
     /**
@@ -35,7 +41,7 @@ public class SparePartController {
      *
      * @return List of all spareParts in database
      */
-    @GetMapping
+    @GetMapping("/admin/spareParts")
     public List<SparePart> getAll() {
         return sparePartService.getAll();
     }
@@ -46,7 +52,7 @@ public class SparePartController {
      * @param id potential id of a sparePart
      * @return a ModelAndView containing sparePart in JSON format
      */
-    @GetMapping("/{id}")
+    @GetMapping("/user/spareParts/{id}")
     public ResponseEntity<SparePart> getSparePart(@PathVariable int id) {
         Optional<SparePart> sparePart = this.sparePartService.getSparePart(id);
         if (sparePart.isEmpty()) {
@@ -58,6 +64,24 @@ public class SparePartController {
         }
     }
 
+    /**
+     * Returns set of all spare parts for given asset
+     *
+     * @param id asset id
+     * @return returns set of all spare parts for given asset
+     */
+    @GetMapping("/user/asset/{id}/spareParts")
+    public ResponseEntity<Set<SparePart>> getAllSparePartsForAsset(@PathVariable int id){
+        Optional<Asset> asset = this.assetService.getAsset(id);
+        if (asset.isEmpty()){
+            log.warn("Asset was not found with ID: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info("Asset found with ID {}, the asset has {} spare parts", id, asset.get().getSpareParts().size());
+            return new ResponseEntity<>(asset.get().getSpareParts(), HttpStatus.OK);
+        }
+    }
+
 
     /**
      * Creates a new sparePart.
@@ -65,7 +89,7 @@ public class SparePartController {
      * @param sparePart The sparePart object to be created.
      * @return ResponseEntity containing the created sparePart and HTTP status code 201 (CREATED).
      */
-    @PostMapping
+    @PostMapping("/admin/spareParts")
     public ResponseEntity<SparePart> createSparePart(@RequestBody SparePartDto sparePart) {
         try {
             SparePart createdSparePart = sparePartService.createSparePart(sparePart);
@@ -86,7 +110,7 @@ public class SparePartController {
      * @return ResponseEntity containing the updated sparePart (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the sparePart with the given ID doesn't exist.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/admin/spareParts/{id}")
     public ResponseEntity<SparePart> updateSparePart(@PathVariable int id, @RequestBody SparePartDto updatedSparePart) {
         Optional<SparePart> existingSparePart = sparePartService.getSparePart(id);
         if (existingSparePart.isEmpty()) {
@@ -110,7 +134,7 @@ public class SparePartController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the sparePart with the given ID doesn't exist.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/spareParts/{id}")
     public ResponseEntity<SparePart> deleteSparePart(@PathVariable int id) {
         Optional<SparePart> existingSparePart = sparePartService.getSparePart(id);
         if (existingSparePart.isEmpty()) {

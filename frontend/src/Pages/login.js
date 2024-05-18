@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
+import './login.css';
 import URL from '../tools/URL';
 
-
-import './login.css';
 
 const Login = (props) => {
 
   const [cookies, setCookie, removeCookie] = useCookies();
 
-  const [email, setEmail] = useState("Jons@ntnu.no")
+  const [email, setEmail] = useState("Jons@cflow.no")
   const [password, setPassword] = useState("IDATA2024isbased")
   
   const login = () => {
@@ -54,8 +53,50 @@ const Login = (props) => {
       console.log(error);
     });
   }
-
   return (
+    <div className="login-container">
+      <div className="login-box">
+        <div className="logo-section">
+          <img
+            alt="Asset Management System Logo"
+            src={require("./resources/assetmanagementsystem.png")}
+            className="logo-image"
+          />
+          <h1 className="logo-text">Asset Management Database</h1>
+        </div>
+        <form onSubmit={login} className="login-form">
+          <h2>Log in</h2>
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="Email"
+            className="input-field"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Password"
+            className="input-field"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <a href="http://localhost:8080/recover" target="_blank" rel="noopener noreferrer" className="forgot-password-link">
+            Forgot your password?
+          </a>
+          <button onClick={login} type="button" className="login-button">Login</button>
+          <button onClick={loginUser} type="button" className="secondary-button">Login User</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+
+  /*return (
     <div className="login-container">
       <div className="mainLogin">
         <div className="navbar">
@@ -64,7 +105,7 @@ const Login = (props) => {
             src={require("./resources/assetmanagementsystem.png")}
             className="image"
           />
-          <span className="logoText">Asset Management Database</span>
+          <span className="logoText">asset Management Database</span>
         </div>
         <form onSubmit={login} className="loginForm">
           <span>Log in</span>
@@ -85,14 +126,15 @@ const Login = (props) => {
           </button>
           <button onClick={loginUser} type='button' className="button">
             <span>
-              <span>Login User</span>
+              <span>Login user</span>
               <br></br>
             </span>
           </button>
         </form>
       </div>
     </div>
-  )
-}
+  )*/
+
 
 export default Login
+

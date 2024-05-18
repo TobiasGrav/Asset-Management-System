@@ -1,0 +1,126 @@
+trigger:
+- main
+
+pool:
+  name: Localhost
+  demands:
+    - maven
+    - docker
+
+variables:
+  - group: test
+
+
+jobs:
+
+###### BuildAndTest ###################################################################################################################################
+
+- job: BuildAndTest
+  displayName: Build and Test Spring Boot App
+  
+  steps:
+
+  - script: |
+      docker run --name ams-db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE="ams-db" --network ams-network mysql:latest
+    displayName: create database
+
+  # Tests and then builds the maven project.
+  - task: Maven@3
+    inputs:
+      mavenPomFile: backend/pom.xml
+      goals: clean package
+      javaHomeOption: JDKVersion
+      mavenVersionOption: Default
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+    env:
+      DATABASE_URL: "localhost"
+      DATABASE_USERNAME: "root"
+      DATABASE_PASSWORD: "root"
+
+###### Dockerize ######################################################################################################################################
+
+- job: Dockerize
+  displayName: Dockerize the spring boot application jar file
+  dependsOn: BuildAndTest
+  
+  steps:
+  - checkout: none
+
+  # Creates a docker image and then runs a container.
+  - task: Docker@2
+    inputs:
+      repository: ams-backend
+      command: build
+      Dockerfile: backend/Dockerfile
+      tags: latest
+
+  # Runs a docker container with the image created above.
+  - script: |
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
+    displayName: Run Docker container
+
+###### InstallNewmanAndRunPostmanTests #################################################################################################################
+
+- job: InstallNewmanAndRunPostmanTests
+  dependsOn: Dockerize
+  displayName: 'Execute Postman Tests'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '21.7.1'
+    displayName: 'Install Node.js'
+  
+  - powershell: npm install -g newman newman-reporter-htmlextra
+    displayName: 'Install Newman and HTML Extra Reporter'
+
+  - powershell: |
+      New-Item -ItemType Directory -Force -Path "$(Build.SourcesDirectory)\TestResults"
+    displayName: 'Create Results Directory'
+
+  - script: |
+      newman run collection.json --environment environment.json --reporters cli,junit,htmlextra ^
+      --reporter-junit-export "$(Build.SourcesDirectory)\TestResults\testResults.xml" ^
+      --reporter-htmlextra-export "$(Build.SourcesDirectory)\TestResults\testResults.html"
+    displayName: 'Run Newman with Postman Collection for Reports'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '$(Build.SourcesDirectory)/TestResults/testResults.xml'
+      searchFolder: '$(Build.SourcesDirectory)\TestResults'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Postman Test Results'
+    displayName: 'Publish Postman Test Results'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)\TestResults'
+      ArtifactName: 'Postman Test Results'
+      publishLocation: 'Container'
+    displayName: 'Publish Newman Test Results as Artifact'
+
+####### Clean ##########################################################################################################################################
+
+# Clean always runs wether the pipeline fails or not.
+# Deletes the docker images built, and running docker containers.
+- job: Clean
+  displayName: Clean docker
+  dependsOn: 
+    - BuildAndTest
+    - Dockerize
+    - InstallNewmanAndRunPostmanTests
+  condition: always()
+
+  steps:
+  # Deletes the docker image.
+  - script: |
+        docker rm --force ams-db
+        docker rm --force ams-backend
+    displayName: Deletes the running container
+
+  # Deletes the docker container.
+  - script: |
+      docker rmi ams-backend:latest
+    displayName: Remove docker image on agent

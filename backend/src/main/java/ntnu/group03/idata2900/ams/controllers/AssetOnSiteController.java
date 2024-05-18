@@ -27,6 +27,9 @@ public class AssetOnSiteController {
     private final SiteService siteService;
 
     private static final String ASSET_ON_SITE_NOT_FOUND = "AssetOnSite not found with id: {}";
+
+    private static final String ASSET_ON_SITE_FOUND = "Asset on site found with ID: {}";
+
     private static final String SITE_NOT_FOUND = "Site not found with id: {}";
 
     /**
@@ -50,6 +53,24 @@ public class AssetOnSiteController {
     @GetMapping("/admin/assetOnSites")
     public List<AssetOnSite> getAll() {
         return assetOnSiteService.getAll();
+    }
+
+    /**
+     * Returns asset on site by given id
+     *
+     * @param id id of asset on site
+     * @return returns asset on site by given id
+     */
+    @GetMapping("/admin/assetOnSites/{id}")
+    public ResponseEntity<AssetOnSite> getAssetOnSite(@PathVariable int id){
+        Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
+        if (assetOnSite.isEmpty()){
+            log.warn(ASSET_ON_SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            log.info(ASSET_ON_SITE_FOUND, id);
+            return new ResponseEntity<>(assetOnSite.get(), HttpStatus.OK);
+        }
     }
 
     /**
@@ -106,11 +127,14 @@ public class AssetOnSiteController {
     public ResponseEntity<AssetOnSite> getAssetsOnSiteAdmin(@PathVariable int id, @PathVariable int aosId){
         Optional<Site> site = this.siteService.getSite(id);
         Optional<AssetOnSite> asset = this.assetOnSiteService.getAssetOnSite(aosId);
-        if (site.isEmpty() && asset.isEmpty()){
+        if (site.isEmpty()){
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else if (asset.isEmpty()){
+            log.warn(ASSET_ON_SITE_NOT_FOUND, aosId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            log.info("Asset on site found with ID: {}", aosId);
+            log.info(ASSET_ON_SITE_FOUND, aosId);
             return new ResponseEntity<>(asset.get(), HttpStatus.OK);
         }
     }
@@ -132,7 +156,7 @@ public class AssetOnSiteController {
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else if (asset.isEmpty()){
-            log.warn("Asset on site not found with ID: {}", aosId);
+            log.warn(ASSET_ON_SITE_NOT_FOUND, aosId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         if (!userService.hasAccessToAssetOnSite(user, id, aosId)) {
@@ -140,7 +164,7 @@ public class AssetOnSiteController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        log.info("Asset on site found with ID: {}", aosId);
+        log.info(ASSET_ON_SITE_FOUND, aosId);
         return new ResponseEntity<>(asset.get(), HttpStatus.OK);
     }
 

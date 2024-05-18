@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -49,38 +50,71 @@ public class UserController {
     }
 
     /**
+     * Returns list of all users in company
+     *
+     * @return List of all users in company
+     */
+    @GetMapping("/manager/users")
+    public List<SignUpDto> getAllUsersForManager() {
+        return this.userService.convertAll(this.userService.getSessionUser().getCompany().getUsers());
+    }
+
+    /**
      * Get a user from database matching given id if it exists.
      *
      * @param id potential id of a user
      * @return a user object in JSON format
      */
     @GetMapping("/admin/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
-        Optional<User> user = this.userService.getUserById(id);
-        if (user.isEmpty()) {
+    public ResponseEntity<SignUpDto> getUser(@PathVariable int id) {
+        SignUpDto user = this.userService.getUserByIdThenConvertToSignupDto(id);
+        if (user == null) {
             log.warn(USER_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             log.info("User found with ID: {}", id);
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 
+    /**
+     * Returns set of all users by site id, including all technicians
+     *
+     * @param id id of site
+     * @return returns set of all users connected to given site id
+     */
+    @GetMapping( "/admin/sites/{id}/users")
+    public ResponseEntity<List<SignUpDto>> getAllUsersBySite(@PathVariable int id){
+        Optional<Site> site = this.siteService.getSite(id);
+        if (site.isEmpty()){
+            log.warn(SITE_NOT_FOUND, id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            Set<User> allUsers = site.get().getUsers();
+            Set<User> technicianUsers = userService.getUsersByRole("TECHNICIAN");
+
+            allUsers.addAll(technicianUsers);
+
+            log.info("All users found with given site ID: {}", id);
+            return new ResponseEntity<>(this.userService.convertAll(allUsers), HttpStatus.OK);
+        }
+    }
     /**
      * Returns set of all users by site id
      *
      * @param id id of site
      * @return returns set of all users connected to given site id
      */
-    @GetMapping( "/admin/sites/{id}/users")
-    public ResponseEntity<Set<User>> getAllUsersBySite(@PathVariable int id){
+    @GetMapping( "/manager/sites/{id}/users")
+    public ResponseEntity<List<SignUpDto>> getAllUsersBySiteForManager(@PathVariable int id){
         Optional<Site> site = this.siteService.getSite(id);
         if (site.isEmpty()){
             log.warn(SITE_NOT_FOUND, id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
+            List<SignUpDto> users = this.userService.convertAll(site.get().getUsers());
             log.info("All users found with given site ID: {}", id);
-            return new ResponseEntity<>(site.get().getUsers(), HttpStatus.OK);
+            return new ResponseEntity<>(users, HttpStatus.OK);
         }
     }
 
@@ -113,7 +147,26 @@ public class UserController {
     @PostMapping("/admin/users")
     public ResponseEntity<User> createUser(@RequestBody SignUpDto user) {
         try {
-            User createdUser = userService.createUserForSignUp(user);
+            User createdUser = userService.createUserForSignUp(user, null);
+            log.info("User created with ID: {}", createdUser.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            log.error("Error creating user", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    /**
+     * Creates a new user.
+     *
+     * @param user The user object to be created.
+     * @return ResponseEntity containing the created user and HTTP status code 201 (CREATED).
+     */
+    @PostMapping("/manager/users")
+    public ResponseEntity<User> createUserAsManager(@RequestBody SignUpDto user) {
+        try {
+            User moderator = userService.getSessionUser();
+            User createdUser = userService.createUserForSignUp(user, moderator.getCompany());
             log.info("User created with ID: {}", createdUser.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (Exception e) {
