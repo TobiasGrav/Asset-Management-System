@@ -85,14 +85,14 @@ jobs:
     displayName: 'Run Newman with Postman Collection for Reports'
 
 ###### PublishPostmanTest #############################################################################################################################
-
-- job: PublishPostmanTest
-  displayName: Publish test
-  dependsOn: InstallNewmanAndRunPostmanTests
-  condition: always()
-
-  steps:
-  - checkout: none
+#
+#- job: PublishPostmanTest
+#  displayName: Publish test
+#  dependsOn: InstallNewmanAndRunPostmanTests
+#  condition: always()
+#
+#  steps:
+#  - checkout: none
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
