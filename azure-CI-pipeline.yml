@@ -62,7 +62,10 @@ jobs:
 - job: InstallNewmanAndRunPostmanTests
   dependsOn: Dockerize
   displayName: 'Execute Postman Tests'
+
   steps:
+  - checkout: none
+
   - task: NodeTool@0
     inputs:
       versionSpec: '21.7.1'
@@ -89,6 +92,7 @@ jobs:
   condition: always()
 
   steps:
+  - checkout: none
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
