@@ -81,6 +81,14 @@ jobs:
       --reporter-htmlextra-export "$(Build.SourcesDirectory)\TestResults\testResults.html"
     displayName: 'Run Newman with Postman Collection for Reports'
 
+###### PublishPostmanTest #############################################################################################################################
+
+- job: PublishPostmanTest
+  displayName: Publish test
+  dependsOn: InstallNewmanAndRunPostmanTests
+  condition: always()
+
+  steps:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
