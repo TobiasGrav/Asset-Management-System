@@ -1,15 +1,11 @@
 trigger:
-- main
+- dev
 
 pool:
   name: Localhost
   demands:
     - maven
     - docker
-
-variables:
-  - group: test
-
 
 jobs:
 
