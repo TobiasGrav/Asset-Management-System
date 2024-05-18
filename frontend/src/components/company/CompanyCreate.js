@@ -39,7 +39,7 @@ const Main = (props) => {
     .then(response => {
         console.log(response);
     })
-    .catch(error => {alert('Something went wrong!\nCompany not created')});
+    .catch(error => {alert('Something went wrong!\ncompany not created')});
   };
 
   // lets the user input values

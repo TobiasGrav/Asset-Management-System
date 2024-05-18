@@ -80,7 +80,7 @@ const Main = (props) => {
                     },
                 }
             );
-            alert('Asset created successfully!');
+            alert('asset created successfully!');
         } catch (error) {
             console.error('Error creating the asset:', error);
             alert('Failed to create the asset.');

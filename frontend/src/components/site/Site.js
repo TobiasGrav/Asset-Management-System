@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import { Helmet } from 'react-helmet';
 
-import Table from '../Asset/AssetTable';
+import Table from '../asset/AssetTable';
 
 import './Site.css';
 import { useParams } from 'react-router';
@@ -68,7 +68,7 @@ const Site = (props) => {
                   'Content-Type': 'application/json',
               },
           });
-          alert("Asset updated successfully!");
+          alert("asset updated successfully!");
       } catch (error) {
           console.error("Error updating the asset:", error);
           alert("Failed to update the asset.");

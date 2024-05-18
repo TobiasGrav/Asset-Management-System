@@ -4,7 +4,7 @@ import URL from '../../tools/URL';
 
 import { Helmet } from 'react-helmet';
 
-import Table from '../Asset/AssetTable';
+import Table from '../asset/AssetTable';
 
 import './User.css';
 import { useParams } from 'react-router';
@@ -131,7 +131,7 @@ const Main = (props) => {
                   'Content-Type': 'application/json',
               },
           });
-          alert("User updated successfully!");
+          alert("user updated successfully!");
       } catch (error) {
           console.error("Error updating the user:", error);
           alert("Failed to update the user.");

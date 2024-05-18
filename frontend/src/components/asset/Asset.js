@@ -105,7 +105,7 @@ const Main = (props) => {
       console.log(updatedAsset);
       try {
           HTTPRequest.put(`${URL.BACKEND}/api/assets/${id}`, updatedAsset, cookies.JWT);
-          alert("Asset updated successfully!");
+          alert("asset updated successfully!");
       } catch (error) {
           console.error("Error updating the asset:", error);
           alert("Failed to update the asset.");

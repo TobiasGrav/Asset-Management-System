@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import URL from '../../tools/URL';
-import QuantityIncrementer from '../Utility/QuantityIncrementer';
+import QuantityIncrementer from '../utility/QuantityIncrementer';
 import './Site.css';
 import { getAdminStatus } from "../../tools/globals";
 import HTTPRequest from "../../tools/HTTPRequest";
@@ -89,10 +89,10 @@ function Table() {
             try {
                 const response = await HTTPRequest.post(`${URL.BACKEND}/api/admin/assetOnSites`, asset, cookies.JWT);
                 if (response.status == 201) {
-                    console.log("Asset imported:", response.data);
+                    console.log("asset imported:", response.data);
                 }
             } catch (error) {
-                console.error('Error importing asset:', error, 'Asset:', asset);
+                console.error('Error importing asset:', error, 'asset:', asset);
                 count += 1;
                 successful = false;
             }

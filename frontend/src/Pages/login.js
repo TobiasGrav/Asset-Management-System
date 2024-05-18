@@ -105,7 +105,7 @@ const Login = (props) => {
             src={require("./resources/assetmanagementsystem.png")}
             className="image"
           />
-          <span className="logoText">Asset Management Database</span>
+          <span className="logoText">asset Management Database</span>
         </div>
         <form onSubmit={login} className="loginForm">
           <span>Log in</span>
@@ -126,7 +126,7 @@ const Login = (props) => {
           </button>
           <button onClick={loginUser} type='button' className="button">
             <span>
-              <span>Login User</span>
+              <span>Login user</span>
               <br></br>
             </span>
           </button>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from '../Asset/AssetTable'
+import Table from './/AssetTable'
 
 import './Asset.css'
 import { useParams } from 'react-router'

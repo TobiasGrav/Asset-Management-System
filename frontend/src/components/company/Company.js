@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from '../Asset/AssetTable'
+import Table from '../asset/AssetTable'
 
 import './Company.css'
 import { useParams } from 'react-router'
@@ -62,7 +62,7 @@ const Company = (props) => {
         console.log(updatedCompany);
         try {
             HTTPRequest.put(`${URL.BACKEND}/api/companies/${companyID}`, updatedCompany, cookies.JWT);
-            alert("Company updated successfully!");
+            alert("company updated successfully!");
         } catch (error) {
             console.error("Error updating the company:", error);
             alert("Failed to update the asset.");

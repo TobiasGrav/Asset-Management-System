@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import { Helmet } from 'react-helmet';
 
-import Table from '../Asset/AssetTable';
+import Table from '../asset/AssetTable';
 import URL from '../../tools/URL';
 
-import '../Asset/Asset.css';
+import '../asset/Asset.css';
 import { useParams } from 'react-router';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import HTTPRequest from '../../tools/HTTPRequest';
 import { jwtDecode } from 'jwt-decode';
 import QRCode from 'qrcode.react';
-import QuantityIncrementer from '../Utility/QuantityIncrementer';
+import QuantityIncrementer from '../utility/QuantityIncrementer';
 
 const Main = (props) => {
 

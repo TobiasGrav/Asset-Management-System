@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from '../Asset/AssetTable'
+import Table from '../asset/AssetTable'
 
 import URL from '../../tools/URL';
 
-import '../Asset/Asset.css'
+import '../asset/Asset.css'
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'

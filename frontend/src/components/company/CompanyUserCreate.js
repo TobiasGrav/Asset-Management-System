@@ -4,7 +4,7 @@ import URL from '../../tools/URL';
 
 import { Helmet } from 'react-helmet';
 
-import Table from '../Asset/AssetTable';
+import Table from '../asset/AssetTable';
 
 import './Company.css';
 import { useParams } from 'react-router';
