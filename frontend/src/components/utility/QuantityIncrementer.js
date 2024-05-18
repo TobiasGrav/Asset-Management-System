@@ -11,7 +11,7 @@ const QuantityIncrementer = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [image, setImage] = useState(require('../../Pages/resources/checkmark.png'));
+  const [image, setImage] = useState(require('../../pages/resources/checkmark.png'));
   const [hasBeenClicked, setHasBeenClicked] = useState(false);
 
   const incrementQuantity = () => {
@@ -30,14 +30,14 @@ const QuantityIncrementer = (props) => {
   };
 
   const playSuccess = () => {
-    setImage(require('../../Pages/resources/checkmark.png'));
+    setImage(require('../../pages/resources/checkmark.png'));
     setAnimate(true);
     setTimeout(() => setAnimate(false), 5000);
     setTimeout(() => setHasBeenClicked(false), 5000);
   }
 
   const playFailed = () => {
-    setImage(require('../../Pages/resources/x.png'));
+    setImage(require('../../pages/resources/x.png'));
     setAnimate(true);
     setTimeout(() => setAnimate(false), 5000);
     setTimeout(() => setHasBeenClicked(false), 5000);
@@ -91,7 +91,7 @@ const QuantityIncrementer = (props) => {
         />
         <button className='incrementButton' style={{ width:'25px' }} onClick={incrementQuantity}>+</button>
         <button type="addAssetButton" className="button" onClick={addAsset} disabled={hasBeenClicked} >Add asset</button>
-        <img src={require('../../Pages/resources/Loading.gif')} hidden={!isWaitingForResponse} style={{ width:'32px', height:'32px' }} ></img>
+        <img src={require('../../pages/resources/Loading.gif')} hidden={!isWaitingForResponse} style={{ width:'32px', height:'32px' }} ></img>
         <img src={image} className={animate ? 'fadeIn' : 'notActive'} style={{ width:'25px', height:'25px' }} ></img>
       </div>
   );

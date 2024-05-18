@@ -30,12 +30,13 @@ const Main = (props) => {
   const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
-  const [image, setImage] = useState(require('../../Pages/resources/nerd.png'));
+  const [image, setImage] = useState(require('../../pages/resources/nerd.png'));
 
   // Conditional variables
   const [validFirstName, setValidFirstName] = useState();
   const [validLastName, setValidLastName] = useState();
   const [validEmail, setValidEmail] = useState();
+  const [emailUsed, setEmailUsed] = useState();
   const [validPhoneNumber, setValidPhoneNumber] = useState();
 
   const emailInput = useRef();
@@ -56,6 +57,7 @@ const Main = (props) => {
     setValidLastName(isValidName(event.target.value));
   }
   const handleEmailChange = (event) => {
+    setEmailUsed(false);
     setEmail(event.target.value);
     setValidEmail(isValidEmail(event.target.value));
   }
@@ -67,15 +69,15 @@ const Main = (props) => {
   }
   const handleRoleChange = (event) => {
     if(event.target.value === 'USER') {
-        setImage(require('../../Pages/resources/nerd.png'));
+        setImage(require('../../pages/resources/nerd.png'));
         setRole("USER");
     }
     if(event.target.value === 'MANAGER') {
-        setImage(require('../../Pages/resources/superior.png'));
+        setImage(require('../../pages/resources/superior.png'));
         setRole("MANAGER");
     }
     if (event.target.value === 'TECHNICIAN'){
-        setImage(require('../../Pages/resources/technician.png'));
+        setImage(require('../../pages/resources/technician.png'));
         setRole("TECHNICIAN");
     }
   }
@@ -120,7 +122,8 @@ const Main = (props) => {
         HTTPRequest.post(endpoint, userData, cookies.JWT)
         .then(response => {
             if(response == null) {
-                alert('Email already in use!');
+                //alert('Email already in use!');
+                setEmailUsed(true);
             }else if(response.status == 201) {
                 navigate(-1);
             }
@@ -145,6 +148,7 @@ const Main = (props) => {
             <b>Email:</b>
             <input className='inputField' ref={emailInput} placeholder="Enter Email" value={email} onChange={handleEmailChange} ></input>
             {validEmail != null && !validEmail && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Not a valid email format</p>}
+            {emailUsed != null && emailUsed && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Email already used</p>}
             <b>Phone number:</b>
             <input className='input' placeholder="Enter Phone number" value={phoneNumber} onChange={handlePhoneNumberChange} ></input>
             {/*{validPhoneNumber != null && !validPhoneNumber && <p style={{color:'red', fontSize:10, marginTop:'0px', marginBottom:'0px'}}>Invalid Phone Number</p>}*/}

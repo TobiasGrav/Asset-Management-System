@@ -156,7 +156,7 @@ const Main = (props) => {
               <button onClick={showServices}>Show Services</button>
               <button onClick={showSpareParts}>Show Spare Parts</button>
           </div>
-          <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
+          <img alt="image" src={require("../../pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
         <div className="buttonContainer">
         <div className="leftButtonContainer">

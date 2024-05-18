@@ -107,7 +107,7 @@ const AssetSparePart = (props) => {
                     {!isNumberValid && <p style={{color: 'red'}}>Please enter a valid number</p>}
                 </div>
                 <div className='imageContainer'>
-                    <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")}
+                    <img alt="image" src={require("../../pages/resources/CompanyLogo.png")}
                          className="companyImage"></img>
                 </div>
             </div>

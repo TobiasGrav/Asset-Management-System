@@ -29,3 +29,8 @@
 .inputField:invalid {
     border-color: red;
 }
+
+.assetContainer {
+    display: flex;
+    justify-content: center;
+}

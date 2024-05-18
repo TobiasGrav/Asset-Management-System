@@ -94,10 +94,10 @@ const Main = (props) => {
       setCompanyID(response.data.company.id);
       if(response.data.roles.length > 1) {
         setRole("Admin");
-        setImage(require('../../Pages/resources/superior.png'));
+        setImage(require('../../pages/resources/superior.png'));
       } else {
         setRole("User");
-        setImage(require('../../Pages/resources/nerd.png'));
+        setImage(require('../../pages/resources/nerd.png'));
       }
     })
     .catch(error => {console.log(error)});

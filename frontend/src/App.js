@@ -3,8 +3,8 @@ import './App.css';
 //import Login from './login/login'
 import Table from './components/asset/AssetTable';
 import Asset from './components/asset/Asset';
-import Home from './Pages/Home';
-import Login from './Pages/login';
+import Home from './pages/Home';
+import Login from './pages/login';
 import Company from './components/company/Company';
 import CompanyCreate from './components/company/CompanyCreate';
 import CompanyTable from './components/company/CompanyTable';

@@ -92,7 +92,7 @@ const Company = (props) => {
                 <button onClick={showSites} >Show Sites</button>
             </div>
             <div className='imageContainer'>
-                <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
+                <img alt="image" src={require("../../pages/resources/CompanyLogo.png")} className="companyImage"></img>
             </div>
         </div>
         <div className="buttonContainer">

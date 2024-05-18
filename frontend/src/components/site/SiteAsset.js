@@ -228,7 +228,7 @@ const Main = ({  size }) => {
           <button onClick={requestService}>Request Service</button>
           <button onClick={viewServiceHistory}>View Service History</button>
         </div>
-        <img src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
+        <img src={require("../../pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">
