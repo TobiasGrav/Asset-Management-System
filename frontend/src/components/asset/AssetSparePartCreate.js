@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import Table from './/AssetTable'
+import Table from './AssetTable'
 
 import './Asset.css'
 import { useParams } from 'react-router'
@@ -82,7 +82,7 @@ const SparePartCreate = (props) => {
                     {!isNumberValid && <p style={{color: 'red'}}>Please enter a valid number</p>}
                 </div>
                 <div className='imageContainer'>
-                    <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")}
+                    <img alt="image" src={require("../../pages/resources/CompanyLogo.png")}
                          className="companyImage"></img>
                 </div>
             </div>

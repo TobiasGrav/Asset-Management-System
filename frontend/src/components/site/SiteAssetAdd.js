@@ -78,7 +78,7 @@ const Main = (props) => {
             {attachmentName}.pdf
           </a>
         </div>
-        <img alt="image" src={require("../../Pages/resources/AssetImage.png")} className="assetImage"/>
+        <img alt="image" src={require("../../pages/resources/AssetImage.png")} className="assetImage"/>
       </div>
       <div className="buttonContainer">
         <div className="leftButtonContainer">

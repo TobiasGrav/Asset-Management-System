@@ -89,7 +89,7 @@ const Service = (props) => {
                     <input value={serviceUrl} onChange={handleServiceUrlChange}></input>
                 </div>
                 <div className='imageContainer'>
-                    <img alt="image" src={require("../../Pages/resources/CompanyLogo.png")} className="companyImage"></img>
+                    <img alt="image" src={require("../../pages/resources/CompanyLogo.png")} className="companyImage"></img>
                 </div>
             </div>
             <div className="buttonContainer">

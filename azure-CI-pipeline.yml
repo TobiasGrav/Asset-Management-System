@@ -101,92 +101,6 @@ jobs:
       publishLocation: 'Container'
     displayName: 'Publish Newman Test Results as Artifact'
 
-###### BuildReactApp #####################################################################################################################################
-
-- job: BuildReactApp
-  displayName: builds and creates a docker image of the react application
-  dependsOn: InstallNewmanAndRunPostmanTests
-
-  steps:
-  - checkout: none
-
-  - script: |
-      cd frontend
-      npm install --yes
-    displayName: Install node.js dependencies
-
-  - script: |
-      cd frontend
-      npm run build
-    displayName: Builds the react application
-
-  - script: |
-      cd frontend
-      docker build -t ams-nginx .
-    displayName: Dockerize react/nginx
-
-###### PushDockerImages #############################################################################################################################
-
-- job: PushDockerImages
-  displayName: Pushes images to private container registry
-  dependsOn: BuildReactApp
-  
-  steps:
-  - checkout: none
-
-  # Logs into the private container registry via a source connection
-  - task: Docker@2
-    displayName: Login to Azure Container Registry
-    inputs:
-      command: login
-      containerRegistry: ams-acr
-
-  # Tags the images for pushing them to the private repository in the cloud.
-  # Latest tag overwrites the last latest image, so that the staging server can pull this.
-  - script: |
-      docker tag ams-backend amsprojectacr.azurecr.io/ams-backend:latest
-      docker tag ams-nginx amsprojectacr.azurecr.io/ams-nginx:latest
-    displayName: Tag Docker Image
-
-  # Pushes the images to the registry.
-  - script: |
-        docker push amsprojectacr.azurecr.io/ams-backend:latest
-        docker push amsprojectacr.azurecr.io/ams-nginx:latest
-    displayName: Push Docker Image
-
-####### Deploy ##########################################################################################################################################
-
-- job: Deploy
-  displayName: Deploys the docker to a cloud hosted staging server
-  dependsOn: PushDockerImages
-
-  steps:
-  #- checkout: none
-
-  # Logs into Azure via a service connection, and tears down the staging server if it exists.
-  - task: AzureCLI@2
-    displayName: Tear down current VM
-    inputs:
-      azureSubscription: ams-rm
-      scriptType: ps
-      scriptLocation: inlineScript
-      inlineScript: |
-        az vm delete --name ams-vm --resource-group ams --yes
-        az disk delete --name ams-vm --resource-group ams --yes
-
-  # Deploys a new VM via the VMtemplate.json, it then sets itself up by downloading 
-  # docker and azure cli for pulling and running the latest image via a custom script.
-  - task: AzureResourceManagerTemplateDeployment@3
-    displayName: Create new VM
-    inputs:
-      azureResourceManagerConnection: ams-rm
-      subscriptionId: 77b69bf5-7cdb-462f-a4b2-b88204db74db
-      resourceGroupName: ams
-      location: Norway East
-      csmFile: $(Build.SourcesDirectory)/VMtemplate.json
-      deploymentMode: Incremental
-      deploymentName: ams
-
 ####### Clean ##########################################################################################################################################
 
 # Clean always runs wether the pipeline fails or not.
@@ -194,9 +108,9 @@ jobs:
 - job: Clean
   displayName: Clean docker
   dependsOn: 
-    #- BuildAndTest
-    #- Dockerize
-    - Deploy
+    - BuildAndTest
+    - Dockerize
+    - InstallNewmanAndRunPostmanTests
   condition: always()
 
   steps:
@@ -208,5 +122,5 @@ jobs:
 
   # Deletes the docker container.
   - script: |
-      docker rmi ams-backend:$(Build.SourceVersion)
+      docker rmi ams-backend:latest
     displayName: Remove docker image on agent
