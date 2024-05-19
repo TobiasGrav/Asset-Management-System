@@ -1,5 +1,10 @@
 package ntnu.group03.idata2900.ams.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.AssetOnSiteDto;
 import ntnu.group03.idata2900.ams.model.AssetOnSite;
@@ -20,6 +25,7 @@ import java.util.Set;
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Asset On Site API", description = "Endpoints for managing assets on site")
 public class AssetOnSiteController {
 
     private final AssetOnSiteService assetOnSiteService;
@@ -50,6 +56,8 @@ public class AssetOnSiteController {
      *
      * @return List of all AssetOnSites in database
      */
+    @Operation(summary = "Get all assets on site", description = "Retrieves a list of all assets on site.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
     @GetMapping("/admin/assetOnSites")
     public List<AssetOnSite> getAll() {
         return assetOnSiteService.getAll();
@@ -61,6 +69,9 @@ public class AssetOnSiteController {
      * @param id id of asset on site
      * @return returns asset on site by given id
      */
+    @Operation(summary = "Get asset on site by ID", description = "Retrieves an asset on site based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Asset on site found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "404", description = "Asset on site not found")
     @GetMapping("/admin/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> getAssetOnSite(@PathVariable int id){
         Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
@@ -80,6 +91,9 @@ public class AssetOnSiteController {
      *
      * @return returns set of all assets on site
      */
+    @Operation(summary = "Get all assets on site by site ID for admin", description = "Retrieves a set of all assets on site based on the provided site ID for admin.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "404", description = "Site not found")
     @GetMapping("/admin/sites/{id}/assetsOnSite")
     public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSite(@PathVariable int id){
         Optional<Site> site = this.siteService.getSite(id);
@@ -99,6 +113,10 @@ public class AssetOnSiteController {
      *
      * @return returns set of all assets on site
      */
+    @Operation(summary = "Get all assets on site by site ID for user", description = "Retrieves a set of all assets on site based on the provided site ID for user.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "404", description = "Site not found")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/user/sites/{id}/assetsOnSite")
     public ResponseEntity<Set<AssetOnSite>> getAllAssetsOnSiteUser(@PathVariable int id){
         Optional<Site> site = this.siteService.getSite(id);
@@ -123,6 +141,9 @@ public class AssetOnSiteController {
      * @param aosId asset on site id
      * @return returns asset on site
      */
+    @Operation(summary = "Get asset on site by site ID and asset ID for admin", description = "Retrieves an asset on site based on the provided site ID and asset ID for admin.")
+    @ApiResponse(responseCode = "200", description = "Asset on site found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "404", description = "Site or asset on site not found")
     @GetMapping("/admin/sites/{id}/assetsOnSite/{aosId}")
     public ResponseEntity<AssetOnSite> getAssetsOnSiteAdmin(@PathVariable int id, @PathVariable int aosId){
         Optional<Site> site = this.siteService.getSite(id);
@@ -146,6 +167,9 @@ public class AssetOnSiteController {
      * @param aosId asset on site id
      * @return returns asset on site
      */
+    @ApiResponse(responseCode = "200", description = "Asset on site found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "404", description = "Site or asset on site not found")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/user/sites/{id}/assetsOnSite/{aosId}")
     public ResponseEntity<AssetOnSite> getAssetsOnSiteUser(@PathVariable int id, @PathVariable int aosId){
         Optional<Site> site = this.siteService.getSite(id);
@@ -175,6 +199,9 @@ public class AssetOnSiteController {
      * @param assetOnSite The assetOnSite object to be created.
      * @return ResponseEntity containing the created assetOnSite and HTTP status code 201 (CREATED).
      */
+    @Operation(summary = "Create a new asset on site", description = "Creates a new asset on site.")
+    @ApiResponse(responseCode = "201", description = "Asset on site created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input, object invalid")
     @PostMapping("/admin/assetOnSites")
     public ResponseEntity<AssetOnSite> createSite(@RequestBody AssetOnSiteDto assetOnSite) {
         try {
@@ -196,6 +223,9 @@ public class AssetOnSiteController {
      * @return ResponseEntity containing the updated AssetOnSite (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the AssetOnSite with the given ID doesn't exist.
      */
+    @Operation(summary = "Update an existing asset on site", description = "Updates an existing asset on site based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Asset on site updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AssetOnSite.class)))
+    @ApiResponse(responseCode = "404", description = "Asset on site not found")
     @PutMapping("/admin/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> updateSite(@PathVariable int id, @RequestBody AssetOnSiteDto updatedAssetOnSite) {
         Optional<AssetOnSite> existingAssetOnSite = assetOnSiteService.getAssetOnSite(id);
@@ -219,6 +249,9 @@ public class AssetOnSiteController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the AssetOnSite with the given ID doesn't exist.
      */
+    @Operation(summary = "Delete an asset on site", description = "Deletes an asset on site based on the provided ID.")
+    @ApiResponse(responseCode = "204", description = "Asset on site deleted")
+    @ApiResponse(responseCode = "404", description = "Asset on site not found")
     @DeleteMapping("/admin/assetOnSites/{id}")
     public ResponseEntity<AssetOnSite> deleteSite(@PathVariable int id) {
         Optional<AssetOnSite> existingAssetOnSite = assetOnSiteService.getAssetOnSite(id);

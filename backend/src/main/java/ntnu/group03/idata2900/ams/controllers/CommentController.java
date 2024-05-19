@@ -1,5 +1,10 @@
 package ntnu.group03.idata2900.ams.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.CommentDto;
 import ntnu.group03.idata2900.ams.model.Comment;
@@ -21,6 +26,7 @@ import java.util.Optional;
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Comment API", description = "Endpoints for managing comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -53,6 +59,8 @@ public class CommentController {
      *
      * @return List of all comments in database
      */
+    @Operation(summary = "Get all comments", description = "Retrieves a list of all comments.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
     @GetMapping("/admin/comments")
     public List<Comment> getAll() {
         return commentService.getAll();
@@ -64,6 +72,9 @@ public class CommentController {
      * @param id potential id of a comments
      * @return a ModelAndView containing comments in JSON format
      */
+    @Operation(summary = "Get comment by ID", description = "Retrieves a comment based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Comment found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
+    @ApiResponse(responseCode = "404", description = "Comment not found")
     @GetMapping("/admin/comments/{id}")
     public ResponseEntity<Comment> getComment(@PathVariable int id) {
         Optional<Comment> comment = this.commentService.getComment(id);
@@ -82,6 +93,10 @@ public class CommentController {
      * @param id potential id of a service completed
      * @return a ModelAndView containing comments in JSON format
      */
+    @Operation(summary = "Get all comments by service completed ID for user", description = "Retrieves a list of all comments associated with a specific service completed ID for user.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/user/comments/serviceCompleted/{id}/comments")
     public ResponseEntity<List<Comment>> getAllCommentsByServiceCompleted(@PathVariable int id) {
         Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
@@ -112,6 +127,9 @@ public class CommentController {
      * @param id potential id of a service completed
      * @return a ModelAndView containing comments in JSON format
      */
+    @Operation(summary = "Get all comments by service completed ID for admin", description = "Retrieves a list of all comments associated with a specific service completed ID for admin.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
     @GetMapping("/admin/comments/serviceCompleted/{id}/comments")
     public ResponseEntity<List<Comment>> getAllCommentsByServiceCompletedForAdmin(@PathVariable int id) {
         Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
@@ -137,6 +155,9 @@ public class CommentController {
      * @param comment The comment object to be created.
      * @return ResponseEntity containing the created comment and HTTP status code 201 (CREATED).
      */
+    @Operation(summary = "Create a new comment", description = "Creates a new comment.")
+    @ApiResponse(responseCode = "201", description = "Comment created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input, object invalid")
     @PostMapping("/admin/comments")
     public ResponseEntity<Comment> createComment(@RequestBody CommentDto comment) {
         try {
@@ -156,6 +177,10 @@ public class CommentController {
      * @param id The id of the service completed
      * @return ResponseEntity containing the created comment and HTTP status code 201 (CREATED).
      */
+    @Operation(summary = "Create a new comment and attach it to a service comment", description = "Creates a new comment and associates it with a service comment based on the provided service completed ID.")
+    @ApiResponse(responseCode = "201", description = "Comment created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input, object invalid")
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
     @PostMapping("/technician/comments/serviceCompleted/{id}")
     public ResponseEntity<Comment> createServiceComment(@RequestBody CommentDto comment, @PathVariable int id) {
         try {
@@ -188,6 +213,9 @@ public class CommentController {
      * @return ResponseEntity containing the updated comment (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the comment with the given ID doesn't exist.
      */
+    @Operation(summary = "Update an existing comment", description = "Updates an existing comment based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Comment updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Comment.class)))
+    @ApiResponse(responseCode = "404", description = "Comment not found")
     @PutMapping("/admin/comments/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable int id, @RequestBody CommentDto updatedComment) {
         Optional<Comment> existingComment = commentService.getComment(id);
@@ -210,6 +238,9 @@ public class CommentController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the comment with the given ID doesn't exist.
      */
+    @Operation(summary = "Delete a comment", description = "Deletes an existing comment based on the provided ID.")
+    @ApiResponse(responseCode = "204", description = "Comment deleted")
+    @ApiResponse(responseCode = "404", description = "Comment not found")
     @DeleteMapping("/admin/comments/{id}")
     public ResponseEntity<Comment> deleteComment(@PathVariable int id) {
         Optional<Comment> existingComment = commentService.getComment(id);

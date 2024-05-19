@@ -10,7 +10,7 @@ import ntnu.group03.idata2900.ams.dto.SparePartDto;
 
 @Setter
 @Getter
-@Schema(description = "Site of the asset.", name = "SparePart")
+@Schema(description = "spare part of a given asset.", name = "SparePart")
 @Entity
 public class SparePart {
 

@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Setter
 @Getter
+@Schema(description = "Company of one or many site", name = "company")
 @Entity
 public class Company {
 

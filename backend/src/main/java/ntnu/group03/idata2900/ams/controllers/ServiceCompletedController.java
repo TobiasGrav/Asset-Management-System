@@ -11,6 +11,12 @@ import ntnu.group03.idata2900.ams.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +27,7 @@ import java.util.Set;
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Service Completed API", description = "Endpoints for managing completed services")
 public class ServiceCompletedController {
 
     private final ServiceCompletedService serviceCompletedService;
@@ -47,6 +54,8 @@ public class ServiceCompletedController {
      *
      * @return List of all completedServices in database
      */
+    @Operation(summary = "Get all completed services", description = "Retrieves a list of all completed services.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
     @GetMapping("/admin/servicesCompleted")
     public List<ServiceCompleted> getAll() {
         return serviceCompletedService.getAll();
@@ -57,8 +66,11 @@ public class ServiceCompletedController {
      *
      * @return Set of all completedServices in database
      */
+    @Operation(summary = "Get all completed services by technician", description = "Retrieves a set of all completed services for the currently authenticated technician.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/technician/servicesCompleted")
-    public ResponseEntity<Set<ServiceCompleted>> getAllByUser() {
+    public ResponseEntity<Set<ServiceCompleted>> getAllByTechnician() {
         User user = userService.getSessionUser();
         if (userService.hasAccessToServiceCompleted(user, "TECHNICIAN")){
             log.info("Services completed found with user name: {}", user.getFirstName() + " " + user.getLastName());
@@ -74,6 +86,10 @@ public class ServiceCompletedController {
      *
      * @return Set of all completedServices for given asset on site
      */
+    @Operation(summary = "Get all completed services by asset on site", description = "Retrieves a set of all completed services for a given asset on site.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "404", description = "Asset on site not found")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/user/assetsOnSite/{id}/servicesCompleted")
     public ResponseEntity<Set<ServiceCompleted>> getAllByAssetOnSite(@PathVariable int id) {
         Optional<AssetOnSite> assetOnSite = this.assetOnSiteService.getAssetOnSite(id);
@@ -97,6 +113,10 @@ public class ServiceCompletedController {
      * @param id potential id of a serviceCompleted
      * @return a ModelAndView containing serviceCompleted in JSON format
      */
+    @Operation(summary = "Get completed service by ID for technician", description = "Retrieves a completed service based on the provided ID for the currently authenticated technician.")
+    @ApiResponse(responseCode = "200", description = "Service completed found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/technician/servicesCompleted/{id}")
     public ResponseEntity<ServiceCompleted> getServiceCompleted(@PathVariable int id) {
         Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
@@ -120,6 +140,10 @@ public class ServiceCompletedController {
      * @param id potential id of a serviceCompleted
      * @return a ModelAndView containing serviceCompleted in JSON format
      */
+    @Operation(summary = "Get completed service by ID for user", description = "Retrieves a completed service based on the provided ID for the currently authenticated user.")
+    @ApiResponse(responseCode = "200", description = "Service completed found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     @GetMapping("/user/servicesCompleted/{id}")
     public ResponseEntity<ServiceCompleted> getServiceCompletedForUser(@PathVariable int id) {
         Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
@@ -145,6 +169,9 @@ public class ServiceCompletedController {
      * @param id potential id of a serviceCompleted
      * @return a ModelAndView containing serviceCompleted in JSON format
      */
+    @Operation(summary = "Get completed service by ID for admin", description = "Retrieves a completed service based on the provided ID for the admin.")
+    @ApiResponse(responseCode = "200", description = "Service completed found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
     @GetMapping("/admin/servicesCompleted/{id}")
     public ResponseEntity<ServiceCompleted> getServiceCompletedForAdmin(@PathVariable int id) {
         Optional<ServiceCompleted> serviceCompleted = this.serviceCompletedService.getServiceCompleted(id);
@@ -164,6 +191,9 @@ public class ServiceCompletedController {
      * @param serviceCompleted The serviceCompleted object to be created.
      * @return ResponseEntity containing the created serviceCompleted and HTTP status code 201 (CREATED).
      */
+    @Operation(summary = "Create a new completed service", description = "Creates a new completed service.")
+    @ApiResponse(responseCode = "201", description = "Service completed created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input, object invalid")
     @PostMapping("/user/servicesCompleted")
     public ResponseEntity<ServiceCompleted> createServiceCompleted(@RequestBody ServiceCompletedDto serviceCompleted) {
         try {
@@ -184,6 +214,9 @@ public class ServiceCompletedController {
      * @return ResponseEntity containing the updated serviceCompleted (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the serviceCompleted with the given ID doesn't exist.
      */
+    @Operation(summary = "Update the completion date of a service", description = "Updates the completion date of an existing service.")
+    @ApiResponse(responseCode = "200", description = "Service completed updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
     @PutMapping("/technician/servicesCompleted/{id}")
     public ResponseEntity<ServiceCompleted> updateServiceCompletedDate(@PathVariable int id) {
         Optional<ServiceCompleted> existingServiceCompleted = serviceCompletedService.getServiceCompleted(id);
@@ -207,6 +240,9 @@ public class ServiceCompletedController {
      * @return ResponseEntity containing the updated serviceCompleted (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the serviceCompleted with the given ID doesn't exist.
      */
+    @Operation(summary = "Update the user of a completed service", description = "Updates the user associated with an existing completed service.")
+    @ApiResponse(responseCode = "200", description = "Service completed updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceCompleted.class)))
+    @ApiResponse(responseCode = "404", description = "Service completed or user not found")
     @PutMapping("/admin/servicesCompleted/{id}/users/{userId}")
     public ResponseEntity<ServiceCompleted> updateServiceCompletedUser(@PathVariable int id, @PathVariable int userId) {
         Optional<ServiceCompleted> existingServiceCompleted = serviceCompletedService.getServiceCompleted(id);
@@ -233,6 +269,9 @@ public class ServiceCompletedController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the serviceCompleted with the given ID doesn't exist.
      */
+    @Operation(summary = "Delete a completed service", description = "Deletes a completed service based on the provided ID.")
+    @ApiResponse(responseCode = "204", description = "Service completed deleted")
+    @ApiResponse(responseCode = "404", description = "Service completed not found")
     @DeleteMapping("/admin/servicesCompleted/{id}")
     public ResponseEntity<ServiceCompleted> deleteServiceCompleted(@PathVariable int id) {
         Optional<ServiceCompleted> existingServiceCompleted = serviceCompletedService.getServiceCompleted(id);

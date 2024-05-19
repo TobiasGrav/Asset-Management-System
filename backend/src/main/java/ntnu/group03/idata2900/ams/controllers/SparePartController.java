@@ -9,6 +9,12 @@ import ntnu.group03.idata2900.ams.services.SparePartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +24,7 @@ import java.util.Set;
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Spare Part API", description = "Endpoints for managing spare parts")
 public class SparePartController {
 
     private final SparePartService sparePartService;
@@ -41,6 +48,8 @@ public class SparePartController {
      *
      * @return List of all spareParts in database
      */
+    @Operation(summary = "Get all spare parts", description = "Retrieves a list of all spare parts.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SparePart.class)))
     @GetMapping("/admin/spareParts")
     public List<SparePart> getAll() {
         return sparePartService.getAll();
@@ -52,6 +61,9 @@ public class SparePartController {
      * @param id potential id of a sparePart
      * @return a ModelAndView containing sparePart in JSON format
      */
+    @Operation(summary = "Get spare part by ID", description = "Retrieves a spare part based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Spare part found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SparePart.class)))
+    @ApiResponse(responseCode = "404", description = "Spare part not found")
     @GetMapping("/user/spareParts/{id}")
     public ResponseEntity<SparePart> getSparePart(@PathVariable int id) {
         Optional<SparePart> sparePart = this.sparePartService.getSparePart(id);
@@ -70,6 +82,9 @@ public class SparePartController {
      * @param id asset id
      * @return returns set of all spare parts for given asset
      */
+    @Operation(summary = "Get all spare parts for an asset", description = "Retrieves a set of all spare parts for a given asset.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SparePart.class)))
+    @ApiResponse(responseCode = "404", description = "Asset not found")
     @GetMapping("/user/asset/{id}/spareParts")
     public ResponseEntity<Set<SparePart>> getAllSparePartsForAsset(@PathVariable int id){
         Optional<Asset> asset = this.assetService.getAsset(id);
@@ -89,6 +104,9 @@ public class SparePartController {
      * @param sparePart The sparePart object to be created.
      * @return ResponseEntity containing the created sparePart and HTTP status code 201 (CREATED).
      */
+    @Operation(summary = "Create a new spare part", description = "Creates a new spare part.")
+    @ApiResponse(responseCode = "201", description = "Spare part created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SparePart.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input, object invalid")
     @PostMapping("/admin/spareParts")
     public ResponseEntity<SparePart> createSparePart(@RequestBody SparePartDto sparePart) {
         try {
@@ -110,6 +128,9 @@ public class SparePartController {
      * @return ResponseEntity containing the updated sparePart (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the sparePart with the given ID doesn't exist.
      */
+    @Operation(summary = "Update an existing spare part", description = "Updates an existing spare part based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Spare part updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SparePart.class)))
+    @ApiResponse(responseCode = "404", description = "Spare part not found")
     @PutMapping("/admin/spareParts/{id}")
     public ResponseEntity<SparePart> updateSparePart(@PathVariable int id, @RequestBody SparePartDto updatedSparePart) {
         Optional<SparePart> existingSparePart = sparePartService.getSparePart(id);
@@ -134,6 +155,9 @@ public class SparePartController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the sparePart with the given ID doesn't exist.
      */
+    @Operation(summary = "Delete a spare part", description = "Deletes a spare part based on the provided ID.")
+    @ApiResponse(responseCode = "204", description = "Spare part deleted")
+    @ApiResponse(responseCode = "404", description = "Spare part not found")
     @DeleteMapping("/admin/spareParts/{id}")
     public ResponseEntity<SparePart> deleteSparePart(@PathVariable int id) {
         Optional<SparePart> existingSparePart = sparePartService.getSparePart(id);

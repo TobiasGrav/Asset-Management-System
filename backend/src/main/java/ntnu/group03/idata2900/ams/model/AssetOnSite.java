@@ -15,6 +15,7 @@ import java.util.Set;
 
 @Setter
 @Getter
+@Schema(description = "asset on a given site", name = "assetOnSite")
 @Entity
 public class AssetOnSite {
 

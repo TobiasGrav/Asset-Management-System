@@ -1,5 +1,10 @@
 package ntnu.group03.idata2900.ams.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ntnu.group03.idata2900.ams.security.AuthenticationRequest;
 import ntnu.group03.idata2900.ams.security.AuthenticationResponse;
 import ntnu.group03.idata2900.ams.security.util.JwtUtil;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin()
+@Tag(name = "Authentication API", description = "Endpoints for authentication")
 public class AuthenticationController {
 
     @Autowired
@@ -33,6 +39,9 @@ public class AuthenticationController {
      * @param authenticationRequest The request JSON object containing email and password
      * @return OK + JWT token; Or UNAUTHORIZED
      */
+    @Operation(summary = "Authenticate user", description = "Authenticates a user and returns a JWT token.")
+    @ApiResponse(responseCode = "200", description = "Successfully authenticated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class)))
+    @ApiResponse(responseCode = "401", description = "Invalid email or password")
     @PostMapping("/api/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         try {

@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Schema(description = "Comment on what needs to be commented on", name = "datasheet")
+@Schema(description = "Comment on what needs to be commented on", name = "comment")
 @Entity
 public class Comment {
 

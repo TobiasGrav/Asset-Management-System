@@ -1,5 +1,10 @@
 package ntnu.group03.idata2900.ams.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import ntnu.group03.idata2900.ams.dto.AssetDto;
 import ntnu.group03.idata2900.ams.model.Asset;
@@ -15,6 +20,7 @@ import java.util.Optional;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/assets")
+@Tag(name = "Asset API", description = "Endpoints for managing assets")
 public class AssetController {
     private final AssetService assetService;
 
@@ -35,6 +41,8 @@ public class AssetController {
      *
      * @return List of all assets in database
      */
+    @Operation(summary = "Get all assets", description = "Retrieves a list of all assets.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Asset.class)))
     @GetMapping
     public List<Asset> getAll() {
         return assetService.getAll();
@@ -46,6 +54,9 @@ public class AssetController {
      * @param id potential id of an asset
      * @return a ModelAndView containing asset in JSON format or page-not-found
      */
+    @Operation(summary = "Get asset by ID", description = "Retrieves an asset based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Asset found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Asset.class)))
+    @ApiResponse(responseCode = "404", description = "Asset not found")
     @GetMapping("/{id}")
     public ResponseEntity<Asset> getAsset(@PathVariable int id) {
         Optional<Asset> asset = this.assetService.getAsset(id);
@@ -65,6 +76,9 @@ public class AssetController {
      * @param asset The asset object to be created.
      * @return ResponseEntity containing the created asset and HTTP status code 201 (CREATED).
      */
+    @Operation(summary = "Create a new asset", description = "Creates a new asset.")
+    @ApiResponse(responseCode = "201", description = "Asset created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Asset.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input, object invalid")
     @PostMapping
     public ResponseEntity<Asset> createAsset(@RequestBody AssetDto asset) {
         try {
@@ -86,6 +100,9 @@ public class AssetController {
      * @return ResponseEntity containing the updated asset (Optional) and HTTP status code 200 (OK) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the asset with the given ID doesn't exist.
      */
+    @Operation(summary = "Update an existing asset", description = "Updates an existing asset based on the provided ID.")
+    @ApiResponse(responseCode = "200", description = "Asset updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Asset.class)))
+    @ApiResponse(responseCode = "404", description = "Asset not found")
     @PutMapping("/{id}")
     public ResponseEntity<Asset> updateAsset(@PathVariable int id, @RequestBody AssetDto updatedAsset) {
         Optional<Asset> existingAsset = assetService.getAsset(id);
@@ -113,6 +130,9 @@ public class AssetController {
      * @return ResponseEntity with HTTP status code 204 (NO_CONTENT) if successful,
      * or HTTP status code 404 (NOT_FOUND) if the asset with the given ID doesn't exist.
      */
+    @Operation(summary = "Delete an asset", description = "Deletes an asset based on the provided ID.")
+    @ApiResponse(responseCode = "204", description = "Asset deleted")
+    @ApiResponse(responseCode = "404", description = "Asset not found")
     @DeleteMapping("/{id}")
     public ResponseEntity<Asset> deleteAsset(@PathVariable int id) {
         Optional<Asset> existingAsset = assetService.getAsset(id);

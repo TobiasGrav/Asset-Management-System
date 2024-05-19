@@ -17,9 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Configuration
 @EnableMethodSecurity
+@Tag(name = "Security Configuration", description = "Security settings for the application")
 public class SecurityConfiguration {
 
     /**
@@ -49,6 +52,7 @@ public class SecurityConfiguration {
      * @throws Exception
      */
     @Bean
+    @Operation(summary = "Configure authorization filter chain", description = "Sets up the authorization filter chain for the application, including JWT authentication.")
     public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
         // Allow JWT authentication
         http.csrf(AbstractHttpConfigurer::disable)
@@ -61,6 +65,9 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/assets/**").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
                         .requestMatchers("/api/datasheets/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -68,6 +75,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @Operation(summary = "Authentication manager", description = "Creates an authentication manager bean.")
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
@@ -77,6 +85,7 @@ public class SecurityConfiguration {
      *
      * @return The password encryptor
      */
+    @Operation(summary = "Password encoder", description = "Defines the password encoder bean using BCrypt.")
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();

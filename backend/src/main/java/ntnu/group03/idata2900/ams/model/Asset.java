@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Schema(description = "asset which assets may have.", name = "categories")
+@Schema(description = "abstracted version of an asset", name = "asset")
 @Entity
 public class Asset {
 
