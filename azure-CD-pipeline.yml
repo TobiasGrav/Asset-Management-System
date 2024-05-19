@@ -38,7 +38,7 @@ jobs:
       DATABASE_URL: "localhost"
       DATABASE_USERNAME: "root"
       DATABASE_PASSWORD: "root"
-      JWT_SECRET_KEY: "jwtkey"
+      JWTSECRET: "jwtkey"
 
 ###### Dockerize ######################################################################################################################################
 
