@@ -65,9 +65,9 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/assets/**").hasAnyAuthority(SecurityAccessUtil.ADMIN, SecurityAccessUtil.USER)
                         .requestMatchers("/api/datasheets/**").hasAuthority(SecurityAccessUtil.ADMIN)
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**").hasAuthority(SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/swagger-ui/**").hasAuthority(SecurityAccessUtil.ADMIN)
+                        .requestMatchers("/swagger-ui.html").hasAuthority(SecurityAccessUtil.ADMIN)
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

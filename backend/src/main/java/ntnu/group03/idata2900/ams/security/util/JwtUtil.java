@@ -3,6 +3,7 @@ package ntnu.group03.idata2900.ams.security.util;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    //@Value("${jwt_secret_key}")
-    private String SECRET_KEY = "1234@£fdsuifsdufsduåpåsdlvødslkfdgpiosdhgopreqht3498yt34yud!&!%#&##¤¤%%%";
+    @Value("${JWT_SECRET_KEY}")
+    private String SECRET_KEY;
     private static final String JWT_AUTH_KEY = "roles";
 
     /**
