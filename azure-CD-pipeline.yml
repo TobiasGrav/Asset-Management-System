@@ -58,7 +58,7 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root --network ams-network ams-backend:latest
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root -e JWT_SECRET_KEY=jwtkey --network ams-network ams-backend:latest
     displayName: Run Docker container
 
 ###### InstallNewmanAndRunPostmanTests #################################################################################################################
