@@ -38,7 +38,7 @@ jobs:
       DATABASE_URL: "localhost"
       DATABASE_USERNAME: "root"
       DATABASE_PASSWORD: "root"
-      JWT_SECRET_KEY: "1234@£fdsuifsdufsduåpåsdlvødslkfdgpiosdhgopreqht3498yt34yud!&!%#&##¤¤%%%" # just a test key
+      JWT_SECRET_KEY: "jN&ME._xGH$e0VL{w7g-AjH+XVj:it0axEqe/G5jAS,dvPPpRzX[83-%]-Sw6-D+" # just a test key
 
 ###### Dockerize ######################################################################################################################################
 
@@ -59,7 +59,7 @@ jobs:
 
   # Runs a docker container with the image created above.
   - script: |
-      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root -e JWT_SECRET_KEY='1234@£fdsuifsdufsduåpåsdlvødslkfdgpiosdhgopreqht3498yt34yud!&!%#&##¤¤%%%' --network ams-network ams-backend:latest
+      docker run --name ams-backend -d -p 8080:8080 -e DATABASE_URL="ams-db" -e DATABASE_USERNAME=root -e DATABASE_PASSWORD=root -e JWT_SECRET_KEY='jN&ME._xGH$e0VL{w7g-AjH+XVj:it0axEqe/G5jAS,dvPPpRzX[83-%]-Sw6-D+' --network ams-network ams-backend:latest
     displayName: Run Docker container
 
 ###### InstallNewmanAndRunPostmanTests #################################################################################################################
