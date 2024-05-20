@@ -23,6 +23,7 @@ class JwtUtilTest {
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
+        jwtUtil.setSecretKey("1234@£fdsuifsdufsduåpåsdlvødslkfdgpiosdhgopreqht3498yt34yud!&!%#&##¤¤%%%");
 
         userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn("testuser");

@@ -117,4 +117,12 @@ public class JwtUtil {
             return true;
         }
     }
+
+    /**
+     * sets the secret key, necessary for testing.
+     * @param secretKey
+     */
+    public void setSecretKey(String secretKey) {
+        this.SECRET_KEY = secretKey;
+    }
 }
