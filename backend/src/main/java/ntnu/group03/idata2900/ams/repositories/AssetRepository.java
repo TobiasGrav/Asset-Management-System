@@ -30,6 +30,12 @@ public interface AssetRepository extends CrudRepository<Asset, Integer> {
      */
     Optional<List<Asset>> findAssetsByCategory(Category category);
 
+    /**
+     * Retrieves an asset from the database based on the provided AssetOnSite instance.
+     *
+     * @param assetOnSite The AssetOnSite instance associated with the asset.
+     * @return An Optional containing the asset associated with the given AssetOnSite, or empty if no asset is found.
+     */
     Optional<Asset> findAssetByAssetOnSites(AssetOnSite assetOnSite);
 
 

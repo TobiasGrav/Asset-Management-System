@@ -9,5 +9,12 @@ import java.util.List;
 
 @Repository
 public interface ServiceCommentRepository extends CrudRepository<ServiceComment, Integer> {
+
+    /**
+     * Finds all comments associated with a given completed service.
+     *
+     * @param serviceCompleted the service completed to find comments
+     * @return a list of comments associated with the specified completed service
+     */
     List<ServiceComment> findAllByServiceCompleted(ServiceCompleted serviceCompleted);
 }

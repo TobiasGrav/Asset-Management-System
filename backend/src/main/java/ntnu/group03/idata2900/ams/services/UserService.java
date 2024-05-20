@@ -287,15 +287,35 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(userRole);
     }
 
+    /**
+     * Fetches all users by their role.
+     *
+     * @param role the role name to search for
+     * @return a set of users with the specified role
+     */
     public Set<User> getUsersByRole(String role) {
         return userRepository.findByRoleName(role);
     }
 
+    /**
+     * Checks if a user has access to a service completed entity based on their role.
+     *
+     * @param user the user to check
+     * @param roleName the role name required for access
+     * @return true if the user has access, false otherwise
+     */
     public boolean hasAccessToServiceCompleted(User user, String roleName){
         Optional<Role> role = roleRepository.findByName(roleName);
         return role.isPresent() && user.getRoles().contains(role.get());
     }
 
+    /**
+     * Checks if a user has access to a specific service completed entity by ID.
+     *
+     * @param user the user to check
+     * @param id the ID of the service completed entity
+     * @return true if the user has access, false otherwise
+     */
     public boolean hasAccessToGivenServiceCompleted(User user, int id){
         Optional<ServiceCompleted> servicesCompleted = serviceCompletedRepository.findById(id);
         return servicesCompleted.filter(value -> user.getServicesCompleted().contains(value)).isEmpty();
@@ -374,11 +394,19 @@ public class UserService implements UserDetailsService {
      * Adds admin role to the user
      *
      * @param user user to have admin added to it
+     * @throws IllegalArgumentException if the admin role is not found
      */
     public void setAdminRole(User user) {
         Role adminRole = roleRepository.findByName(SecurityAccessUtil.ADMIN).orElseThrow(() -> new IllegalArgumentException("Role ADMIN not found"));
         user.getRoles().add(adminRole);
     }
+
+    /**
+     * Removes the admin role from the specified user.
+     *
+     * @param user the user from whom the admin role is to be removed
+     * @throws IllegalArgumentException if the admin role is not found
+     */
     public void removeAdminRoleFromUser(User user){
         Role adminRole = roleRepository.findByName(SecurityAccessUtil.ADMIN).orElseThrow(() -> new IllegalArgumentException("Role ADMIN not found"));
         user.getRoles().remove(adminRole);

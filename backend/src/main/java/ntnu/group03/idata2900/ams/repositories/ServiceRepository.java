@@ -11,5 +11,12 @@ import java.util.Optional;
 @Repository
 public interface ServiceRepository extends CrudRepository<Service, Integer> {
 
+    /**
+     * Finds a list of services associated with a given asset.
+     *
+     * @param asset the asset to find services
+     * @return an Optional containing a list of services associated with the specified asset,
+     *         or an empty Optional if no services are found
+     */
     Optional<List<Service>> findServicesByAsset(Asset asset);
 }
